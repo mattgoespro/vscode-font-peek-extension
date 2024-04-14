@@ -1,0 +1,18 @@
+{
+  "exclude": ["**/node_modules/**"],
+  "include": ["src/**/*.ts", "media/**/*.js"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "lib": ["dom", "es2020"],
+    "outDir": "dist",
+    "target": "es2020",
+    "types": ["node"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  }
+}
