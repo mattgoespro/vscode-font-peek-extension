@@ -6,7 +6,7 @@ module.exports = {
     sourceType: "module"
   },
   extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  plugins: ["@typescript-eslint", "import"],
+  plugins: ["@typescript-eslint", "import", "react"],
   settings: {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]

@@ -1,18 +1,19 @@
 {
   "exclude": ["**/node_modules/**"],
-  "include": ["src/**/*.ts", "media/**/*.js"],
+  "include": ["src"],
   "compilerOptions": {
     "module": "commonjs",
+    "jsx": "react",
     "moduleResolution": "node",
     "baseUrl": ".",
     "lib": ["dom", "es2020"],
     "outDir": "dist",
     "target": "es2020",
-    "types": ["node"],
+    "types": ["node", "react"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   }
 }

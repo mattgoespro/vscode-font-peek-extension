@@ -1,11 +1,4 @@
 {
-  "files.exclude": {
-    "**/node_modules/**": true
-  },
-  "search.exclude": {
-    "**/node_modules/**": true
-  },
-  "typescript.tsc.autoDetect": "off",
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnPaste": true,
@@ -17,6 +10,7 @@
     "editor.formatOnSave": true
   },
   "css.format.enable": false,
+  "css.validate": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "always",
     "source.fixAll.eslint": "always",
@@ -32,10 +26,8 @@
   "explorer.confirmDragAndDrop": false,
   "files.watcherExclude": {
     "**/node_modules/**": true,
-    ".git": true,
-    "dll": true,
-    "release/app/{dist,build,node_modules}": true,
-    "resources": true
+    "**/dist/**": true,
+    ".git": true
   },
   "html.format.enable": false,
   "javascript.format.enable": false,
@@ -48,8 +40,13 @@
   "material-icon-theme.hidesExplorerArrows": true,
   "npm.exclude": "release/**",
   "prettier.configPath": ".prettierrc.js",
-  "css.validate": true,
+  "search.exclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    ".git": true
+  },
   "typescript.format.enable": false,
+  "typescript.tsc.autoDetect": "off",
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "workbench.iconTheme": "material-icon-theme"

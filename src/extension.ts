@@ -1,15 +1,21 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
-import { TTFEditorProvider } from './ttfPreview';
+import vscode from "vscode";
+import { TTFEditorProvider } from "./ttfPreview";
+import ReactDOMServer from "react-dom/server";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+// // Define your React component for font glyph preview
+// const FontGlyphPreview: React.FunctionComponent = () => {
+//   // Your logic for displaying font glyphs here
+//   return (
+//     <div>
+//       <h1>Test React Dom Glyph Preview</h1>
+//     </div>
+//   );
+// };
+
 export function activate(context: vscode.ExtensionContext) {
-
-	context.subscriptions.push(TTFEditorProvider.register(context))
-
+  // ReactDOMServer.renderToString(<FontGlyphPreview />);
+  console.log("Congratulations, your extension 'ttf-preview' is now active!");
+  context.subscriptions.push(TTFEditorProvider.register(context));
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}

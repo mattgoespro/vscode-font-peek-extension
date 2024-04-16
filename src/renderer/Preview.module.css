@@ -1,0 +1,40 @@
+#--Preview-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+  margin: 0;
+  background-color: #161616;
+}
+
+#--Preview-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#--Preview-title {
+  position: relative;
+  font-family: Roboto;
+  font-weight: 300;
+  text-align: center;
+  font-size: 56px;
+  margin: 20px 0;
+}
+
+#--Preview-subtitle {
+  position: relative;
+}
+
+#--Preview-subtitle span {
+  position: relative;
+  font-family: Roboto;
+  font-weight: 200;
+  text-align: center;
+  font-size: 24px;
+  margin: 0 0 20px;
+}

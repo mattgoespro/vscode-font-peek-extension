@@ -1,20 +1,17 @@
-import * as vscode from "vscode";
-import * as path from "path";
-import { Disposable } from "./dispose";
+import vscode from "vscode";
+import path from "path";
+import { Disposable } from "./main/dispose";
 import { Font, TTF, woff2 } from "fonteditor-core";
 import { inflate } from "pako";
-
-type Glyph = {
-  name: string;
-  unicode: string;
-  unencoded: string;
-  htmlEncoded: string;
-};
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+import Preview from "./renderer/Preview";
+import { Glyph } from "./main/glyph";
 
 export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TTFDocument> {
   static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
-      "ttf.preview",
+      "fontGlyphPreview.editor.preview",
       new TTFEditorProvider(context),
       {
         supportsMultipleEditorsPerDocument: true,
@@ -31,6 +28,7 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     openContext: vscode.CustomDocumentOpenContext,
     token: vscode.CancellationToken
   ): TTFDocument | Thenable<TTFDocument> {
+    console.log("openCustomDocument");
     return TTFDocument.create(uri);
   }
 
@@ -39,6 +37,7 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     webviewPanel: vscode.WebviewPanel,
     token: vscode.CancellationToken
   ): Promise<void> {
+    console.log("resolveCustomEditor");
     webviewPanel.webview.options = {
       enableScripts: true
     };
@@ -79,11 +78,12 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
 
       const html = this.getHtmlForWebView(
         webviewPanel.webview,
-        font.toBase64({ type: "ttf" }, null),
+        font.toBase64({ type: "ttf" }),
         glyphs
       );
-      webviewPanel.webview.postMessage({ glyph: glyphs });
+      webviewPanel.webview.postMessage({ glyphs });
       webviewPanel.webview.html = html;
+      console.log("set html");
     } catch (e) {
       webviewPanel.webview.html = this.getErrorHtmlForWebView(
         webviewPanel.webview,
@@ -93,161 +93,7 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     }
   }
 
-  private getStyles(data: string) {
-    return /*css*/ `
-    @font-face {
-      src: url("${data}");
-      font-family: iconfont-preview;
-    }
-
-    html, body {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      padding: 0;
-    }
-
-    #preview {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      flex-wrap: wrap;
-      margin: 0;
-      background-color: #161616;
-    }
-
-    #preview-header {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    #preview-title {
-      position: relative;
-      font-family: Roboto;
-      font-weight: 300;
-      text-align: center;
-      font-size: 56px;
-      margin: 20px 0;
-    }
-
-    #preview-subtitle {
-      position: relative;
-    }
-
-    #preview-subtitle span {
-      position: relative;
-      font-family: Roboto;
-      font-weight: 200;
-      text-align: center;
-      font-size: 24px;
-      margin: 0 0 20px;
-    }
-
-    #glyph-search-input {
-      position: absolute;
-      width: 150px;
-      top: calc(50% - 15px);
-      right: calc(-50% + 5px);
-      font-size: 14px;
-      color: white;
-      padding: 5px;
-      background-color: #0e0e0e;
-      border: 1px solid #444444;
-      border-radius: 9px;
-    }
-
-    #glyph-search-input::placeholder {
-      color: #757575;
-    }
-
-    #glyphs {
-      width: 90%;
-      display: flex;
-      flex-wrap: wrap;
-      flex: 1;
-      gap: 10px;
-    }
-
-    .glyph {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      flex-basis: 10%;
-      border: 1px solid #444444;
-      border-radius: 8pt;
-      padding: 10px;
-    }
-
-    .glyph-name {
-      font-family: "Nunito";
-      font-size: 12px;
-      color: #b3b3b3;
-      margin-bottom: 5px;
-    }
-
-    .glyph-html {
-      color: white;
-      font-family: iconfont-preview !important;
-      font-size: 30px;
-      font-style: normal;
-      margin-bottom: 5px;
-      -webkit-font-smoothing: antialiased;
-      -webkit-text-stroke-width: 0.2px;
-    }
-
-    .glyph-codes {
-      color: #666666;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      gap: 10px;
-      font-size: 10px;
-    }
-
-    .glyph-code {
-      position: relative;
-      color: #4b4b4b;
-      color: var(--vscode-editor-foreground);
-    }
-
-    .glyph-code:hover::before {
-      position: absolute;
-      width: 100%;
-      height: 50px;
-      content: attr(data-code);
-      place-content: center;
-      background-color: #4b4b4b;
-      filter: opacity(60%);
-      top: 0;
-      left: 0;
-      padding: 2px;
-      border-radius: 4px;
-      font-size: 12px;
-      color: red;
-    }
-    `;
-  }
-
-  private createGlyphHtml(glyph: Glyph) {
-    return /*html*/ `
-    <div class="glyph" title="${glyph.name}">
-      <div class="glyph-name">${glyph.name}</div>
-      <div class="glyph-html">${glyph.unicode}</div>
-      <div class="glyph-codes">
-        <span data-code="raw" class="glyph-code">${glyph.unencoded}</span>
-        <span data-code="unicode" class="glyph-code">${glyph.htmlEncoded}</span>
-      </div>
-    </div>
-    `;
-  }
-
-  getHtmlForWebView(webview: vscode.Webview, data: string, glyph: Glyph[]) {
+  getHtmlForWebView(webview: vscode.Webview, data: string, glyphs: Glyph[]) {
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.file(path.join(this._context.extensionPath, "media", "load-ttf.js"))
     );
@@ -289,28 +135,27 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
             rel="stylesheet"
           />
 
-          <title>icontfont-preview</title>
+          <title>font-glyph-preview</title>
 
           <script src="${scriptUri}" type="text/javascript"></script>
 
           <style>
-            ${this.getStyles(data)}
+            @font-face {
+              src: url("${data}");
+              font-family: iconfont-preview;
+            }
+
+            html, body {
+              display: flex;
+              flex-direction: column;
+              flex: 1;
+              padding: 0;
+            }
           </style>
         </head>
 
         <body>
-          <div id="preview">
-            <div id="preview-header">
-              <h1 id="preview-title">Iconfonts Preview</h1>
-              <h2 id="preview-subtitle">
-                <span>Click on the icon to copy the unicode</span>
-                <input id="glyph-search-input" name="glyph-search-input" type="search" placeholder="Search for icon" />
-              </h2>
-            </div>
-            <div id="glyphs">
-              ${glyph.map(this.createGlyphHtml.bind(this)).join("\n")}
-            </div>
-          </div>
+          ${ReactDOMServer.renderToString(Preview({ glyphs }))}
         </body>
       </html>`;
   }
@@ -347,32 +192,25 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
   }
 }
 class TTFDocument extends Disposable implements vscode.CustomDocument {
+  private constructor(readonly uri: vscode.Uri, private initialContent: Uint8Array) {
+    super();
+  }
+
   private static async readFile(uri: vscode.Uri): Promise<Uint8Array> {
     if (uri.scheme === "untitled") {
       return new Uint8Array();
     }
+
     return vscode.workspace.fs.readFile(uri);
   }
+
   static async create(uri: vscode.Uri) {
     const fileData = await TTFDocument.readFile(uri);
-    console.log(uri, fileData);
     return new TTFDocument(uri, fileData);
   }
 
-  private readonly _uri: vscode.Uri;
-  private _documentData: Uint8Array;
-  // private readonly _delegate: TTFDocumentDelegate;
-  private constructor(uri: vscode.Uri, initialContent: Uint8Array) {
-    super();
-    this._uri = uri;
-    this._documentData = initialContent;
-  }
-
-  public get uri() {
-    return this._uri;
-  }
   public get documentData(): Uint8Array {
-    return this._documentData;
+    return this.initialContent;
   }
 }
 interface TTFDocumentDelegate {
