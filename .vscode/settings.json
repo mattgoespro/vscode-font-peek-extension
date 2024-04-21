@@ -24,9 +24,8 @@
   "eslint.run": "onType",
   "eslint.validate": ["javascript", "typescript", "typescriptreact"],
   "explorer.confirmDragAndDrop": false,
-  "files.watcherExclude": {
-    "**/node_modules/**": true,
-    "**/dist/**": true,
+  "files.exclude": {
+    "node_modules": true,
     ".git": true
   },
   "html.format.enable": false,

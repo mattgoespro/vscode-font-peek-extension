@@ -1,5 +1,5 @@
 import React from "react";
-import { className } from "../Class";
+import { className } from "../Shared/Style";
 import styles from "./FontGlyph.module.css";
 
 type FontGlyphProps = {

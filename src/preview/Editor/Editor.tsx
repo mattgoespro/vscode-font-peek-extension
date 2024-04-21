@@ -1,15 +1,17 @@
 import React from "react";
-import { classId } from "./Class";
-import { FontGlyph } from "./FontGlyph/FontGlyph";
-import { Glyph } from "../main/glyph";
+import { classId } from "../Shared/Style";
+import { FontGlyph } from "../FontGlyph/FontGlyph";
+import { Glyph } from "../../extension/glyph";
+import { uuid } from "../Shared/UUID";
+import "./Editor.module.css";
 
-const id = classId("Preview");
+const id = classId("Editor");
 
-type PreviewProps = {
+type EditorProps = {
   glyphs: Glyph[];
 };
 
-function Preview({ glyphs }: PreviewProps) {
+function Editor({ glyphs }: EditorProps) {
   return (
     <div id={id("preview")}>
       <div id={id("preview-header")}>
@@ -28,6 +30,7 @@ function Preview({ glyphs }: PreviewProps) {
         $
         {glyphs.map((glyph) => (
           <FontGlyph
+            key={uuid()}
             name={glyph.name}
             unicode={glyph.unicode}
             unencoded={glyph.unencoded}
@@ -39,4 +42,4 @@ function Preview({ glyphs }: PreviewProps) {
   );
 }
 
-export default Preview;
+export default Editor;

@@ -5,34 +5,12 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "watch",
-      "problemMatcher": "$tsc-watch",
-      "isBackground": true,
+      "script": "build",
+      "label": "build",
       "presentation": {
         "reveal": "never"
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "dependsOn": ["Compile"]
-    },
-    {
-      "label": "Compile",
-      "type": "npm",
-      "script": "compile",
-      "problemMatcher": "$tsc",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "dependsOn": ["Clean"]
-    },
-    {
-      "label": "Clean",
-      "type": "npm",
-      "script": "clean",
-      "problemMatcher": [],
+      "problemMatcher": "$ts-checker-webpack",
       "group": {
         "kind": "build",
         "isDefault": true

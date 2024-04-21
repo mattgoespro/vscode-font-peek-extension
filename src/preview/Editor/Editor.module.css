@@ -1,4 +1,4 @@
-#--Preview-preview {
+#--Editor-preview {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,7 +9,7 @@
   background-color: #161616;
 }
 
-#--Preview-header {
+#--Editor-header {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -17,7 +17,7 @@
   margin: 20px 0;
 }
 
-#--Preview-title {
+#--Editor-title {
   position: relative;
   font-family: Roboto;
   font-weight: 300;
@@ -26,11 +26,11 @@
   margin: 20px 0;
 }
 
-#--Preview-subtitle {
+#--Editor-subtitle {
   position: relative;
 }
 
-#--Preview-subtitle span {
+#--Editor-subtitle span {
   position: relative;
   font-family: Roboto;
   font-weight: 200;
