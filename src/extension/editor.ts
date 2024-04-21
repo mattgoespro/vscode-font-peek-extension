@@ -1,9 +1,9 @@
 import vscode from "vscode";
 import { Disposable } from "./dispose";
+import { Font, TTF, woff2 } from "fonteditor-core";
 import { inflate } from "pako";
 import { Glyph } from "./glyph";
 import path from "path";
-import fontkit from "fontkit";
 
 export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TTFDocument> {
   static register(context: vscode.ExtensionContext): vscode.Disposable {
@@ -36,33 +36,32 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     webviewPanel.webview.options = {
       enableScripts: true
     };
+    let buffer: Uint8Array;
     const glyphs: Glyph[] = [];
+    let result: TTF.TTFObject;
 
     try {
-      const buffer: Uint8Array = this.nodeBufferToArrayBuffer(document.documentData);
-      const font = fontkit.create(Buffer.from(buffer.buffer)).getFont(document.uri.fsPath);
-      console.log("Loaded font:");
-      console.log(font);
+      buffer = this.nodeBufferToArrayBuffer(document.documentData);
+      const suffix = document.uri.fsPath.split(".").pop();
 
-      for (let i = 0; i < font.characterSet.length; i++) {
-        const glyph = font.getGlyph(i);
-        console.log("Identified glyph:");
-        console.log(glyph);
+      if (suffix == "woff2") {
+        await woff2.init(buffer.buffer);
+      }
 
-        const codes = glyph.codePoints;
-        console.log("Unicode: ", codes);
+      const font = Font.create(buffer.buffer, {
+        type: suffix as any,
+        //@ts-ignore
+        inflate: suffix == "woff" ? inflate : void 0
+      });
+      result = font.get();
 
-        if (codes !== null) {
-          const unencoded = String.fromCharCode(...codes);
+      for (let i = 0; i < result.glyf.length; i++) {
+        const glyph = result.glyf[i];
+        if (glyph.unicode) {
+          const unencoded = glyph.unicode[glyph.unicode.length - 1].toString(16);
           const unicode = `&#x${unencoded}`;
-          const htmlEncoded = `\\u${unicode};`;
-          console.log("Adding glyph:");
-          console.log({
-            name: glyph.name,
-            unicode,
-            unencoded,
-            htmlEncoded
-          });
+          const htmlEncoded = `\\u${unencoded};`;
+
           glyphs.push({
             name: glyph.name,
             unicode,
