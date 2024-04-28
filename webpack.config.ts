@@ -3,10 +3,12 @@ import { Configuration } from "webpack";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const config: Configuration = {
   target: "web",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   mode: "development",
   entry: {
     extension: {
@@ -41,10 +43,13 @@ const config: Configuration = {
           loader: "babel-loader",
           options: {
             presets: [["@babel/preset-env", { modules: "commonjs" }]],
-            plugins: ["@babel/plugin-transform-runtime"]
+            plugins: ["@babel/plugin-transform-runtime"],
+            cacheDirectory: true,
+            cacheCompression: false,
+            compact: false
           }
         },
-        exclude: /node_modules\/(?!fonteditor-core)/
+        exclude: /(node_modules\/(?!fonteditor-core))|(dist)/
       },
       {
         test: /\.tsx?$/,
@@ -62,24 +67,35 @@ const config: Configuration = {
                   }
                 ]
               ],
-              plugins: ["@babel/plugin-transform-runtime", "babel-plugin-react-css-modules"]
+              plugins: [
+                "@babel/plugin-transform-runtime",
+                "babel-plugin-react-css-modules",
+                "@babel/plugin-transform-class-properties"
+              ],
+              cacheDirectory: true,
+              cacheCompression: false,
+              compact: false
             }
           }
         ],
-        exclude: /node_modules/
+        include: path.resolve(__dirname, "src"),
+        exclude: /(node_modules)|(dist)/
       },
       {
         test: /\.css$/,
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
-              importLoaders: 1,
-              modules: true
+              modules: {
+                localIdentName: "[local]",
+                exportLocalsConvention: "camelCaseOnly"
+              }
             }
           }
-        ]
+        ],
+        exclude: /node_modules/
       }
     ]
   },
@@ -88,7 +104,16 @@ const config: Configuration = {
   },
   plugins: [
     new CleanWebpackPlugin({ verbose: true }),
-    new ForkTsCheckerWebpackPlugin({ formatter: "basic" })
+    new ForkTsCheckerWebpackPlugin({ formatter: "basic" }),
+    new HtmlWebpackPlugin({
+      template: "./src/preview/index.html",
+      filename: "preview.html",
+      chunks: ["preview"],
+      inject: "head"
+    }),
+    new MiniCssExtractPlugin({
+      chunkFilename: "[id].css"
+    })
   ]
 };
 

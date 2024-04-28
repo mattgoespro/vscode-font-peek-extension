@@ -9,7 +9,7 @@
     "lib": ["dom", "es2020"],
     "outDir": "dist",
     "target": "es6",
-    "types": ["node", "react", "./src/custom.d.ts"],
+    "types": ["node", "react", "./src/preview/types.d.ts"],
     "allowJs": true,
     "strict": false,
     "esModuleInterop": true,

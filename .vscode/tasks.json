@@ -7,10 +7,12 @@
       "type": "npm",
       "script": "build",
       "label": "build",
+      "isBackground": false,
       "presentation": {
         "reveal": "never"
       },
       "problemMatcher": "$ts-checker-webpack",
+
       "group": {
         "kind": "build",
         "isDefault": true

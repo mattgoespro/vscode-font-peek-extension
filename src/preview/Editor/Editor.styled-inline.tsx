@@ -91,7 +91,6 @@ function Editor({ glyphs }: EditorProps) {
           alignItems: "center",
           flexWrap: "wrap",
           flex: 1,
-          gap: "1rem",
           width: "100%"
         }}
       >

@@ -3,7 +3,7 @@
   "displayName": "font-glyph-preview",
   "description": "Preview font glyphs in files from within Visual Studio Code",
   "version": "0.0.1",
-  "icon": "images/logo.png",
+  "icon": "assets/logo.png",
   "main": "./dist/extension.js",
   "type": "commonjs",
   "engines": {
@@ -76,6 +76,7 @@
     "css-loader": "^7.1.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.0",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
