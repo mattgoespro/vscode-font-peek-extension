@@ -1,4 +1,4 @@
-#--Editor-preview {
+.preview {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,7 +9,7 @@
   background-color: #161616;
 }
 
-#--Editor-header {
+.header {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -17,7 +17,7 @@
   margin: 20px 0;
 }
 
-#--Editor-title {
+.title {
   position: relative;
   font-family: Roboto;
   font-weight: 300;
@@ -26,15 +26,30 @@
   margin: 20px 0;
 }
 
-#--Editor-subtitle {
-  position: relative;
-}
-
-#--Editor-subtitle span {
+.subtitle {
   position: relative;
   font-family: Roboto;
   font-weight: 200;
   text-align: center;
   font-size: 24px;
   margin: 0 0 20px;
+}
+
+.glyph-search-input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  color: #444444;
+  background-color: #1b1b1b;
+  border: 1px solid #444444;
+}
+
+.glyphs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0;
+  gap: 10px;
 }

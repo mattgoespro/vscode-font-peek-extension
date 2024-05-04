@@ -3,13 +3,14 @@ import { Configuration } from "webpack";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import MiniCssExtractWebpackPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
-const config: Configuration = {
+export default {
   target: "web",
   devtool: "inline-source-map",
   mode: "development",
+  stats: "errors-warnings",
   entry: {
     extension: {
       import: "./src/extension.ts",
@@ -33,26 +34,13 @@ const config: Configuration = {
     }
   },
   optimization: {
-    minimize: false
+    minimize: true,
+    runtimeChunk: false
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: [["@babel/preset-env", { modules: "commonjs" }]],
-            plugins: ["@babel/plugin-transform-runtime"],
-            cacheDirectory: true,
-            cacheCompression: false,
-            compact: false
-          }
-        },
-        exclude: /(node_modules\/(?!fonteditor-core))|(dist)/
-      },
-      {
-        test: /\.tsx?$/,
+        test: /\.[tj]sx?$/,
         use: [
           {
             loader: "babel-loader",
@@ -78,22 +66,36 @@ const config: Configuration = {
             }
           }
         ],
-        include: path.resolve(__dirname, "src"),
-        exclude: /(node_modules)|(dist)/
+        exclude: /node_modules/
+      },
+      {
+        test: /\.html$/,
+        loader: "html-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractWebpackPlugin.loader,
+          {
+            loader: "css-loader",
+            options: { modules: true }
+          },
+          "sass-loader",
+          "postcss-loader"
+        ],
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          MiniCssExtractWebpackPlugin.loader,
           {
             loader: "css-loader",
-            options: {
-              modules: {
-                localIdentName: "[local]",
-                exportLocalsConvention: "camelCaseOnly"
-              }
-            }
-          }
+            options: { modules: true }
+          },
+          ,
+          "postcss-loader"
         ],
         exclude: /node_modules/
       }
@@ -103,18 +105,11 @@ const config: Configuration = {
     vscode: "commonjs vscode"
   },
   plugins: [
-    new CleanWebpackPlugin({ verbose: true }),
-    new ForkTsCheckerWebpackPlugin({ formatter: "basic" }),
-    new HtmlWebpackPlugin({
-      template: "./src/preview/index.html",
-      filename: "preview.html",
-      chunks: ["preview"],
-      inject: "head"
+    new MiniCssExtractWebpackPlugin({
+      filename: "[name].css",
+      chunkFilename: "[name].css"
     }),
-    new MiniCssExtractPlugin({
-      chunkFilename: "[id].css"
-    })
+    new ForkTsCheckerWebpackPlugin({ formatter: "basic" }),
+    new CleanWebpackPlugin({ verbose: true })
   ]
-};
-
-export default config;
+} satisfies Configuration;

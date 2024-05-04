@@ -1,6 +1,7 @@
 export type FontGlyph = {
+  id: number;
   name: string;
+  hex: string;
   unicode: string;
-  unencoded: string;
-  htmlEncoded: string;
+  html: string;
 };

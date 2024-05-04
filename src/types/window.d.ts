@@ -1,5 +1,3 @@
-import { GlobalWindow } from "";
-
 declare global {
   /**
    * The `vscode` namespace provided by the webview host.
@@ -14,9 +12,6 @@ declare global {
   interface Window {
     acquireVsCodeApi: () => VsCodeApi;
   }
-
-  declare module "*.module.css" {
-    const classes: { [key: string]: string };
-    export default classes;
-  }
 }
+
+export {};

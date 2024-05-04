@@ -1,4 +1,4 @@
-import Editor from "./Editor/Editor";
+import { Editor } from "./Editor/Editor";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { FontGlyphsLoadedMessage, WebviewReadyMessage } from "../shared/event";
@@ -10,19 +10,10 @@ window.onload = () => {
     MessageEvent<WebviewReadyMessage>
   >);
 
-  console.log("Loading preview");
-
   window.onmessage = (event: MessageEvent<FontGlyphsLoadedMessage>) => {
     console.log("Received extension message: ", event.data);
     console.log("---- Data: ", event.data);
 
-    createRoot(createAppRoot()).render(<Editor glyphs={event.data?.glyphs} />);
+    createRoot(document.getElementById("root")).render(<Editor glyphs={event.data?.glyphs} />);
   };
 };
-
-function createAppRoot() {
-  const root = document.createElement("div");
-  root.id = "root";
-  document.body.appendChild(root);
-  return root;
-}

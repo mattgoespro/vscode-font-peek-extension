@@ -9,10 +9,25 @@
       "label": "build",
       "isBackground": false,
       "presentation": {
-        "reveal": "never"
+        "reveal": "always",
+        "panel": "shared"
       },
       "problemMatcher": "$ts-checker-webpack",
-
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "watch",
+      "label": "watch",
+      "isBackground": false,
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": "$ts-checker-webpack-watch",
       "group": {
         "kind": "build",
         "isDefault": true

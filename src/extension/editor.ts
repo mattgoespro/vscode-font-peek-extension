@@ -1,14 +1,15 @@
 import vscode from "vscode";
-import { Disposable } from "./dispose";
 import { FontGlyph } from "../shared/model";
 import { Font, create } from "fontkit";
-import { getExtensionWebviewContent, getExtensionWebviewErrorContent } from "./editor-content";
 import { WebviewReadyMessage } from "../shared/event";
+import path from "path";
+import html from "../preview/index.html";
+import { TTFDocument } from "./document";
 
 export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TTFDocument> {
   private webviewPanel: vscode.WebviewPanel;
 
-  constructor(private readonly _context: vscode.ExtensionContext) {}
+  constructor(private readonly context: vscode.ExtensionContext) {}
 
   static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
@@ -26,16 +27,14 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
   private syncWithWebview() {
     return Promise.race([
       new Promise<void>((resolve) => {
-        this.webviewPanel.webview.onDidReceiveMessage(
-          (event: MessageEvent<WebviewReadyMessage>) => {
-            console.log("Received message from webview: ", event);
+        this.webview.onDidReceiveMessage((event: MessageEvent<WebviewReadyMessage>) => {
+          console.log("Received message from webview: ", event);
 
-            if (event.data.state === "ready") {
-              console.log("Webview is ready");
-              resolve();
-            }
+          if (event.data.state === "ready") {
+            console.log("Webview is ready");
+            resolve();
           }
-        );
+        });
       }),
       new Promise<void>((resolve) => setTimeout(resolve, 10000))
     ]);
@@ -49,87 +48,96 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     return TTFDocument.create(uri);
   }
 
+  private get webview(): vscode.Webview {
+    if (this.webviewPanel == null) {
+      vscode.window.showErrorMessage("Webview panel not ready.");
+      throw new Error("Webview panel not ready.");
+    }
+
+    return this.webviewPanel.webview;
+  }
+
   async resolveCustomEditor(
     document: TTFDocument,
     webviewPanel: vscode.WebviewPanel,
     _: vscode.CancellationToken
   ): Promise<void> {
     this.webviewPanel = webviewPanel;
-    this.webviewPanel.webview.options = {
-      enableScripts: true
+    this.webview.options = {
+      enableScripts: true,
+      enableCommandUris: true,
+      localResourceRoots: [
+        vscode.Uri.file(path.join(this.context.extensionPath, "dist")),
+        vscode.Uri.file(path.dirname(document.uri.path))
+      ]
     };
 
     let glyphs: FontGlyph[] = [];
 
-    try {
-      const font = create(Buffer.from(document.documentData)) as Font;
-      console.log("Created font:");
-      console.log("\tName:", font.fullName);
-      console.log("\tFamily:", font.familyName);
-      console.log("\tCharacter points:", font.characterSet);
-      glyphs = this.getFontGlyphs(font);
+    const fontData = Buffer.from(document.documentData);
+    const font = create(fontData) as Font;
+    glyphs = this.getFontGlyphs(font);
 
-      this.webviewPanel.webview.html = getExtensionWebviewContent(
-        this._context.extensionPath,
-        this.webviewPanel.webview
-      );
+    this.webview.html = this.getWebviewContent(document);
 
-      await this.syncWithWebview();
+    await this.syncWithWebview();
 
-      this.webviewPanel.webview.postMessage({ glyphs });
-    } catch (error) {
-      webviewPanel.webview.html = getExtensionWebviewErrorContent(webviewPanel.webview, error);
-      console.error(error);
-    }
+    this.webview.postMessage({ glyphs });
+  }
+
+  private getWebviewContent(document: TTFDocument): string {
+    const previewScriptPath = vscode.Uri.file(
+      path.join(this.context.extensionPath, "dist", "preview.js")
+    );
+    const previewStylesPath = vscode.Uri.file(
+      path.join(this.context.extensionPath, "dist", "preview.css")
+    );
+
+    const previewScriptUri = previewScriptPath.with({ scheme: "vscode-resource" }).toString();
+    const previewStylesheetUri = previewStylesPath.with({ scheme: "vscode-resource" }).toString();
+    const previewFontDataUri = vscode.Uri.parse(document.uri.toString())
+      .with({
+        scheme: "vscode-resource"
+      })
+      .toString();
+
+    return this.interpolateKeys(html, {
+      previewScriptUri,
+      previewStylesheetUri,
+      previewFontDataUri
+    });
+  }
+
+  private interpolateKeys(content: string, data: Record<string, string>): string {
+    let html = content;
+
+    Object.entries(data).forEach(([key, value]) => {
+      html = html.replace(`{{ ${key} }}`, `${value}`);
+    });
+
+    return html;
   }
 
   private getFontGlyphs(font: Font) {
     const glyphs: FontGlyph[] = [];
 
     for (let i = 0; i < font.characterSet.length; i++) {
-      const unencoded = font.characterSet[i].toString(16);
-      console.log("Unencoded:", unencoded);
-      const unicode = `&#x${unencoded}`;
-      console.log("Unicode:", unicode);
-      const htmlEncoded = `\\u${unicode};`;
-      console.log("HTML encoded:", htmlEncoded);
-      // console.log({
-      //   name: glyph.name,
-      //   unicode,
-      //   unencoded,
-      //   htmlEncoded
-      // });
+      const glyph = font.glyphForCodePoint(font.characterSet[i]);
+      const id = glyph.id;
+      const name = glyph.name;
+      const hex = glyph.codePoints[0].toString(16);
+      const unicode = `&#x${hex}`;
+      const htmlEncoded = `\\u${hex};`;
+
       glyphs.push({
-        name: "test",
+        id,
+        name,
+        hex,
         unicode,
-        unencoded,
-        htmlEncoded
+        html: htmlEncoded
       });
     }
 
     return glyphs;
-  }
-}
-
-class TTFDocument extends Disposable implements vscode.CustomDocument {
-  constructor(public readonly uri: vscode.Uri, private initialContent: Uint8Array) {
-    super();
-  }
-
-  private static async readFile(uri: vscode.Uri): Promise<Uint8Array> {
-    if (uri.scheme === "untitled") {
-      return new Uint8Array();
-    }
-
-    return vscode.workspace.fs.readFile(uri);
-  }
-
-  static async create(uri: vscode.Uri) {
-    const fileData = await TTFDocument.readFile(uri);
-    return new TTFDocument(uri, fileData);
-  }
-
-  public get documentData(): Uint8Array {
-    return this.initialContent;
   }
 }
