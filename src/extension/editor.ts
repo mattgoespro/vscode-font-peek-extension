@@ -6,7 +6,9 @@ import path from "path";
 import html from "../preview/index.html";
 import { TTFDocument } from "./document";
 
-export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TTFDocument> {
+export class FontPreviewWebviewProvider
+  implements vscode.CustomReadonlyEditorProvider<TTFDocument>
+{
   private webviewPanel: vscode.WebviewPanel;
 
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -14,7 +16,7 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
   static register(context: vscode.ExtensionContext): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       "fontGlyphPreview.editor.preview",
-      new TTFEditorProvider(context),
+      new FontPreviewWebviewProvider(context),
       {
         supportsMultipleEditorsPerDocument: true,
         webviewOptions: {
@@ -28,10 +30,7 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     return Promise.race([
       new Promise<void>((resolve) => {
         this.webview.onDidReceiveMessage((event: MessageEvent<WebviewReadyMessage>) => {
-          console.log("Received message from webview: ", event);
-
           if (event.data.state === "ready") {
-            console.log("Webview is ready");
             resolve();
           }
         });
@@ -72,11 +71,8 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
       ]
     };
 
-    let glyphs: FontGlyph[] = [];
-
-    const fontData = Buffer.from(document.documentData);
-    const font = create(fontData) as Font;
-    glyphs = this.getFontGlyphs(font);
+    const font = create(document.getFontData()) as Font;
+    let glyphs: FontGlyph[] = this.getFontGlyphs(font);
 
     this.webview.html = this.getWebviewContent(document);
 
@@ -92,19 +88,13 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
     const previewStylesPath = vscode.Uri.file(
       path.join(this.context.extensionPath, "dist", "preview.css")
     );
-
     const previewScriptUri = previewScriptPath.with({ scheme: "vscode-resource" }).toString();
     const previewStylesheetUri = previewStylesPath.with({ scheme: "vscode-resource" }).toString();
-    const previewFontDataUri = vscode.Uri.parse(document.uri.toString())
-      .with({
-        scheme: "vscode-resource"
-      })
-      .toString();
 
     return this.interpolateKeys(html, {
       previewScriptUri,
       previewStylesheetUri,
-      previewFontDataUri
+      previewFontDataUri: document.getFontDataWebviewUri().toString()
     });
   }
 
@@ -125,16 +115,16 @@ export class TTFEditorProvider implements vscode.CustomReadonlyEditorProvider<TT
       const glyph = font.glyphForCodePoint(font.characterSet[i]);
       const id = glyph.id;
       const name = glyph.name;
-      const hex = glyph.codePoints[0].toString(16);
-      const unicode = `&#x${hex}`;
-      const htmlEncoded = `\\u${hex};`;
+      const binary = glyph.codePoints[0];
+      const hex = binary.toString(16);
+      const unicode = String.fromCodePoint(binary);
 
       glyphs.push({
         id,
         name,
-        hex,
+        binary,
         unicode,
-        html: htmlEncoded
+        hex
       });
     }
 

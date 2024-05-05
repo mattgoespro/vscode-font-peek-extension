@@ -6,7 +6,7 @@
     "jsx": "react",
     "moduleResolution": "node",
     "baseUrl": ".",
-    "lib": ["dom", "es2020"],
+    "lib": ["dom", "es2022"],
     "outDir": "dist",
     "target": "es6",
     "types": ["node", "react", "./src/types/modules.d.ts", "./src/types/window.d.ts"],

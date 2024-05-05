@@ -1,8 +1,8 @@
 import vscode from "vscode";
-import { TTFEditorProvider } from "./extension/editor";
+import { FontPreviewWebviewProvider } from "./extension/editor";
 
 export function activate(context: vscode.ExtensionContext) {
-  context.subscriptions.push(TTFEditorProvider.register(context));
+  context.subscriptions.push(FontPreviewWebviewProvider.register(context));
 }
 
 export function deactivate() {}

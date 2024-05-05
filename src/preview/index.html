@@ -43,6 +43,8 @@
       @font-face {
         src: url("{{ previewFontDataUri }}");
         font-family: "font-glyph";
+        font-size: 30px;
+        font-style: normal;
       }
 
       html,
@@ -65,13 +67,12 @@
     </style>
 
     <!--
-      The source value is interpolated by the extension and is the URI of the script that
-      is injected into the webview in order to render the extension preview.
+      The resources are resolved and formatted by the extension as webview URIs, then injected when the preview is opened.
     -->
-    <link href="{{ previewStylesheetUri }}" rel="stylesheet" />
     <script>
-      exports = window.acquireVsCodeApi;
+      exports = {};
     </script>
+    <link href="{{ previewStylesheetUri }}" rel="stylesheet" />
     <script src="{{ previewScriptUri }}"></script>
   </head>
   <body>

@@ -30,9 +30,9 @@ export function Editor({ glyphs }: EditorProps) {
             <FontGlyphView
               key={uuid()}
               name={glyph.name}
+              binary={glyph.binary}
               unicode={glyph.unicode}
-              unencoded={glyph.hex}
-              htmlEncoded={glyph.html}
+              hex={glyph.hex}
             />
           ))) || (
           <h1

@@ -1,17 +1,16 @@
 import vscode from "vscode";
 
 export class TTFDocument implements vscode.CustomDocument {
-  constructor(public readonly uri: vscode.Uri, private initialContent: Uint8Array) {}
-  dispose(): void {
-    throw new Error("Method not implemented.");
-  }
+  constructor(public readonly uri: vscode.Uri, private contents: Buffer) {}
 
-  private static async readFile(uri: vscode.Uri): Promise<Uint8Array> {
+  dispose(): void {}
+
+  private static async readFile(uri: vscode.Uri): Promise<Buffer> {
     if (uri.scheme === "untitled") {
-      return new Uint8Array();
+      return Buffer.from([]);
     }
 
-    return vscode.workspace.fs.readFile(uri);
+    return Buffer.from(await vscode.workspace.fs.readFile(uri));
   }
 
   static async create(uri: vscode.Uri) {
@@ -19,7 +18,15 @@ export class TTFDocument implements vscode.CustomDocument {
     return new TTFDocument(uri, fileData);
   }
 
-  public get documentData(): Uint8Array {
-    return this.initialContent;
+  public getFontData() {
+    return Buffer.from(this.contents.buffer);
+  }
+
+  public getFontDataBase64() {
+    return this.contents.toString("base64");
+  }
+
+  public getFontDataWebviewUri() {
+    return `data:font/ttf;base64,${this.getFontDataBase64()}`;
   }
 }

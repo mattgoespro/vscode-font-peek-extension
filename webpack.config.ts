@@ -109,7 +109,10 @@ export default {
       filename: "[name].css",
       chunkFilename: "[name].css"
     }),
-    new ForkTsCheckerWebpackPlugin({ formatter: "basic" }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") },
+      formatter: "basic"
+    }),
     new CleanWebpackPlugin({ verbose: true })
   ]
 } satisfies Configuration;

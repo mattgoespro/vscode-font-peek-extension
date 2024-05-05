@@ -11,9 +11,6 @@ window.onload = () => {
   >);
 
   window.onmessage = (event: MessageEvent<FontGlyphsLoadedMessage>) => {
-    console.log("Received extension message: ", event.data);
-    console.log("---- Data: ", event.data);
-
     createRoot(document.getElementById("root")).render(<Editor glyphs={event.data?.glyphs} />);
   };
 };
