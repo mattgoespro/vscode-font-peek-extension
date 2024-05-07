@@ -1,7 +1,8 @@
-import { Editor } from "./Editor/Editor";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { FontGlyphsLoadedMessage, WebviewReadyMessage } from "../shared/event";
+import { Editor } from "./Editor/Editor";
+import "./preview.css";
 
 window.onload = () => {
   const vscodeApi = window.acquireVsCodeApi();

@@ -1,6 +1,6 @@
 import React from "react";
-import { FontGlyph as FontGlyphView } from "../FontGlyph/FontGlyph";
 import { FontGlyph } from "../../shared/model";
+import { FontGlyph as FontGlyphView } from "../FontGlyph/FontGlyph";
 import { uuid } from "../Shared/UUID";
 import * as styles from "./Editor.module.scss";
 

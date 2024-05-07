@@ -22,11 +22,7 @@
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap"
       rel="stylesheet"
     />
     <link
@@ -39,6 +35,8 @@
       rel="stylesheet"
     />
 
+    <!-- <link rel="stylesheet" href="{{ previewStylesheetUri }}" /> -->
+
     <style>
       @font-face {
         src: url("{{ previewFontDataUri }}");
@@ -46,33 +44,13 @@
         font-size: 30px;
         font-style: normal;
       }
-
-      html,
-      body {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        padding: 0;
-      }
-
-      #root {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        flex: 1;
-        padding: 0;
-        margin: 0 20px;
-      }
     </style>
 
-    <!--
-      The resources are resolved and formatted by the extension as webview URIs, then injected when the preview is opened.
-    -->
+    <!-- The resources are resolved and formatted by the extension as webview URIs, then injected when the preview is opened. -->
     <script>
       exports = {};
     </script>
-    <link href="{{ previewStylesheetUri }}" rel="stylesheet" />
+    <link href="{{ previewWebviewStylesheetUri }}" rel="stylesheet" />
     <script src="{{ previewScriptUri }}"></script>
   </head>
   <body>

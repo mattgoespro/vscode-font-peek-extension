@@ -1,10 +1,9 @@
 import path from "path";
-import { Configuration } from "webpack";
-import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractWebpackPlugin from "mini-css-extract-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
+import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
+import { Configuration } from "webpack";
 
 export default {
   target: "web",
@@ -17,7 +16,7 @@ export default {
       filename: "extension.js"
     },
     preview: {
-      import: "./src/preview/index.tsx",
+      import: "./src/preview/preview.tsx",
       filename: "preview.js"
     }
   },

@@ -11,18 +11,21 @@
 
 .name {
   font-family: "Nunito";
-  font-size: 12px;
-  color: #b3b3b3;
+  font-size: 14px;
+  font-weight: 200;
+  color: #95c6ff;
   margin-bottom: 5px;
+  text-align: center;
 }
 
 .unicode {
   font-family: font-glyph !important;
-  font-size: 16px;
+  font-size: 46px;
   font-style: normal;
   text-align: center;
   color: white;
-  margin-bottom: 5px;
+  text-align: center;
+  margin: 10px;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;
 }
@@ -37,12 +40,9 @@
 }
 
 .code {
-  color: #ff9e4f;
-  // font-family: "Quicksand";
-  font-family: font-glyph !important;
-  font-size: 30px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Quicksand";
+  font-size: 12px;
+  font-weight: 200;
+  color: #b3b3b3;
+  text-align: center;
 }

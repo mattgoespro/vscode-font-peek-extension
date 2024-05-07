@@ -20,13 +20,13 @@
   "eslint.codeActionsOnSave.mode": "all",
   "eslint.enable": true,
   "eslint.format.enable": false,
-  "eslint.probe": ["javascript", "typescript", "typescriptreact"],
+  "eslint.probe": ["javascript", "typescript", "typescriptreact", "html"],
   "eslint.run": "onType",
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "html"],
   "explorer.confirmDragAndDrop": false,
   "files.exclude": {
-    "node_modules": true,
-    ".git": true
+    ".git": true,
+    "node_modules": true
   },
   "html.format.enable": false,
   "javascript.format.enable": false,
@@ -38,10 +38,9 @@
   "material-icon-theme.folders.color": "#eb7734",
   "material-icon-theme.hidesExplorerArrows": true,
   "npm.exclude": "release/**",
-  "prettier.configPath": ".prettierrc.js",
   "search.exclude": {
-    "**/node_modules/**": true,
     "**/dist/**": true,
+    "**/node_modules/**": true,
     ".git": true
   },
   "typescript.format.enable": false,

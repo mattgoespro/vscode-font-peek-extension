@@ -10,16 +10,12 @@ type FontGlyphProps = {
 
 export function FontGlyph({ name, binary, unicode, hex }: FontGlyphProps) {
   return (
-    <div className={styles["fontGlyph"]}>
+    <div className={styles["glyph"]}>
       <div className={styles["name"]}>{name}</div>
       <div className={styles["unicode"]}>{unicode}</div>
       <div className={styles["codes"]}>
-        <i>
-          <span className={styles["code"]}>{binary}</span>
-        </i>
-        <i>
-          <span className={styles["code"]}>{hex}</span>
-        </i>
+        <span className={styles["code"]}>{binary}</span>
+        <span className={styles["code"]}>{hex}</span>
       </div>
     </div>
   );

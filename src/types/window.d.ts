@@ -3,7 +3,7 @@ declare global {
    * The `vscode` namespace provided by the webview host.
    */
   interface VsCodeApi {
-    postMessage(message: any): void;
+    postMessage(message: unknown): void;
   }
 
   /**

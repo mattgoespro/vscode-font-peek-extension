@@ -1,9 +1,9 @@
-import vscode from "vscode";
-import { FontGlyph } from "../shared/model";
-import { Font, create } from "fontkit";
-import { WebviewReadyMessage } from "../shared/event";
 import path from "path";
-import html from "../preview/index.html";
+import { Font, create } from "fontkit";
+import vscode from "vscode";
+import html from "../preview/preview.html";
+import { WebviewReadyMessage } from "../shared/event";
+import { FontGlyph } from "../shared/model";
 import { TTFDocument } from "./document";
 
 export class FontPreviewWebviewProvider
@@ -89,11 +89,14 @@ export class FontPreviewWebviewProvider
       path.join(this.context.extensionPath, "dist", "preview.css")
     );
     const previewScriptUri = previewScriptPath.with({ scheme: "vscode-resource" }).toString();
-    const previewStylesheetUri = previewStylesPath.with({ scheme: "vscode-resource" }).toString();
+
+    const previewWebviewStylesheetUri = previewStylesPath
+      .with({ scheme: "vscode-resource" })
+      .toString();
 
     return this.interpolateKeys(html, {
       previewScriptUri,
-      previewStylesheetUri,
+      previewWebviewStylesheetUri,
       previewFontDataUri: document.getFontDataWebviewUri().toString()
     });
   }
