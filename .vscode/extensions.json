@@ -19,6 +19,8 @@
     "dsznajder.es7-react-js-snippets",
     "meganrogge.template-string-converter",
     "pushqrdx.inline-html",
-    "stxr.iconfont-preview"
+    "stxr.iconfont-preview",
+    "negokaz.live-server-preview",
+    "ms-vscode.live-server"
   ]
 }

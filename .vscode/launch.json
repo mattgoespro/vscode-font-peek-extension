@@ -15,21 +15,6 @@
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
       "outFiles": ["${workspaceFolder}/dist/*.js"],
       "preLaunchTask": "build"
-    },
-    {
-      "name": "Extension: Watch",
-      "type": "extensionHost",
-      "request": "launch",
-      "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-        "webpack://?:*/*": "${workspaceFolder}/*"
-      },
-      "sourceMapRenames": true,
-      "runtimeExecutable": "${execPath}",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "outFiles": ["${workspaceFolder}/dist/*.js"],
-      "preLaunchTask": "watch"
     }
   ]
 }

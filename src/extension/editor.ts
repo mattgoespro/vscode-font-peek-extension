@@ -26,7 +26,7 @@ export class FontPreviewWebviewProvider
     );
   }
 
-  private syncWithWebview() {
+  private waitForWebview() {
     return Promise.race([
       new Promise<void>((resolve) => {
         this.webview.onDidReceiveMessage((event: MessageEvent<WebviewReadyMessage>) => {
@@ -61,6 +61,10 @@ export class FontPreviewWebviewProvider
     webviewPanel: vscode.WebviewPanel,
     _: vscode.CancellationToken
   ): Promise<void> {
+    await this.setWebviewPanel(webviewPanel, document);
+  }
+
+  private async setWebviewPanel(webviewPanel: vscode.WebviewPanel, document: TTFDocument) {
     this.webviewPanel = webviewPanel;
     this.webview.options = {
       enableScripts: true,
@@ -71,13 +75,15 @@ export class FontPreviewWebviewProvider
       ]
     };
 
-    const font = create(document.getFontData()) as Font;
-    let glyphs: FontGlyph[] = this.getFontGlyphs(font);
+    await this.initWebview(document);
+  }
 
+  private async initWebview(document: TTFDocument) {
     this.webview.html = this.getWebviewContent(document);
+    vscode.debug.activeDebugConsole.appendLine("Webview content set.");
+    await this.waitForWebview();
 
-    await this.syncWithWebview();
-
+    let glyphs: FontGlyph[] = this.getDocumentFontGlyphs(document);
     this.webview.postMessage({ glyphs });
   }
 
@@ -94,24 +100,20 @@ export class FontPreviewWebviewProvider
       .with({ scheme: "vscode-resource" })
       .toString();
 
-    return this.interpolateHtmlKeys(html, {
+    return this.replaceHtmlVariables(html, {
       previewScriptUri,
       previewWebviewStylesheetUri,
       previewFontDataUri: document.getFontDataWebviewUri().toString()
     });
   }
 
-  private interpolateHtmlKeys(content: string, data: Record<string, string>): string {
-    let html = content;
-
-    Object.entries(data).forEach(([key, value]) => {
-      html = html.replace(`{{ ${key} }}`, `${value}`);
-    });
-
-    return html;
+  private getDocumentFontGlyphs(document: TTFDocument) {
+    const font = create(document.getFontData()) as Font;
+    let glyphs: FontGlyph[] = this.extractGlyphsFromFont(font);
+    return glyphs;
   }
 
-  private getFontGlyphs(font: Font) {
+  private extractGlyphsFromFont(font: Font) {
     const MAX_GLYPH_STRING_LENGTH = 3;
     const glyphs: FontGlyph[] = [];
 
@@ -141,5 +143,15 @@ export class FontPreviewWebviewProvider
     }
 
     return glyphs;
+  }
+
+  private replaceHtmlVariables(content: string, data: Record<string, string>): string {
+    let html = content;
+
+    Object.entries(data).forEach(([key, value]) => {
+      html = html.replace(`{{ ${key} }}`, `${value}`);
+    });
+
+    return html;
   }
 }

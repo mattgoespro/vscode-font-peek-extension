@@ -4,11 +4,10 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractWebpackPlugin from "mini-css-extract-plugin";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import { Configuration } from "webpack";
+import { BundleAnalyzerPlugin as BundleAnalyzerWebpackPlugin } from "webpack-bundle-analyzer";
 
 export default {
   target: "web",
-  devtool: "inline-source-map",
-  mode: "development",
   stats: "errors-warnings",
   entry: {
     extension: {
@@ -31,10 +30,6 @@ export default {
     fallback: {
       path: require.resolve("path-browserify")
     }
-  },
-  optimization: {
-    minimize: true,
-    runtimeChunk: false
   },
   module: {
     rules: [
@@ -107,10 +102,6 @@ export default {
     new MiniCssExtractWebpackPlugin({
       filename: "[name].css",
       chunkFilename: "[name].css"
-    }),
-    new ForkTsCheckerWebpackPlugin({
-      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") },
-      formatter: "basic"
     }),
     new CleanWebpackPlugin({ verbose: true })
   ]

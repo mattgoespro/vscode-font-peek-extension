@@ -1,9 +1,11 @@
+import { WebviewReadyMessage } from "src/shared/event";
+
 declare global {
   /**
    * The `vscode` namespace provided by the webview host.
    */
   interface VsCodeApi {
-    postMessage(message: unknown): void;
+    postMessage<T extends WebviewReadyMessage>(message: Partial<MessageEvent<T>>): void;
   }
 
   /**
