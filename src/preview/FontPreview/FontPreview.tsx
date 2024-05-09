@@ -1,8 +1,8 @@
 import React from "react";
 import { FontGlyph } from "../../shared/model";
-import { FontGlyph as FontGlyphView } from "../FontGlyph/FontGlyph";
 import { uuid } from "../Shared/UUID";
-import * as styles from "./Editor.module.scss";
+import * as styles from "./FontPreview.module.scss";
+import { GlyphPreview } from "./GlyphPreview/FontGlyph";
 
 type EditorProps = {
   glyphs: FontGlyph[];
@@ -27,7 +27,7 @@ export function Editor({ glyphs }: EditorProps) {
         {(glyphs &&
           glyphs.length > 0 &&
           glyphs.map((glyph) => (
-            <FontGlyphView
+            <GlyphPreview
               key={uuid()}
               name={glyph.name}
               binary={glyph.binary}

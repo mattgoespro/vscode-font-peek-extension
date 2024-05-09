@@ -8,7 +8,7 @@ type FontGlyphProps = {
   hex: string;
 };
 
-export function FontGlyph({ name, binary, unicode, hex }: FontGlyphProps) {
+export function GlyphPreview({ name, binary, unicode, hex }: FontGlyphProps) {
   return (
     <div className={styles["glyph"]}>
       <div className={styles["name"]}>{name}</div>
