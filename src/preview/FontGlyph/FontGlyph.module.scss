@@ -11,8 +11,8 @@
 
 .name {
   font-family: "Nunito";
-  font-size: 14px;
-  font-weight: 200;
+  font-size: 20px;
+  font-weight: 400;
   color: #95c6ff;
   margin-bottom: 5px;
   text-align: center;
@@ -31,12 +31,13 @@
 }
 
 .codes {
-  color: #666666;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
   gap: 10px;
+  width: 100%;
   font-size: 10px;
+  color: #666666;
 }
 
 .code {

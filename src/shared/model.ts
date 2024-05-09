@@ -1,7 +1,7 @@
 export type FontGlyph = {
   id: number;
   name: string;
-  binary: number;
+  binary: string;
   unicode: string;
   hex: string;
 };

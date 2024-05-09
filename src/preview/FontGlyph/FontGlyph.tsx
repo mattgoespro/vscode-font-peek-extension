@@ -3,7 +3,7 @@ import * as styles from "./FontGlyph.module.scss";
 
 type FontGlyphProps = {
   name: string;
-  binary: number;
+  binary: string;
   unicode: string;
   hex: string;
 };

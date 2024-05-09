@@ -94,14 +94,14 @@ export class FontPreviewWebviewProvider
       .with({ scheme: "vscode-resource" })
       .toString();
 
-    return this.interpolateKeys(html, {
+    return this.interpolateHtmlKeys(html, {
       previewScriptUri,
       previewWebviewStylesheetUri,
       previewFontDataUri: document.getFontDataWebviewUri().toString()
     });
   }
 
-  private interpolateKeys(content: string, data: Record<string, string>): string {
+  private interpolateHtmlKeys(content: string, data: Record<string, string>): string {
     let html = content;
 
     Object.entries(data).forEach(([key, value]) => {
@@ -112,20 +112,29 @@ export class FontPreviewWebviewProvider
   }
 
   private getFontGlyphs(font: Font) {
+    const MAX_GLYPH_STRING_LENGTH = 3;
     const glyphs: FontGlyph[] = [];
 
     for (let i = 0; i < font.characterSet.length; i++) {
       const glyph = font.glyphForCodePoint(font.characterSet[i]);
+
       const id = glyph.id;
       const name = glyph.name;
       const binary = glyph.codePoints[0];
-      const hex = binary.toString(16);
+      const hex = `&#x${binary.toString(16)}`;
       const unicode = String.fromCodePoint(binary);
+
+      const glyphString = font.stringsForGlyph(glyph.id);
+
+      if (glyphString.length > MAX_GLYPH_STRING_LENGTH) {
+        console.log("Glyph string too long: ", glyphString);
+        continue;
+      }
 
       glyphs.push({
         id,
         name,
-        binary,
+        binary: `\\u${binary.toString(16)}`,
         unicode,
         hex
       });
