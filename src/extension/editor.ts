@@ -1,10 +1,10 @@
-import path from "path";
-import { Font, create } from "fontkit";
+import { join, dirname } from "path";
 import vscode from "vscode";
 import html from "../preview/preview.html";
 import { WebviewReadyMessage } from "../shared/event";
 import { FontGlyph } from "../shared/model";
 import { TTFDocument } from "./document";
+import { loadFont } from "./font";
 
 export class FontPreviewWebviewProvider
   implements vscode.CustomReadonlyEditorProvider<TTFDocument>
@@ -70,8 +70,8 @@ export class FontPreviewWebviewProvider
       enableScripts: true,
       enableCommandUris: true,
       localResourceRoots: [
-        vscode.Uri.file(path.join(this.context.extensionPath, "dist")),
-        vscode.Uri.file(path.dirname(document.uri.path))
+        vscode.Uri.file(join(this.context.extensionPath, "dist")),
+        vscode.Uri.file(dirname(document.uri.path))
       ]
     };
 
@@ -83,16 +83,16 @@ export class FontPreviewWebviewProvider
     vscode.debug.activeDebugConsole.appendLine("Webview content set.");
     await this.waitForWebview();
 
-    let glyphs: FontGlyph[] = this.getDocumentFontGlyphs(document);
+    let glyphs: FontGlyph[] = loadFont(document.getFontData());
     this.webview.postMessage({ glyphs });
   }
 
   private getWebviewContent(document: TTFDocument): string {
     const previewScriptPath = vscode.Uri.file(
-      path.join(this.context.extensionPath, "dist", "preview.js")
+      join(this.context.extensionPath, "dist", "preview.js")
     );
     const previewStylesPath = vscode.Uri.file(
-      path.join(this.context.extensionPath, "dist", "preview.css")
+      join(this.context.extensionPath, "dist", "preview.css")
     );
     const previewScriptUri = previewScriptPath.with({ scheme: "vscode-resource" }).toString();
 
@@ -105,44 +105,6 @@ export class FontPreviewWebviewProvider
       previewWebviewStylesheetUri,
       previewFontDataUri: document.getFontDataWebviewUri().toString()
     });
-  }
-
-  private getDocumentFontGlyphs(document: TTFDocument) {
-    const font = create(document.getFontData()) as Font;
-    let glyphs: FontGlyph[] = this.extractGlyphsFromFont(font);
-    return glyphs;
-  }
-
-  private extractGlyphsFromFont(font: Font) {
-    const MAX_GLYPH_STRING_LENGTH = 3;
-    const glyphs: FontGlyph[] = [];
-
-    for (let i = 0; i < font.characterSet.length; i++) {
-      const glyph = font.glyphForCodePoint(font.characterSet[i]);
-
-      const id = glyph.id;
-      const name = glyph.name;
-      const binary = glyph.codePoints[0];
-      const hex = `&#x${binary.toString(16)}`;
-      const unicode = String.fromCodePoint(binary);
-
-      const glyphString = font.stringsForGlyph(glyph.id);
-
-      if (glyphString.length > MAX_GLYPH_STRING_LENGTH) {
-        console.log("Glyph string too long: ", glyphString);
-        continue;
-      }
-
-      glyphs.push({
-        id,
-        name,
-        binary: `\\u${binary.toString(16)}`,
-        unicode,
-        hex
-      });
-    }
-
-    return glyphs;
   }
 
   private replaceHtmlVariables(content: string, data: Record<string, string>): string {

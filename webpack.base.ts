@@ -1,6 +1,5 @@
 import path from "path";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractWebpackPlugin from "mini-css-extract-plugin";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import { Configuration } from "webpack";
@@ -34,29 +33,13 @@ export default {
   module: {
     rules: [
       {
-        test: /\.[tj]sx?$/,
+        test: /\.tsx?$/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: [
-                ["@babel/preset-env", { modules: "commonjs" }],
-                "@babel/preset-typescript",
-                [
-                  "@babel/preset-react",
-                  {
-                    runtime: "automatic"
-                  }
-                ]
-              ],
-              plugins: [
-                "@babel/plugin-transform-runtime",
-                "babel-plugin-react-css-modules",
-                "@babel/plugin-transform-class-properties"
-              ],
               cacheDirectory: true,
-              cacheCompression: false,
-              compact: false
+              cacheCompression: true
             }
           }
         ],
@@ -103,6 +86,13 @@ export default {
       filename: "[name].css",
       chunkFilename: "[name].css"
     }),
-    new CleanWebpackPlugin({ verbose: true })
+    new CleanWebpackPlugin({ verbose: true }),
+    new BundleAnalyzerWebpackPlugin({
+      analyzerMode: "static",
+      openAnalyzer: false,
+      reportFilename: "bundle-report.html",
+      defaultSizes: "stat",
+      excludeAssets: [/\.(map|txt|html)$/]
+    })
   ]
 } satisfies Configuration;

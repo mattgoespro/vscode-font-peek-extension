@@ -1,9 +1,9 @@
 {
-  "exclude": ["**/node_modules/**", "eslint.config.js"],
   "include": ["src"],
+  "exclude": ["**/node_modules/**", "eslint.config.js"],
   "compilerOptions": {
     "module": "commonjs",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "baseUrl": ".",
     "lib": ["dom", "es2022"],

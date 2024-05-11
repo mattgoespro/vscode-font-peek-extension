@@ -2,19 +2,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex: 1 1 10%;
+  justify-content: space-evenly;
+  flex: 0 1 5%;
   border: 1px solid #444444;
   border-radius: 8px;
-  padding: 10px;
+  padding: 5px 8px;
 }
 
 .name {
   font-family: "Nunito";
-  font-size: 12x;
+  font-size: 12px;
   font-weight: 400;
   color: #95c6ff;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   text-align: center;
 }
 
@@ -24,8 +24,7 @@
   font-style: normal;
   text-align: center;
   color: white;
-  text-align: center;
-  margin: 10px;
+  margin: 0 0 6px;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;
 }
@@ -36,13 +35,11 @@
   justify-content: space-evenly;
   gap: 10px;
   width: 100%;
-  font-size: 10px;
-  color: #666666;
 }
 
 .code {
   font-family: "Roboto";
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 400;
   color: #b3b3b3;
   text-align: center;

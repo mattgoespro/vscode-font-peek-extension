@@ -1,5 +1,4 @@
-import React from "react";
-import * as styles from "./FontGlyph.module.scss";
+import * as styles from "./GlyphPreview.module.scss";
 
 type FontGlyphProps = {
   name: string;
