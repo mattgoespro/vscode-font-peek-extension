@@ -2,25 +2,49 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 4rem;
+  flex: 1;
   height: 3rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-family: "Roboto";
   font-weight: 400;
   color: #c7c7c7;
   background-color: #0e0e0e;
-  transition: background-color 0.3s;
+  transition-duration: 0.3s;
   cursor: pointer;
-  border: 1px solid;
-  border-color: #0c0c0c;
+  border-top: 1px solid #282828;
+  border-bottom: 1px solid #282828;
+  border-left: none;
+  border-right: none;
+
+  &:first-child {
+    border-left: 1px solid #282828;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  &:last-child {
+    border-right: 1px solid #282828;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
 
   &:hover {
-    background-color: #1b1b1b;
-    border-color: #c7c7c7;
+    color: #bdbdbd;
+    background-color: #4b4b4b;
   }
 
   &.active {
+    color: #ff7c30;
     background-color: #1b1b1b;
+    border-left: 1px solid;
+    border-right: 1px solid;
     border-color: #ff7c30;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: #282828;
+    background-color: #0e0e0e;
+    border-color: #282828;
   }
 }

@@ -1,4 +1,4 @@
-console.log("\nbabel-loader: transpiling with babel.config.js\n");
+console.log("\nbabel-loader: transpiling with babel\n");
 
 /** @type {import('@babel/core').TransformOptions} */
 export default {

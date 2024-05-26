@@ -1,56 +1,56 @@
 import { useEffect, useState } from "react";
-import { styleClasses } from "src/preview/Shared/utils";
 import { FontGlyph } from "../../../shared/model";
+// import { logger } from "../../../shared/output";
+import { styleClasses } from "../../Shared/utils";
+import { PAGINATION_CHUNK_SIZE, getPageChunk } from "./GlyphPagination.model";
 import * as styles from "./GlyphPagination.module.scss";
-
-const PAGE_SIZE = 50;
 
 type GlyphPaginationProps = {
   glyphs: FontGlyph[];
-  pageChange: (glyphs: FontGlyph[]) => void;
+  totalPages: number;
+  searchTerm: string;
+  pageGlyphsChanged: (glyphs: FontGlyph[]) => void;
 };
 
 export function GlyphPagination(props: GlyphPaginationProps) {
-  const { glyphs, pageChange } = props;
   const [currentPage, setCurrentPage] = useState(0);
+  const [numEnabledPages, setNumEnabledPages] = useState<number>(props.totalPages);
 
   useEffect(() => {
-    console.log("Number of glyphs changed to: ", glyphs.length);
-  }, [glyphs]);
+    setCurrentPage(0);
+  }, [props.glyphs]);
 
-  const totalPages = Math.ceil(glyphs.length / PAGE_SIZE);
+  useEffect(() => {
+    //logger.log("GlyphPagination: glyphs ", props.glyphs);
+    props.pageGlyphsChanged(props.glyphs.filter((glyph) => glyph.name.includes(props.searchTerm)));
+    setNumEnabledPages(Math.ceil(props.glyphs.length / PAGINATION_CHUNK_SIZE));
+  }, [props.searchTerm]);
 
-  function handlePageChange(pageIndex: number) {
-    setCurrentPage(pageIndex);
-    pageChange(
-      glyphs.slice(
-        pageIndex * PAGE_SIZE,
-        Math.min(Math.max(0, pageIndex * PAGE_SIZE + PAGE_SIZE), glyphs.length)
-      )
-    );
+  function handlePageChange(page: number) {
+    const chunkStartIndex = page * PAGINATION_CHUNK_SIZE;
+    const chunk = getPageChunk(props.glyphs, chunkStartIndex, PAGINATION_CHUNK_SIZE);
+    props.pageGlyphsChanged(chunk);
+    setCurrentPage(page);
   }
 
   function glyphRangeText(pageIndex: number) {
-    const start = pageIndex * PAGE_SIZE + 1;
-    const end = Math.min(start + PAGE_SIZE - 1, glyphs.length);
+    const start = pageIndex * PAGINATION_CHUNK_SIZE + 1;
+    const end = Math.min(start + PAGINATION_CHUNK_SIZE - 1, props.glyphs.length);
 
     return `${start} - ${end}`;
   }
-  return (
-    <>
-      {Array.from({ length: totalPages }, (_, i) => (
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={styleClasses(
-            styles,
-            "pagination-button",
-            currentPage === i ? "active" : undefined
-          )}
-        >
-          {glyphRangeText(i)}
-        </button>
-      ))}
-    </>
-  );
+
+  return Array.from({ length: props.totalPages }, (_, i) => (
+    <button
+      key={i}
+      onClick={() => handlePageChange(i)}
+      className={styleClasses(
+        styles,
+        "pagination-button",
+        ...[i >= numEnabledPages ? "disabled" : undefined, currentPage === i ? "active" : undefined]
+      )}
+    >
+      {glyphRangeText(i)}
+    </button>
+  ));
 }

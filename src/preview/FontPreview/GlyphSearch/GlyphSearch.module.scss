@@ -16,4 +16,8 @@
     outline: none;
     border-color: #ff7c30;
   }
+
+  &::-webkit-search-cancel-button {
+    color: #b3b3b3;
+  }
 }

@@ -4,11 +4,27 @@
     {
       "type": "npm",
       "script": "build:dev",
-      "label": "build",
+      "label": "build:dev",
       "isBackground": false,
       "presentation": {
         "reveal": "always",
         "panel": "shared"
+      },
+      "problemMatcher": "$ts-checker-webpack",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "build:prod",
+      "label": "build:prod",
+      "isBackground": false,
+      "presentation": {
+        "reveal": "silent",
+        "revealProblems": "onProblem",
+        "group": "build"
       },
       "problemMatcher": "$ts-checker-webpack",
       "group": {

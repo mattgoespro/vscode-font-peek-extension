@@ -1,8 +1,8 @@
 import vscode from "vscode";
-import { FontPreviewWebviewProvider } from "./extension/editor";
+import { FontPreviewDocumentProvider } from "./extension/editor";
 
 export function activate(context: vscode.ExtensionContext) {
-  context.subscriptions.push(FontPreviewWebviewProvider.register(context));
+  context.subscriptions.push(FontPreviewDocumentProvider.register(context));
 }
 
 export function deactivate() {}

@@ -23,6 +23,8 @@
     "ms-vscode.live-server",
     "cipchk.cssrem",
     "mrmlnc.vscode-scss",
-    "sibiraj-s.vscode-scss-formatter"
+    "sibiraj-s.vscode-scss-formatter",
+    "amodio.tsl-problem-matcher",
+    "ctcuff.font-preview"
   ]
 }

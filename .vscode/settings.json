@@ -38,9 +38,11 @@
   "material-icon-theme.folders.color": "#eb7734",
   "material-icon-theme.hidesExplorerArrows": true,
   "npm.exclude": "release/**",
+  "typescript.preferences.importModuleSpecifier": "relative",
   "search.exclude": {
     "**/dist/**": true,
     "**/node_modules/**": true,
+    "**/bundle-analyzer/**": true,
     ".git": true
   },
   "typescript.format.enable": false,

@@ -1,17 +1,17 @@
 const js = require("@eslint/js");
 const htmlPlugin = require("@html-eslint/eslint-plugin");
 const htmlParser = require("@html-eslint/parser");
-const ts = require("@typescript-eslint/eslint-plugin");
-const tsParser = require("@typescript-eslint/parser");
+const ts = require("typescript-eslint");
 const prettierPlugin = require("eslint-config-prettier");
 const importPlugin = require("eslint-plugin-import");
+const reactPlugin = require("eslint-plugin-react");
 
 /** @type { import("eslint").Linter.FlatConfig[]} */
 module.exports = [
   {
     files: ["src/**/*.ts", "src/**/*.tsx"],
     languageOptions: {
-      parser: tsParser,
+      parser: ts.parser,
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module"
@@ -19,7 +19,8 @@ module.exports = [
     },
     plugins: {
       eslint: js,
-      "@typescript-eslint": ts,
+      "typescript-eslint": ts,
+      react: reactPlugin,
       import: importPlugin,
       prettier: prettierPlugin
     },
@@ -58,6 +59,9 @@ module.exports = [
     },
     ignores: ["node_modules", "dist"]
   },
+  ...ts.configs.eslintRecommended,
+  ...ts.configs.recommended,
+  ...reactPlugin.configs.all,
   {
     ...htmlPlugin.configs["flat/recommended"],
     files: ["*.html"],

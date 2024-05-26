@@ -1,21 +1,18 @@
 import * as styles from "./GlyphSearch.module.scss";
 
 type GlyphSearchProps = {
-  onSearch: (search: string) => void;
+  onValueChange: (search: string) => void;
 };
 
-export function GlyphSearch({ onSearch }: GlyphSearchProps) {
+export function GlyphSearch(props: GlyphSearchProps) {
   return (
     <input
       type="search"
       placeholder="Search for a glyph..."
       defaultValue=""
       className={styles["search-input"]}
-      onKeyUp={(event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          onSearch((event.target as HTMLInputElement).value);
-        }
+      onChange={(event) => {
+        props.onValueChange((event.target as HTMLInputElement).value);
       }}
     />
   );

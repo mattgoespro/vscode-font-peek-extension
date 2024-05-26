@@ -1,6 +1,6 @@
 import vscode from "vscode";
 
-export class TTFDocument implements vscode.CustomDocument {
+export class FontDocument implements vscode.CustomDocument {
   constructor(public readonly uri: vscode.Uri, private contents: Buffer) {}
 
   dispose(): void {}
@@ -14,8 +14,8 @@ export class TTFDocument implements vscode.CustomDocument {
   }
 
   static async create(uri: vscode.Uri) {
-    const fileData = await TTFDocument.readFile(uri);
-    return new TTFDocument(uri, fileData);
+    const fileData = await FontDocument.readFile(uri);
+    return new FontDocument(uri, fileData);
   }
 
   public getFontData() {

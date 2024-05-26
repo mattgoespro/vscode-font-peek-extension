@@ -27,7 +27,6 @@ export function extractFontGlyphs(font: Font) {
     const glyphString = font.stringsForGlyph(glyph.id);
 
     if (glyphString.length > MAX_GLYPH_STRING_LENGTH) {
-      console.log("Glyph string too long: ", glyphString);
       continue;
     }
 
