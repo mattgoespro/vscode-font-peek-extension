@@ -14,7 +14,7 @@ export default {
       filename: "extension.js"
     },
     preview: {
-      import: "./src/preview/preview.tsx",
+      import: "./src/preview/Preview.tsx",
       filename: "preview.js"
     }
   },
@@ -71,7 +71,6 @@ export default {
             loader: "css-loader",
             options: { modules: true }
           },
-          ,
           "postcss-loader"
         ],
         exclude: /node_modules/

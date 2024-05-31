@@ -1,11 +1,13 @@
-import { WebviewReadyMessage } from "src/shared/event";
-
+import * as events from "../shared/events/messages";
+console.log(events);
 declare global {
+  type ExtensionEvent = events[keyof events];
+
   /**
    * The `vscode` namespace provided by the webview host.
    */
-  interface VsCodeApi {
-    postMessage<T extends WebviewReadyMessage>(message: Partial<MessageEvent<T>>): void;
+  export interface VsCodeApi {
+    postMessage<T extends ExtensionEvent>(message: Partial<MessageEvent<T>>): void;
   }
 
   /**

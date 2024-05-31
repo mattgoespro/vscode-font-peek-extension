@@ -1,9 +1,9 @@
 import vscode from "vscode";
 
 export class FontDocument implements vscode.CustomDocument {
-  constructor(public readonly uri: vscode.Uri, private contents: Buffer) {}
+  private static disposables: vscode.Disposable[] = [];
 
-  dispose(): void {}
+  constructor(public readonly uri: vscode.Uri, private contents: Buffer) {}
 
   private static async readFile(uri: vscode.Uri): Promise<Buffer> {
     if (uri.scheme === "untitled") {
@@ -15,7 +15,15 @@ export class FontDocument implements vscode.CustomDocument {
 
   static async create(uri: vscode.Uri) {
     const fileData = await FontDocument.readFile(uri);
-    return new FontDocument(uri, fileData);
+    const document = new FontDocument(uri, fileData);
+    this.disposables.push(document);
+
+    return document;
+  }
+
+  static dispose() {
+    this.disposables.forEach((disposable) => disposable.dispose());
+    this.disposables = [];
   }
 
   public getFontData() {
@@ -28,5 +36,9 @@ export class FontDocument implements vscode.CustomDocument {
 
   public getFontDataWebviewUri() {
     return `data:font/ttf;base64,${this.getFontDataBase64()}`;
+  }
+
+  public dispose(): void {
+    // no-op
   }
 }

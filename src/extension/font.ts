@@ -3,8 +3,7 @@ import { FontGlyph } from "../shared/model";
 
 export function loadFont(buffer: Buffer) {
   const font = loadFontData(buffer);
-  let glyphs: FontGlyph[] = extractFontGlyphs(font);
-  return glyphs;
+  return extractFontGlyphs(font);
 }
 
 function loadFontData(buffer: Buffer) {

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { FontGlyph } from "../../shared/model";
-import { genUuid } from "../Shared/utils";
+import { useOutput } from "../Shared/Hooks/Logger";
+import { genUuid } from "../Shared/Utils";
 import * as styles from "./FontPreview.module.scss";
 import { GlyphPagination } from "./GlyphPagination/GlyphPagination";
 import { getTotalPages } from "./GlyphPagination/GlyphPagination.model";
 import { GlyphPreview } from "./GlyphPreview/GlyphPreview";
 import { GlyphSearch } from "./GlyphSearch/GlyphSearch";
-import { logger } from "../../shared/output";
 
 type FontPreviewProps = {
   glyphs: FontGlyph[];
@@ -15,14 +15,15 @@ type FontPreviewProps = {
 export function FontPreview(props: FontPreviewProps) {
   const [pageGlyphs, setPageGlyphs] = useState<FontGlyph[]>(props.glyphs);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [output] = useOutput("FontPreview");
 
   function onPageGlyphsChanged(pageGlyphs: FontGlyph[]) {
-    //logger.log("setting page glyphs", pageGlyphs);
+    output("setting page glyphs", pageGlyphs);
     setPageGlyphs(pageGlyphs);
   }
 
   function onGlyphSearch(name: string) {
-    //logger.log("searching for", name);
+    output("searching for", name);
     setSearchTerm(name);
   }
 

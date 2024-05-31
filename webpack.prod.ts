@@ -9,4 +9,4 @@ export default merge<Configuration>(baseConfig, {
     minimize: true
   },
   plugins: []
-} satisfies Configuration);
+});

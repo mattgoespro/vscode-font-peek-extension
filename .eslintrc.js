@@ -21,10 +21,17 @@ module.exports = {
       version: "detect"
     },
     "import/resolver": {
-      "webpack": {
-        "config": "webpack.base.ts"
+      node: {
+        extensions: [".ts", ".tsx", ".js", ".html"]
+      },
+      typescript: {
+        alwaysTryTypes: true,
+        project: "./tsconfig.json"
+      },
+      webpack: {
+        config: "./webpack.base.ts"
       }
-    }
+    },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts"]
     },
@@ -52,5 +59,5 @@ module.exports = {
       }
     ]
   },
-  ignorePatterns: ["*eslint*", "node_modules/**/*", "dist/**/*"]
+  ignorePatterns: ["*eslint*", "node_modules/**/*", "dist/**/*", "*.html"]
 };

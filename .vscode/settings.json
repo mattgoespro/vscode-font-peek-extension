@@ -17,7 +17,7 @@
     "source.fixAll.scss": "always"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.codeActionsOnSave.mode": "all",
+  "eslint.codeActionsOnSave.mode": "problems",
   "eslint.enable": true,
   "eslint.format.enable": false,
   "eslint.probe": ["javascript", "typescript", "typescriptreact", "html"],

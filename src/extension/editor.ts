@@ -1,11 +1,11 @@
-import { join, dirname } from "path";
-import vscode from "vscode";
-import html from "../preview/preview.html";
-import { WebviewReadyMessage } from "../shared/event";
+import { dirname, join } from "path";
+import vscode, { OutputChannel } from "vscode";
+import html from "../preview/Preview.html";
+import { WebviewStateMessage } from "../shared/events/messages";
 import { FontGlyph } from "../shared/model";
+import { output } from "../shared/output";
 import { FontDocument } from "./document";
 import { loadFont } from "./font";
-import { logger } from "../shared/output";
 
 export class FontPreviewDocumentProvider
   implements vscode.CustomReadonlyEditorProvider<FontDocument>
@@ -13,8 +13,12 @@ export class FontPreviewDocumentProvider
   private webviewPanel: vscode.WebviewPanel;
   private webviewScriptUri: vscode.Uri;
   private webviewStylesheetUri: vscode.Uri;
+  private disposables: vscode.Disposable[] = [];
 
-  constructor(private readonly context: vscode.ExtensionContext) {
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private outputChannel: vscode.OutputChannel
+  ) {
     this.webviewScriptUri = vscode.Uri.file(
       join(this.context.extensionPath, "dist", "preview.js")
     ).with({ scheme: "vscode-resource" });
@@ -27,10 +31,13 @@ export class FontPreviewDocumentProvider
    * Registers the font preview custom editor provider.
    * @param context The extension context.
    */
-  static register(context: vscode.ExtensionContext): vscode.Disposable {
+  static register(
+    context: vscode.ExtensionContext,
+    outputChannel: OutputChannel
+  ): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       "fontGlyphPreview.editor.preview",
-      new FontPreviewDocumentProvider(context),
+      new FontPreviewDocumentProvider(context, outputChannel),
       {
         supportsMultipleEditorsPerDocument: true,
         webviewOptions: {
@@ -58,7 +65,6 @@ export class FontPreviewDocumentProvider
       document.dispose();
       webviewPanel.dispose();
 
-      //logger.log(error);
       vscode.window.showErrorMessage("Failed to create custom editor.", error);
     }
   }
@@ -66,14 +72,22 @@ export class FontPreviewDocumentProvider
   private onWebviewReady() {
     return Promise.race([
       new Promise<void>((resolve) => {
-        this.webview.onDidReceiveMessage((event: MessageEvent<WebviewReadyMessage>) => {
+        this.webview.onDidReceiveMessage((event: MessageEvent<WebviewStateMessage>) => {
           if (event.data.state === "ready") {
             resolve();
           }
-        });
+        }, this.disposables);
       }),
-      new Promise<void>((resolve) => setTimeout(resolve, 30 * 1000))
+      new Promise<void>((resolve) => setTimeout(resolve, 30000))
     ]);
+  }
+
+  private listenForWebviewMessages() {
+    this.webview.onDidReceiveMessage((event: MessageEvent) => {
+      if (event.data.type === "log") {
+        output(this.outputChannel, "webview", event.data.args);
+      }
+    }, this.disposables);
   }
 
   /**
@@ -100,6 +114,7 @@ export class FontPreviewDocumentProvider
   private async createCustomEditor(webviewPanel: vscode.WebviewPanel, document: FontDocument) {
     await this.setWebviewPanel(webviewPanel, document);
     await this.createWebview(document);
+    this.listenForWebviewMessages();
   }
 
   /**
@@ -133,7 +148,7 @@ export class FontPreviewDocumentProvider
      */
     await this.onWebviewReady();
 
-    let glyphs: FontGlyph[] = loadFont(document.getFontData());
+    const glyphs: FontGlyph[] = loadFont(document.getFontData());
     this.webview.postMessage({ glyphs });
   }
 
@@ -158,7 +173,12 @@ export class FontPreviewDocumentProvider
   private get webview(): vscode.Webview {
     if (this.webviewPanel == null) {
       vscode.window.showErrorMessage("Webview panel not initialized.");
-      //logger.log(new Error("Webview panel not initialized."));
+      output(
+        this.outputChannel,
+        "extension",
+        module.id,
+        new Error("Webview panel not initialized.")
+      );
     }
 
     return this.webviewPanel.webview;

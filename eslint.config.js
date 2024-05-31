@@ -1,9 +1,13 @@
+/**
+ * Restore eslint 9.x using flat config once typescript-eslint is updated.
+ */
 const js = require("@eslint/js");
 const htmlPlugin = require("@html-eslint/eslint-plugin");
 const htmlParser = require("@html-eslint/parser");
 const ts = require("typescript-eslint");
 const prettierPlugin = require("eslint-config-prettier");
 const importPlugin = require("eslint-plugin-import");
+const importWebpackPlugin = require("eslint-import-resolver-webpack");
 const reactPlugin = require("eslint-plugin-react");
 
 /** @type { import("eslint").Linter.FlatConfig[]} */
@@ -27,14 +31,22 @@ module.exports = [
     ignores: ["node_modules/**/*", "dist/**/*"],
     settings: {
       "import/parsers": {
-        "@typescript-eslint/parser": [".ts"]
+        "@typescript-eslint/parser": [".ts", ".tsx"]
       },
-      "import/extensions": [".js", ".ts", ".tsx", ".html"],
-      "import/order": ["error"],
-      typescript: {
-        alwaysTryTypes: true,
-        project: ["./tsconfig.json"]
-      }
+      "import/resolver": {
+        node: {
+          extensions: [".ts", ".tsx", ".js", ".html"]
+        },
+        typescript: {
+          alwaysTryTypes: true,
+          project: "./tsconfig.json"
+        },
+        webpack: {
+          config: "./webpack.base.ts"
+        }
+      },
+      "import/extensions": [".ts", ".tsx", ".js", ".html"],
+      "import/order": ["error"]
     },
     rules: {
       ...ts.configs["eslint-recommended"].rules,

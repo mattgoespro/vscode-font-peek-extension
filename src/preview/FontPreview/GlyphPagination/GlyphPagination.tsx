@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontGlyph } from "../../../shared/model";
-// import { logger } from "../../../shared/output";
-import { styleClasses } from "../../Shared/utils";
+import { useOutput } from "../../Shared/Hooks/Logger";
+import { styleClasses } from "../../Shared/Utils";
 import { PAGINATION_CHUNK_SIZE, getPageChunk } from "./GlyphPagination.model";
 import * as styles from "./GlyphPagination.module.scss";
 
@@ -15,13 +15,14 @@ type GlyphPaginationProps = {
 export function GlyphPagination(props: GlyphPaginationProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [numEnabledPages, setNumEnabledPages] = useState<number>(props.totalPages);
+  const [output] = useOutput("GlyphPagination");
 
   useEffect(() => {
     setCurrentPage(0);
   }, [props.glyphs]);
 
   useEffect(() => {
-    //logger.log("GlyphPagination: glyphs ", props.glyphs);
+    output("GlyphPagination: glyphs ", props.glyphs);
     props.pageGlyphsChanged(props.glyphs.filter((glyph) => glyph.name.includes(props.searchTerm)));
     setNumEnabledPages(Math.ceil(props.glyphs.length / PAGINATION_CHUNK_SIZE));
   }, [props.searchTerm]);
