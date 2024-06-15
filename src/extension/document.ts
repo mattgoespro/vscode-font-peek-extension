@@ -2,20 +2,20 @@ import vscode from "vscode";
 
 export class FontDocument implements vscode.CustomDocument {
   private static disposables: vscode.Disposable[] = [];
+  private contents: Buffer;
+  constructor(public readonly uri: vscode.Uri) {}
 
-  constructor(public readonly uri: vscode.Uri, private contents: Buffer) {}
-
-  private static async readFile(uri: vscode.Uri): Promise<Buffer> {
+  protected async readFile(uri: vscode.Uri): Promise<Buffer> {
     if (uri.scheme === "untitled") {
       return Buffer.from([]);
     }
 
-    return Buffer.from(await vscode.workspace.fs.readFile(uri));
+    this.contents = Buffer.from(await vscode.workspace.fs.readFile(uri));
   }
 
   static async create(uri: vscode.Uri) {
-    const fileData = await FontDocument.readFile(uri);
-    const document = new FontDocument(uri, fileData);
+    const document = new FontDocument(uri);
+    await document.readFile(uri);
     this.disposables.push(document);
 
     return document;

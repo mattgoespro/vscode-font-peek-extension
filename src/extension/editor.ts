@@ -1,7 +1,8 @@
 import { dirname, join } from "path";
+import { Subject, Subscription } from "rxjs";
 import vscode, { OutputChannel } from "vscode";
 import html from "../preview/Preview.html";
-import { WebviewStateMessage } from "../shared/events/messages";
+import { LogMessage, WebviewStateMessage } from "../shared/events/messages";
 import { FontGlyph } from "../shared/model";
 import { output } from "../shared/output";
 import { FontDocument } from "./document";
@@ -14,6 +15,8 @@ export class FontPreviewDocumentProvider
   private webviewScriptUri: vscode.Uri;
   private webviewStylesheetUri: vscode.Uri;
   private disposables: vscode.Disposable[] = [];
+  private previewReady$: Subject<boolean> = new Subject();
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -48,6 +51,14 @@ export class FontPreviewDocumentProvider
   }
 
   /**
+   * Disposes of the font preview document provider.
+   */
+  dispose() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.disposables.forEach((disposable) => disposable.dispose());
+  }
+
+  /**
    * Resolves the font preview webview for the given font file.
    *
    * @param document - The document holding the font data to be resolved.
@@ -69,27 +80,6 @@ export class FontPreviewDocumentProvider
     }
   }
 
-  private onWebviewReady() {
-    return Promise.race([
-      new Promise<void>((resolve) => {
-        this.webview.onDidReceiveMessage((event: MessageEvent<WebviewStateMessage>) => {
-          if (event.data.state === "ready") {
-            resolve();
-          }
-        }, this.disposables);
-      }),
-      new Promise<void>((resolve) => setTimeout(resolve, 30000))
-    ]);
-  }
-
-  private listenForWebviewMessages() {
-    this.webview.onDidReceiveMessage((event: MessageEvent) => {
-      if (event.data.type === "log") {
-        output(this.outputChannel, "webview", event.data.args);
-      }
-    }, this.disposables);
-  }
-
   /**
    * Creates a new FontDocument from the given font file URI.
    *
@@ -98,12 +88,19 @@ export class FontPreviewDocumentProvider
    * @param _token - The cancellation token.
    * @returns The opened FontDocument or a promise that resolves to the opened FontDocument.
    */
-  openCustomDocument(
+  async openCustomDocument(
     uri: vscode.Uri,
     _openContext: vscode.CustomDocumentOpenContext,
     _token: vscode.CancellationToken
-  ): FontDocument | Thenable<FontDocument> {
-    return FontDocument.create(uri);
+  ): Promise<FontDocument> {
+    const document = await FontDocument.create(uri);
+
+    _token.onCancellationRequested(() => {
+      document.dispose();
+      vscode.window.showInformationMessage("Cancelled preview.");
+    });
+
+    return document;
   }
 
   /**
@@ -114,7 +111,7 @@ export class FontPreviewDocumentProvider
   private async createCustomEditor(webviewPanel: vscode.WebviewPanel, document: FontDocument) {
     await this.setWebviewPanel(webviewPanel, document);
     await this.createWebview(document);
-    this.listenForWebviewMessages();
+    this.addWebviewEventListeners();
   }
 
   /**
@@ -144,12 +141,27 @@ export class FontPreviewDocumentProvider
     vscode.debug.activeDebugConsole.appendLine("Set webview content.");
 
     /**
-     * Wait for the webview to load before sending the font data.
+     * Wait for webview ready state before sending font data.
      */
-    await this.onWebviewReady();
+    this.subscriptions.push(
+      this.previewReady$.subscribe(async () => {
+        const glyphs: FontGlyph[] = loadFont(document.getFontData());
+        this.webview.postMessage({ glyphs });
+      })
+    );
+  }
 
-    const glyphs: FontGlyph[] = loadFont(document.getFontData());
-    this.webview.postMessage({ glyphs });
+  private addWebviewEventListeners() {
+    this.webview.onDidReceiveMessage((event: MessageEvent<WebviewStateMessage>) => {
+      if (event.data.state === "ready") {
+        this.previewReady$.next(true);
+      }
+    }, this.disposables);
+    this.webview.onDidReceiveMessage((event: MessageEvent<LogMessage>) => {
+      if (event.data.type === "log") {
+        output(this.outputChannel, "webview", event.data.moduleContext, event.data.args);
+      }
+    }, this.disposables);
   }
 
   private formatFontDocument(document: FontDocument): string {

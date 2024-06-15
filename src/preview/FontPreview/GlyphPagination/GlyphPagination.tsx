@@ -22,7 +22,7 @@ export function GlyphPagination(props: GlyphPaginationProps) {
   }, [props.glyphs]);
 
   useEffect(() => {
-    output("GlyphPagination: glyphs ", props.glyphs);
+    output("glyphs ", props.glyphs);
     props.pageGlyphsChanged(props.glyphs.filter((glyph) => glyph.name.includes(props.searchTerm)));
     setNumEnabledPages(Math.ceil(props.glyphs.length / PAGINATION_CHUNK_SIZE));
   }, [props.searchTerm]);
