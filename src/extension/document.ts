@@ -3,14 +3,16 @@ import vscode from "vscode";
 export class FontDocument implements vscode.CustomDocument {
   private static disposables: vscode.Disposable[] = [];
   private contents: Buffer;
+
   constructor(public readonly uri: vscode.Uri) {}
 
-  protected async readFile(uri: vscode.Uri): Promise<Buffer> {
+  protected async readFile(uri: vscode.Uri) {
     if (uri.scheme === "untitled") {
-      return Buffer.from([]);
+      this.contents = Buffer.from([]);
     }
 
-    this.contents = Buffer.from(await vscode.workspace.fs.readFile(uri));
+    const fontData = await vscode.workspace.fs.readFile(uri);
+    this.contents = Buffer.from(fontData);
   }
 
   static async create(uri: vscode.Uri) {
@@ -23,11 +25,10 @@ export class FontDocument implements vscode.CustomDocument {
 
   static dispose() {
     this.disposables.forEach((disposable) => disposable.dispose());
-    this.disposables = [];
   }
 
   public getFontData() {
-    return Buffer.from(this.contents.buffer);
+    return this.contents;
   }
 
   public getFontDataBase64() {
