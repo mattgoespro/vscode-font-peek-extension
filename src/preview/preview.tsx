@@ -1,8 +1,8 @@
 import { Root, createRoot } from "react-dom/client";
 import { FontGlyphsLoadedMessage, WebviewStateMessage } from "../shared/events/messages";
-import { FontPreview } from "./FontPreview/FontPreview";
+import { FontPreview } from "./font-preview/font-preview";
 import "./Preview.css";
-import { ExtensionWebviewContext } from "./Shared/ExtensionWebviewContext";
+import { ExtensionWebviewContext } from "./shared/extension-webview-context";
 
 let root: Root = null;
 

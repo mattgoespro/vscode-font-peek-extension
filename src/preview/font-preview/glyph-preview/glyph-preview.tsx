@@ -1,4 +1,4 @@
-import * as styles from "./GlyphPreview.module.scss";
+import * as styles from "./glyph-preview.module.scss";
 
 type FontGlyphProps = {
   name: string;

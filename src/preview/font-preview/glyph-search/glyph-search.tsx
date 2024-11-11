@@ -1,4 +1,4 @@
-import * as styles from "./GlyphSearch.module.scss";
+import * as styles from "./glyph-search.module.scss";
 
 type GlyphSearchProps = {
   onValueChange: (search: string) => void;

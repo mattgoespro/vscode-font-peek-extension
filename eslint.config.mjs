@@ -1,5 +1,7 @@
 import tseslint from "typescript-eslint";
 import eslint from "@eslint/js";
+import react from "eslint-plugin-react";
+import html from "@html-eslint/eslint-plugin";
 
 export default tseslint.config(
   {
@@ -18,5 +20,28 @@ export default tseslint.config(
         }
       ]
     }
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
+    ...react.configs.flat.recommended,
+    languageOptions: {
+      ...react.configs.flat.recommended.languageOptions
+    },
+    settings: {
+      react: {
+        version: "detect"
+      },
+      ecmaFeatures: {
+        jsx: true
+      }
+    },
+    rules: {
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off"
+    }
+  },
+  {
+    files: ["*.html"],
+    ...html.configs["flat/recommended"]
   }
 );

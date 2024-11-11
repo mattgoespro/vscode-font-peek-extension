@@ -12,12 +12,10 @@
   "css.format.enable": false,
   "css.validate": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
     "source.fixAll.eslint": "always",
     "source.fixAll.scss": "always"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.codeActionsOnSave.mode": "problems",
   "eslint.enable": true,
   "eslint.format.enable": false,
   "eslint.probe": ["javascript", "typescript", "typescriptreact", "html"],

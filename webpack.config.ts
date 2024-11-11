@@ -3,10 +3,12 @@ import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import MiniCssExtractWebpackPlugin from "mini-css-extract-plugin";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import { Configuration } from "webpack";
-import { BundleAnalyzerPlugin as BundleAnalyzerWebpackPlugin } from "webpack-bundle-analyzer";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import TerserWebpackPlugin from "terser-webpack-plugin";
 
 export default {
   target: "web",
+  devtool: "source-map",
   stats: "errors-warnings",
   entry: {
     extension: {
@@ -77,21 +79,31 @@ export default {
       }
     ]
   },
-  externals: {
-    vscode: "commonjs vscode"
-  },
   plugins: [
     new MiniCssExtractWebpackPlugin({
       filename: "[name].css",
       chunkFilename: "[name].css"
     }),
     new CleanWebpackPlugin({ verbose: true }),
-    new BundleAnalyzerWebpackPlugin({
-      analyzerMode: "static",
-      openAnalyzer: false,
-      reportFilename: "bundle-report.html",
-      defaultSizes: "stat",
-      excludeAssets: [/\.(map|txt|html)$/]
+    new ForkTsCheckerWebpackPlugin({
+      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") },
+      formatter: "basic"
     })
-  ]
+  ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserWebpackPlugin({
+        extractComments: false,
+        terserOptions: {
+          format: {
+            comments: false
+          }
+        }
+      })
+    ]
+  },
+  externals: {
+    vscode: "commonjs vscode"
+  }
 } satisfies Configuration;

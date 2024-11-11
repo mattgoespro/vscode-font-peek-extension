@@ -14,7 +14,8 @@
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
       "outFiles": ["${workspaceFolder}/dist/*.js"],
-      "preLaunchTask": "build:dev"
+      "runtimeSourcemapPausePatterns": ["webpack:///./~/*", "webpack://?:*/*"],
+      "preLaunchTask": "build"
     }
   ]
 }

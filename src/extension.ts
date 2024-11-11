@@ -1,5 +1,5 @@
 import vscode from "vscode";
-import { output } from "@/shared/output";
+import { output } from "@shared/output";
 import { FontPreviewDocumentProvider } from "./extension/editor";
 
 export function activate(context: vscode.ExtensionContext) {

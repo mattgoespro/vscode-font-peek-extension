@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { LogMessage } from "../../../shared/events/messages";
-import { ExtensionWebviewContext } from "../ExtensionWebviewContext";
-import * as logContexts from "./LogContexts";
+import { ExtensionWebviewContext } from "../extension-webview-context";
 
-export const useOutput = (moduleContext: keyof typeof logContexts) => {
+export const useOutput = (moduleContext: string) => {
   const vsCodeContext = useContext(ExtensionWebviewContext);
 
   return [

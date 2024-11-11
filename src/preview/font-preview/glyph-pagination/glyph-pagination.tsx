@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { FontGlyph } from "../../../shared/model";
-import { useOutput } from "../../Shared/Hooks/Logger";
-import { styleClasses } from "../../Shared/Utils";
-import { PAGINATION_CHUNK_SIZE, getPageChunk } from "./GlyphPagination.model";
-import * as styles from "./GlyphPagination.module.scss";
+import { useOutput } from "../../shared/hooks/use-output";
+import { PAGINATION_CHUNK_SIZE, getPageChunk, getTotalPages } from "./glyph-pagination.model";
+import * as styles from "./glyph-pagination.module.scss";
+import { styleClasses } from "../../shared/utils";
 
 type GlyphPaginationProps = {
   glyphs: FontGlyph[];
-  totalPages: number;
-  searchTerm: string;
   pageGlyphsChanged: (glyphs: FontGlyph[]) => void;
 };
 
 export function GlyphPagination(props: GlyphPaginationProps) {
+  const totalPages = getTotalPages(props.glyphs.length);
+
   const [currentPage, setCurrentPage] = useState(0);
-  const [numEnabledPages, setNumEnabledPages] = useState<number>(props.totalPages);
+  const [numEnabledPages, setNumEnabledPages] = useState<number>(totalPages);
   const [output] = useOutput("GlyphPagination");
 
   useEffect(() => {
@@ -23,9 +23,8 @@ export function GlyphPagination(props: GlyphPaginationProps) {
 
   useEffect(() => {
     output("glyphs ", props.glyphs);
-    props.pageGlyphsChanged(props.glyphs.filter((glyph) => glyph.name.includes(props.searchTerm)));
     setNumEnabledPages(Math.ceil(props.glyphs.length / PAGINATION_CHUNK_SIZE));
-  }, [props.searchTerm]);
+  }, [currentPage]);
 
   function handlePageChange(page: number) {
     const chunkStartIndex = page * PAGINATION_CHUNK_SIZE;
@@ -41,7 +40,7 @@ export function GlyphPagination(props: GlyphPaginationProps) {
     return `${start} - ${end}`;
   }
 
-  return Array.from({ length: props.totalPages }, (_, i) => (
+  return Array.from({ length: totalPages }, (_, i) => (
     <button
       key={i}
       onClick={() => handlePageChange(i)}

@@ -1,5 +1,5 @@
 import { FontGlyph } from "../../../shared/model";
-import { clamp } from "../../Shared/Utils";
+import { clamp } from "../../shared/utils";
 
 export const PAGINATION_CHUNK_SIZE = 50;
 

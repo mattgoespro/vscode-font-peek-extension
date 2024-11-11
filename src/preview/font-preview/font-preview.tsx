@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { FontGlyph } from "../../shared/model";
-import { useOutput } from "../Shared/Hooks/Logger";
-import { genUuid } from "../Shared/Utils";
-import * as styles from "./FontPreview.module.scss";
-import { GlyphPagination } from "./GlyphPagination/GlyphPagination";
-import { getTotalPages } from "./GlyphPagination/GlyphPagination.model";
-import { GlyphPreview } from "./GlyphPreview/GlyphPreview";
-import { GlyphSearch } from "./GlyphSearch/GlyphSearch";
+import * as styles from "./font-preview.module.scss";
+import { GlyphPreview } from "./glyph-preview/glyph-preview";
+import { GlyphSearch } from "./glyph-search/glyph-search";
+import { useOutput } from "../shared/hooks/use-output";
+import { GlyphPagination } from "./glyph-pagination/glyph-pagination";
+import { genUuid } from "../shared/utils";
 
 type FontPreviewProps = {
   glyphs: FontGlyph[];
@@ -38,12 +37,7 @@ export function FontPreview(props: FontPreviewProps) {
         {((pageGlyphs ?? []).length > 0 && (
           <>
             <div className={styles["pagination"]}>
-              <GlyphPagination
-                glyphs={props.glyphs}
-                totalPages={getTotalPages(props.glyphs.length)}
-                pageGlyphsChanged={onPageGlyphsChanged}
-                searchTerm={searchTerm}
-              />
+              <GlyphPagination glyphs={props.glyphs} pageGlyphsChanged={onPageGlyphsChanged} />
             </div>
             <div className={styles["page-glyphs"]}>
               {pageGlyphs.map((glyph) => (
