@@ -16,8 +16,8 @@ export default {
       filename: "extension.js"
     },
     preview: {
-      import: "./src/preview/Preview.tsx",
-      filename: "preview.js"
+      import: "./src/webview/index.tsx",
+      filename: "webview.js"
     }
   },
   output: {
@@ -34,17 +34,25 @@ export default {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.tsx?$/,
+      //   use: [
+      //     {
+      //       loader: "babel-loader",
+      //       options: {
+      //         cacheDirectory: true,
+      //         cacheCompression: true
+      //       }
+      //     }
+      //   ],
+      //   exclude: /node_modules/
+      // },
       {
-        test: /\.tsx?$/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              cacheDirectory: true,
-              cacheCompression: true
-            }
-          }
-        ],
+        test: /[ts]x?$/,
+        loader: "ts-loader",
+        options: {
+          transpileOnly: true
+        },
         exclude: /node_modules/
       },
       {
@@ -80,14 +88,13 @@ export default {
     ]
   },
   plugins: [
-    new MiniCssExtractWebpackPlugin({
-      filename: "[name].css",
-      chunkFilename: "[name].css"
-    }),
     new CleanWebpackPlugin({ verbose: true }),
+    new MiniCssExtractWebpackPlugin({
+      filename: "webview.css",
+      chunkFilename: "webview.css"
+    }),
     new ForkTsCheckerWebpackPlugin({
-      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") },
-      formatter: "basic"
+      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") }
     })
   ],
   optimization: {

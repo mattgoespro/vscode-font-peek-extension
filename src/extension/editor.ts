@@ -1,7 +1,7 @@
 import { dirname, join } from "path";
 import { Subject, Subscription } from "rxjs";
 import vscode, { OutputChannel } from "vscode";
-import html from "../preview/Preview.html";
+import html from "../webview/index.html";
 import { LogMessage, WebviewStateMessage } from "../shared/events/messages";
 import { FontGlyph } from "../shared/model";
 import { output } from "../shared/output";
@@ -23,10 +23,10 @@ export class FontPreviewDocumentProvider
     private outputChannel: vscode.OutputChannel
   ) {
     this.webviewScriptUri = vscode.Uri.file(
-      join(this.context.extensionPath, "dist", "preview.js")
+      join(this.context.extensionPath, "dist", "webview.js")
     ).with({ scheme: "vscode-resource" });
     this.webviewStylesheetUri = vscode.Uri.file(
-      join(this.context.extensionPath, "dist", "preview.css")
+      join(this.context.extensionPath, "dist", "webview.css")
     ).with({ scheme: "vscode-resource" });
   }
 

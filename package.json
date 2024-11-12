@@ -10,7 +10,7 @@
     "vscode": "^1.51.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.ts --mode production",
+    "build": "webpack --config webpack.config.ts --mode production --watch",
     "vscode:prepublish": "npm run build",
     "lint": "eslint src"
   },

@@ -34,40 +34,11 @@
   margin: 0 0 2.5rem;
 }
 
-.preview-page {
+.glyph-page {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 80%;
   margin: 0 0 4rem;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  width: 80%;
-  margin-bottom: 1.5rem;
-}
-
-.page-glyphs {
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.no-glyphs {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  font-family: "Roboto";
-  font-weight: 300;
-  font-size: 1em;
-  color: #9d9d9d;
 }

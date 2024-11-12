@@ -1,5 +1,3 @@
-console.log("\nbabel-loader: transpiling with babel\n");
-
 /** @type {import('@babel/core').TransformOptions} */
 export default {
   presets: [

@@ -6,15 +6,11 @@
       "type": "extensionHost",
       "request": "launch",
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-        "webpack://?:*/*": "${workspaceFolder}/*"
-      },
-      "sourceMapRenames": true,
+      "resolveSourceMapLocations": ["${workspaceFolder}/dist/**", "!**/node_modules/**"],
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
       "outFiles": ["${workspaceFolder}/dist/*.js"],
-      "runtimeSourcemapPausePatterns": ["webpack:///./~/*", "webpack://?:*/*"],
+      "outputCapture": "console",
       "preLaunchTask": "build"
     }
   ]

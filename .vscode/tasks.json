@@ -5,12 +5,12 @@
       "type": "npm",
       "script": "build",
       "label": "build",
-      "isBackground": false,
+      "isBackground": true,
       "presentation": {
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": "$ts-checker-webpack",
+      "problemMatcher": "$ts-checker-webpack-watch",
       "group": {
         "kind": "build",
         "isDefault": true

@@ -11,6 +11,7 @@
   },
   "css.format.enable": false,
   "css.validate": true,
+  "debug.toolBarLocation": "commandCenter",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.fixAll.scss": "always"
@@ -36,14 +37,14 @@
   "material-icon-theme.folders.color": "#eb7734",
   "material-icon-theme.hidesExplorerArrows": true,
   "npm.exclude": "release/**",
-  "typescript.preferences.importModuleSpecifier": "relative",
   "search.exclude": {
+    "**/bundle-analyzer/**": true,
     "**/dist/**": true,
     "**/node_modules/**": true,
-    "**/bundle-analyzer/**": true,
     ".git": true
   },
   "typescript.format.enable": false,
+  "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.tsc.autoDetect": "off",
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.updateImportsOnFileMove.enabled": "always",

@@ -1,8 +1,16 @@
-.pagination-button {
+.pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
+  margin-bottom: 1.5rem;
+}
+
+.pagination-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 10%;
   height: 3rem;
   font-size: 0.75rem;
   font-family: "Roboto";

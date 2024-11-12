@@ -1,0 +1,28 @@
+:host {
+  margin: 20px;
+}
+
+.glyph-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.glyph-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.no-glyphs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto";
+  font-weight: 300;
+  font-size: 1em;
+  color: #9d9d9d;
+}
