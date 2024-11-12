@@ -43,6 +43,14 @@
     "**/node_modules/**": true,
     ".git": true
   },
+  "terminal.integrated.defaultProfile.windows": "bash-node",
+  "terminal.integrated.profiles.windows": {
+    "bash-node": {
+      "icon": "terminal-bash",
+      "overrideName": true,
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe"
+    }
+  },
   "typescript.format.enable": false,
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.tsc.autoDetect": "off",
