@@ -64,12 +64,14 @@ export function GlyphPage({ glyphs }: GlyphPageProps) {
   }, [filterCriteria.currentPage, filterCriteria.currentSearchName]);
 
   return (
-    <div className={styles["wrapper"]}>
+    <div className={styles["glyph-page-wrapper"]}>
       <GlyphSearch onValueChange={onSearchFilterCriteriaChange} />
-      <GlyphPagination
-        totalGlyphs={glyphs.length}
-        onPageChange={onPageFilterCriteriaChange}
-      ></GlyphPagination>
+      <div className={styles["glyph-pagination"]}>
+        <GlyphPagination
+          totalGlyphs={glyphs.length}
+          onPageChange={onPageFilterCriteriaChange}
+        ></GlyphPagination>
+      </div>
       {((glyphs ?? []).length > 0 && (
         <>
           <div className={styles["glyph-list"]}>

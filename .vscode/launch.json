@@ -11,7 +11,7 @@
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
       "outFiles": ["${workspaceFolder}/dist/*.js"],
       "outputCapture": "console",
-      "preLaunchTask": "build"
+      "preLaunchTask": "watch"
     }
   ]
 }

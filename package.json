@@ -10,7 +10,8 @@
     "vscode": "^1.51.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.ts --mode production --watch",
+    "watch": "webpack --config webpack.config.ts --mode development --watch",
+    "build": "webpack --config webpack.config.ts --mode production",
     "vscode:prepublish": "npm run build",
     "lint": "eslint src"
   },
@@ -55,6 +56,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
+    "@hediet/node-reload": "^0.8.0",
+    "@hediet/std": "^0.6.0",
     "debug": "^4.3.7",
     "fonteditor-core": "^2.4.1",
     "fontkit": "^2.0.4",

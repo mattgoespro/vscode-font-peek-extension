@@ -29,7 +29,9 @@ export default {
     extensions: [".ts", ".tsx", ".js"],
     plugins: [new TsconfigPathsWebpackPlugin()],
     fallback: {
-      path: require.resolve("path-browserify")
+      path: require.resolve("path-browserify"),
+      fs: false,
+      module: false
     }
   },
   module: {
@@ -66,7 +68,11 @@ export default {
           MiniCssExtractWebpackPlugin.loader,
           {
             loader: "css-loader",
-            options: { modules: true }
+            options: {
+              modules: {
+                localIdentName: "[name]__[local]___[hash:base64:5]"
+              }
+            }
           },
           "sass-loader",
           "postcss-loader"
@@ -79,7 +85,11 @@ export default {
           MiniCssExtractWebpackPlugin.loader,
           {
             loader: "css-loader",
-            options: { modules: true }
+            options: {
+              modules: {
+                localIdentName: "[name]__[local]___[hash:base64:5]"
+              }
+            }
           },
           "postcss-loader"
         ],
@@ -109,6 +119,9 @@ export default {
         }
       })
     ]
+  },
+  watchOptions: {
+    poll: 1000
   },
   externals: {
     vscode: "commonjs vscode"

@@ -1,8 +1,9 @@
 .glyph {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  flex: 0 1 5rem;
+  justify-content: space-around;
+  flex: 1 1 10%;
+  max-width: 10%;
   border: 1px solid #444444;
   border-radius: 8px;
   padding: 0.25rem 0.5rem;
