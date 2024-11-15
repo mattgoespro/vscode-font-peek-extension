@@ -5,7 +5,7 @@ import { FontPreviewDocumentProvider } from "./extension/editor";
 export function activate(context: vscode.ExtensionContext) {
   const outputChannel = vscode.window.createOutputChannel("Font Glyph Preview");
 
-  context.subscriptions.push(FontPreviewDocumentProvider.register(context, outputChannel));
+  context.subscriptions.push(FontPreviewDocumentProvider.register(context));
   output(outputChannel, "extension", "Extension", "Started Font Glyph Preview.");
 }
 

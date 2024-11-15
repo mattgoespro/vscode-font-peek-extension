@@ -1,17 +1,25 @@
 import { FontGlyph } from "../model";
 
-export type WebviewStateMessage = {
-  type: "webview-state";
-  state: "ready";
+type MessagePayloads = {
+  webview: {
+    "webview-state-changed": {
+      state: "ready";
+    };
+    "log-output": {
+      moduleContext: string;
+      args: unknown[];
+    };
+  };
+  extension: {
+    "font-glyphs-loaded": {
+      glyphs: FontGlyph[];
+    };
+  };
 };
 
-export type FontGlyphsLoadedMessage = {
-  type: "font-glyphs-loaded";
-  glyphs: FontGlyph[];
-};
-
-export type LogMessage = {
-  type: "log";
-  moduleContext: string;
-  args: unknown[];
-};
+export type EditorMessage<T extends keyof MessagePayloads> = {
+  [K in keyof MessagePayloads[T]]: {
+    source: T;
+    name: K;
+  } & MessagePayloads[T][K];
+}[keyof MessagePayloads[T]];
