@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { EditorMessage } from "../shared/events/messages";
 import { FontPreview } from "./font-preview/font-preview";
-import "./index.css";
 import { WebviewContext } from "./shared/webview-context";
 import { useOutputPanel } from "./shared/hooks/use-output-panel";
 

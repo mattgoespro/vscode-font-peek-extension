@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -35,9 +35,15 @@
       rel="stylesheet"
     />
 
-    <!-- The resources are resolved and formatted by the extension as webview URIs, then injected when the preview is opened. -->
-
     <style>
+      body {
+        background-color: #101010;
+      }
+
+      #root {
+        margin: 2rem;
+      }
+
       @font-face {
         src: url("{{ webviewFontDataUri }}");
         font-family: "font-glyph";
@@ -49,6 +55,8 @@
     <script>
       exports = {};
     </script>
+
+    <!-- The resources are resolved and formatted by the extension as webview URIs, then injected when the preview is opened. -->
     <link href="{{ webviewStylesheetUri }}" rel="stylesheet" />
     <script src="{{ webviewScriptUri }}"></script>
   </head>

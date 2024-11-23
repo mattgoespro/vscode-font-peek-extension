@@ -1,31 +1,28 @@
+@use "styles/variables";
+
 .glyph {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex-shrink: 1;
-  flex-grow: 1;
-  flex-basis: 10%;
-  border: 1px solid #444444;
+  height: 5rem;
+  border: 1px solid variables.$grey;
   border-radius: 8px;
   padding: 0.25rem 0.5rem;
 }
 
 .name {
-  font-family: "Nunito";
-  font-size: 0.75em;
-  font-weight: 400;
-  color: #95c6ff;
-  margin-bottom: 0.5rem;
+  font-family: Nunito, sans-serif;
+  font-size: 1em;
+  color: variables.$light-blue;
   text-align: center;
 }
 
 .unicode {
-  font-family: font-glyph !important;
-  font-size: 1.5em;
+  font-family: font-glyph, monospace !important;
+  font-size: 2em;
   font-style: normal;
   text-align: center;
-  color: white;
-  margin: 0 0 0.5rem;
+  color: variables.$light;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;
 }
@@ -39,9 +36,8 @@
 }
 
 .code {
-  font-family: "Roboto";
-  font-size: 0.5em;
-  font-weight: 400;
-  color: #c7c7c7;
+  font-family: "Source Code Pro", monospace;
+  font-size: 0.8em;
+  color: variables.$light-grey;
   text-align: center;
 }

@@ -34,7 +34,7 @@ export default {
       module: false
     },
     alias: {
-      "@styles": path.resolve(__dirname, "src", "webview", "styles")
+      styles: path.resolve(__dirname, "src/webview/styles")
     }
   },
   module: {
@@ -80,8 +80,9 @@ export default {
           {
             loader: "sass-loader",
             options: {
+              implementation: require("sass"),
               sassOptions: {
-                includePaths: [path.resolve(__dirname, "src", "webview", "styles")]
+                includePaths: [path.resolve(__dirname, "src/webview/styles")]
               }
             }
           },

@@ -1,4 +1,4 @@
-@import "@styles/colors";
+@use "styles/variables";
 
 .search-input {
   display: flex;
@@ -7,20 +7,16 @@
   align-items: center;
   width: 20rem;
   height: 2.5rem;
-  font-family: "Roboto";
+  font-family: Roboto, monospace;
   font-weight: 400;
-  color: $grey;
-  padding: 10px;
-  background-color: $dark;
-  border: 1px solid $grey;
+  color: variables.$grey;
+  padding: 0.75rem;
+  background-color: variables.$dark;
+  border: 1px solid variables.$grey;
   border-radius: 8px;
 
   &:focus {
     outline: none;
-    border-color: #ff7c30;
-  }
-
-  &::-webkit-search-cancel-button {
-    color: #b3b3b3;
+    border-color: variables.$orange;
   }
 }

@@ -11,7 +11,6 @@
     "esbenp.prettier-vscode",
     "richie5um2.vscode-sort-json",
     "formulahendry.auto-rename-tag",
-    "nyxb.vscode-styled-colors",
     "dsznajder.es7-react-js-snippets",
     "meganrogge.template-string-converter",
     "cipchk.cssrem",
@@ -20,9 +19,9 @@
     "amodio.tsl-problem-matcher",
     "yoavbls.pretty-ts-errors",
     "steoates.autoimport",
-    "naumovs.color-highlight",
     "pushqrdx.inline-html",
     "pkief.material-icon-theme",
-    "antiantisepticeye.vscode-color-picker"
+    "antiantisepticeye.vscode-color-picker",
+    "stylelint.vscode-stylelint"
   ]
 }
