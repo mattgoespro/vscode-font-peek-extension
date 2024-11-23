@@ -11,7 +11,7 @@ export function FontPreview({ glyphs }: FontPreviewProps) {
     <div className={styles["preview"]}>
       <div className={styles["header"]}>
         <h1 className={styles["title"]}>Font Glyph Preview</h1>
-        <h2 className={styles["subtitle"]}>Click on the icon to copy the font glyph unicode.</h2>
+        <h2 className={styles["subtitle"]}>Click a glyph to copy its unicode value.</h2>
       </div>
       <div className={styles["glyph-page"]}>
         <GlyphPage glyphs={glyphs} />

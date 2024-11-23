@@ -32,6 +32,9 @@ export default {
       path: require.resolve("path-browserify"),
       fs: false,
       module: false
+    },
+    alias: {
+      "@styles": path.resolve(__dirname, "src", "webview", "styles")
     }
   },
   module: {
@@ -74,7 +77,14 @@ export default {
               }
             }
           },
-          "sass-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              sassOptions: {
+                includePaths: [path.resolve(__dirname, "src", "webview", "styles")]
+              }
+            }
+          },
           "postcss-loader"
         ],
         exclude: /node_modules/

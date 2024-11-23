@@ -1,4 +1,9 @@
 {
+  "[scss]": {
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnPaste": true,
@@ -9,6 +14,7 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true
   },
+  "autoimport.showNotifications": false,
   "css.format.enable": false,
   "css.validate": true,
   "debug.toolBarLocation": "commandCenter",
@@ -37,6 +43,10 @@
   "material-icon-theme.folders.color": "#eb7734",
   "material-icon-theme.hidesExplorerArrows": true,
   "npm.exclude": "release/**",
+  "scss.lint.emptyRules": "warning",
+  "scss.lint.zeroUnits": "warning",
+  "scss.showErrors": true,
+  "scssFormatter.printWidth": 120,
   "search.exclude": {
     "**/bundle-analyzer/**": true,
     "**/dist/**": true,
@@ -46,6 +56,10 @@
   "terminal.integrated.defaultProfile.windows": "bash-node",
   "terminal.integrated.profiles.windows": {
     "bash-node": {
+      "args": ["-l"],
+      "env": {
+        "PATH": "${workspaceFolder}\\node_modules\\.bin;${env:PATH}"
+      },
       "icon": "terminal-bash",
       "overrideName": true,
       "path": "C:\\Program Files\\Git\\bin\\bash.exe"

@@ -5,7 +5,18 @@ import { Subject, Subscription } from "rxjs";
 import { FontGlyph } from "../shared/model";
 import { EditorMessage } from "../shared/events/messages";
 import { loadFont } from "./font";
-import { output } from "../shared/output";
+import { createLogger } from "../shared/logging/logger";
+import { FormattedError } from "../shared/logging/formatted-error";
+
+class FontGlyphPreviewError extends FormattedError {
+  constructor(message: string) {
+    super(message);
+  }
+
+  protected getFormattedMessage(message: string): string {
+    return message;
+  }
+}
 
 export class FontDocument implements vscode.CustomDocument {
   private contents: Buffer;
@@ -16,6 +27,7 @@ export class FontDocument implements vscode.CustomDocument {
 
   private subscriptions: Subscription[] = [];
   private disposables: vscode.Disposable[] = [];
+  private logger = createLogger("FontDocument");
 
   constructor(
     private context: vscode.ExtensionContext,
@@ -100,9 +112,11 @@ export class FontDocument implements vscode.CustomDocument {
   private addWebviewEventListeners() {
     this.webview.onDidReceiveMessage((event: MessageEvent<EditorMessage<"webview">>) => {
       switch (event.data.name) {
-        case "log-output":
-          output(this.outputChannel, "webview", event.data.moduleContext, event.data.args);
+        case "log-output": {
+          const logger = createLogger("Webview");
+          this.outputChannel.appendLine(logger.createLogMessage(event.data.args, true));
           break;
+        }
         case "webview-state-changed":
           if (event.data.state === "ready") {
             this.previewReady$.next(true);
@@ -132,7 +146,12 @@ export class FontDocument implements vscode.CustomDocument {
   private get webview(): vscode.Webview {
     if (this.webviewPanel == null) {
       vscode.window.showErrorMessage("Webview panel not initialized.");
-      output(this.outputChannel, "extension", module.id, new Error("Webview not initialized."));
+      this.outputChannel.appendLine(
+        this.logger.createLogMessage(
+          new FontGlyphPreviewError("Webview panel not initialized"),
+          true
+        )
+      );
     }
 
     return this.webviewPanel.webview;

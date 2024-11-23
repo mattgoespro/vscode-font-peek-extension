@@ -1,5 +1,7 @@
 import { FontGlyph } from "../model";
 
+export type LogLevel = "info" | "warn" | "error";
+
 type MessagePayloads = {
   webview: {
     "webview-state-changed": {
@@ -7,6 +9,7 @@ type MessagePayloads = {
     };
     "log-output": {
       moduleContext: string;
+      level: LogLevel;
       args: unknown[];
     };
   };

@@ -6,18 +6,22 @@ export class FontPreviewDocumentProvider
 {
   private document: FontDocument;
 
-  private outputChannel = vscode.window.createOutputChannel("Font Preview Document");
-
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly outputChannel: vscode.OutputChannel
+  ) {}
 
   /**
    * Registers the font preview custom editor provider.
    * @param context The extension context.
    */
-  static register(context: vscode.ExtensionContext): vscode.Disposable {
+  static register(
+    context: vscode.ExtensionContext,
+    outputChannel: vscode.OutputChannel
+  ): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       "fontGlyphPreview.editor.preview",
-      new FontPreviewDocumentProvider(context),
+      new FontPreviewDocumentProvider(context, outputChannel),
       {
         supportsMultipleEditorsPerDocument: true,
         webviewOptions: {
