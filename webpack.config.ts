@@ -39,19 +39,6 @@ export default {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.tsx?$/,
-      //   use: [
-      //     {
-      //       loader: "babel-loader",
-      //       options: {
-      //         cacheDirectory: true,
-      //         cacheCompression: true
-      //       }
-      //     }
-      //   ],
-      //   exclude: /node_modules/
-      // },
       {
         test: /[ts]x?$/,
         loader: "ts-loader",
