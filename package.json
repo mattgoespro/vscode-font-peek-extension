@@ -4,15 +4,25 @@
   "description": "Preview font glyphs in files from within Visual Studio Code",
   "version": "0.0.1",
   "icon": "assets/logo.png",
-  "main": "./dist/extension.js",
+  "main": "dist/extension.js",
+  "publisher": "mattgoespro",
+  "repository": {
+    "url": "https://"
+  },
+  "author": {
+    "name": "https://github.com/mattgoespro/vscode-font-glyph-preview-extension"
+  },
   "type": "commonjs",
   "engines": {
-    "vscode": "^1.51.0"
+    "vscode": "^1.95.0"
   },
   "scripts": {
     "watch": "webpack --config webpack.config.ts --mode development --watch",
     "build": "webpack --config webpack.config.ts --mode production",
-    "vscode:prepublish": "npm run build",
+    "package": "vsce package -t win32-x64 -o dist/",
+    "prepackage": "npm run build",
+    "publish": "vsce publish",
+    "clean": "rm -rf dist out",
     "lint": "eslint src",
     "lint:scss": "stylelint src/**/*.scss"
   },
@@ -55,6 +65,12 @@
       }
     ]
   },
+  "activationEvents": [
+    "workspaceContains:*.ttf",
+    "workspaceContains:*.otf",
+    "workspaceContains:*.woff",
+    "workspaceContains:*.woff2"
+  ],
   "dependencies": {
     "@babel/runtime": "^7.26.0",
     "@hediet/node-reload": "^0.8.0",
@@ -88,7 +104,6 @@
     "@types/pako": "^2.0.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/stylelint": "^14.0.0",
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.95.0",
     "@types/webpack": "^5.28.5",
@@ -131,6 +146,7 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.15.0",
+    "vsce": "^2.15.0",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   }

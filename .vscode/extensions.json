@@ -1,5 +1,7 @@
 {
   "recommendations": [
+    "github.copilot",
+    "github.copilot-chat",
     "dbaeumer.vscode-eslint",
     "herrmannplatz.npm-dependency-links",
     "mskelton.npm-outdated",
@@ -7,7 +9,6 @@
     "fabiospampinato.vscode-open-in-npm",
     "usernamehw.errorlens",
     "felipecaputo.git-project-manager",
-    "github.copilot-chat",
     "esbenp.prettier-vscode",
     "richie5um2.vscode-sort-json",
     "formulahendry.auto-rename-tag",
@@ -19,9 +20,9 @@
     "amodio.tsl-problem-matcher",
     "yoavbls.pretty-ts-errors",
     "steoates.autoimport",
-    "pushqrdx.inline-html",
     "pkief.material-icon-theme",
-    "antiantisepticeye.vscode-color-picker",
-    "stylelint.vscode-stylelint"
+    "stylelint.vscode-stylelint",
+    "ctcuff.font-preview",
+    "markosth09.color-picker"
   ]
 }
