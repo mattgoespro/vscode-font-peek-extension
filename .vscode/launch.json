@@ -11,7 +11,18 @@
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
       "outFiles": ["${workspaceFolder}/dist/*.js"],
       "outputCapture": "console",
-      "preLaunchTask": "watch"
+      "preLaunchTask": "watch",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "cascadeTerminateToConfigurations": ["watch"],
+      "pauseForSourceMap": true,
+      "localRoot": "${workspaceFolder}\\src",
+      "remoteRoot": "/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${workspaceFolder}/src/*"
+      },
+      "sourceMapRenames": true
     }
   ]
 }
