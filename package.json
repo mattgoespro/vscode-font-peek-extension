@@ -1,13 +1,13 @@
 {
-  "name": "vscode-font-glyph-preview-extension",
-  "displayName": "font-glyph-preview",
-  "description": "Preview font glyphs in files from within Visual Studio Code",
+  "name": "vscode-font-peek-extension",
+  "displayName": "Font Peek",
+  "description": "Easily peek at font files, their font details, and view their glyphs directly within Visual Studio Code.",
   "version": "0.0.1",
-  "icon": "assets/logo.png",
+  "icon": "src/assets/logo.png",
   "main": "dist/extension.js",
   "publisher": "mattgoespro",
   "repository": {
-    "url": "https://"
+    "url": "https://github.com/mattgoespro/vscode-font-peek-extension.git"
   },
   "author": {
     "name": "https://github.com/mattgoespro/vscode-font-glyph-preview-extension"
@@ -22,7 +22,7 @@
     "package": "vsce package -t win32-x64 -o dist/",
     "prepackage": "npm run build",
     "publish": "vsce publish",
-    "clean": "rm -rf dist out",
+    "clean": "rm -rf dist",
     "lint": "eslint src",
     "stylint": "stylelint src/**/*.scss"
   },

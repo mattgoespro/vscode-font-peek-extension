@@ -1,14 +1,19 @@
-import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
-import html from "@html-eslint/eslint-plugin";
+import tsEslint from "typescript-eslint";
+import eslint from "@eslint/js";
+import reactEslint from "eslint-plugin-react";
+import htmlEslint from "@html-eslint/eslint-plugin";
 
-export default tseslint.config(
+export default tsEslint.config(
   {
-    ...react.configs.flat.recommended,
-    ignores: ["node_modules", "dist/**/*", "temp"],
+    ignores: ["node_modules", "dist", "temp", "*.js"]
+  },
+  eslint.configs.recommended,
+  tsEslint.configs.recommended,
+  {
+    ...reactEslint.configs.flat.recommended,
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
-      ...react.configs.flat.recommended.languageOptions
+      ...reactEslint.configs.flat.recommended.languageOptions
     },
     settings: {
       react: {
@@ -21,19 +26,11 @@ export default tseslint.config(
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          varsIgnorePattern: "^_",
-          argsIgnorePattern: "^_"
-        }
-      ]
+      "no-unused-vars": "off"
     }
   },
-  ...tseslint.configs.eslintRecommended,
   {
     files: ["*.html"],
-    ...html.configs["flat/recommended"]
+    ...htmlEslint.configs["flat/recommended"]
   }
 );
