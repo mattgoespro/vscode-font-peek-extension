@@ -1,28 +1,26 @@
 {
-  "version": "0.2.0",
   "configurations": [
     {
       "name": "Extension: Build",
       "type": "extensionHost",
-      "request": "launch",
-      "sourceMaps": true,
-      "resolveSourceMapLocations": ["${workspaceFolder}/dist/**", "!**/node_modules/**"],
-      "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "outFiles": ["${workspaceFolder}/dist/*.js"],
-      "outputCapture": "console",
-      "preLaunchTask": "watch",
-      "autoAttachChildProcesses": true,
-      "skipFiles": ["<node_internals>/**"],
-      "internalConsoleOptions": "openOnSessionStart",
-      "cascadeTerminateToConfigurations": ["watch"],
-      "pauseForSourceMap": true,
       "localRoot": "${workspaceFolder}\\src",
-      "remoteRoot": "/src",
+      "outFiles": ["${workspaceFolder}\\dist\\*.js"],
+      // "outputCapture": "console",
+      "outputCapture": "std",
+      "pauseForSourceMap": true,
+      "remoteRoot": "\\src",
+      "request": "launch",
+      "resolveSourceMapLocations": ["${workspaceFolder}\\dist\\**", "!**\\node_modules\\**"],
+      "runtimeExecutable": "${execPath}",
+      "skipFiles": ["<node_internals>\\**"],
       "sourceMapPathOverrides": {
-        "webpack:///src/*": "${workspaceFolder}/src/*"
+        "webpack:\\\\\\src\\*": "${workspaceFolder}\\src\\*"
       },
-      "sourceMapRenames": true
+      "sourceMapRenames": true,
+      "sourceMaps": true,
+      "preLaunchTask": "npm: dev"
     }
-  ]
+  ],
+  "version": "0.2.0"
 }
