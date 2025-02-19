@@ -14,7 +14,6 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true
   },
-  "autoimport.showNotifications": false,
   "css.format.enable": false,
   "css.validate": false,
   "debug.toolBarLocation": "commandCenter",
@@ -50,12 +49,12 @@
   "scss.validate": false,
   "scssFormatter.printWidth": 120,
   "search.exclude": {
-    "dist/": true,
-    "out/": true,
-    "**/node_modules/**": true,
     "**/.git/**": true,
+    "**/node_modules/**": true,
     "**/package-lock.json": true,
-    "LICENSE.txt": true
+    "LICENSE.txt": true,
+    "dist/": true,
+    "out/": true
   },
   "stylelint.enable": true,
   "stylelint.validate": ["css", "scss"],
