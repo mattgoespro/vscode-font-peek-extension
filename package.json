@@ -66,10 +66,12 @@
     ]
   },
   "activationEvents": [
+    "onStartupFinished",
     "workspaceContains:*.ttf",
     "workspaceContains:*.otf",
     "workspaceContains:*.woff",
-    "workspaceContains:*.woff2"
+    "workspaceContains:*.woff2",
+    "workspaceContains:*.eot"
   ],
   "dependencies": {
     "fontkit": "^2.0.4",

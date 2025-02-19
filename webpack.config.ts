@@ -5,6 +5,7 @@ import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import { Configuration } from "webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import TerserWebpackPlugin from "terser-webpack-plugin";
+import sass from "sass";
 
 export default {
   target: "web",
@@ -67,7 +68,7 @@ export default {
           {
             loader: "sass-loader",
             options: {
-              implementation: require("sass"),
+              implementation: sass,
               sassOptions: {
                 includePaths: [path.resolve(__dirname, "src/webview/styles")]
               }
@@ -102,6 +103,7 @@ export default {
       chunkFilename: "webview.css"
     }),
     new ForkTsCheckerWebpackPlugin({
+      formatter: "basic",
       typescript: { configFile: path.resolve(__dirname, "tsconfig.json") }
     })
   ],

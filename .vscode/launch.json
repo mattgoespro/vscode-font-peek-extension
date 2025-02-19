@@ -19,7 +19,7 @@
       },
       "sourceMapRenames": true,
       "sourceMaps": true,
-      "preLaunchTask": "npm: dev"
+      "preLaunchTask": "dev"
     }
   ],
   "version": "0.2.0"
