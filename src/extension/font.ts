@@ -1,5 +1,6 @@
-import { Font, create } from "fontkit";
+import fontkit from "fontkit";
 import { FontGlyph } from "../shared/model";
+import vscode from "vscode";
 
 export function loadFont(buffer: Buffer) {
   const font = loadFontData(buffer);
@@ -7,10 +8,24 @@ export function loadFont(buffer: Buffer) {
 }
 
 function loadFontData(buffer: Buffer) {
-  return create(buffer) as Font;
+  const font = fontkit.create(buffer);
+  console.log(font);
+
+  if (isFontCollection(font)) {
+    vscode.window.showInformationMessage(`Font loaded with type ${font.type}.`);
+    vscode.window.showInformationMessage("Loaded font as a font collection.");
+  }
+
+  return font as fontkit.Font;
 }
 
-export function extractFontGlyphs(font: Font) {
+function isFontCollection(
+  font: fontkit.Font | fontkit.FontCollection
+): font is fontkit.FontCollection {
+  return (font as fontkit.FontCollection).fonts !== undefined;
+}
+
+export function extractFontGlyphs(font: fontkit.Font) {
   const MAX_GLYPH_STRING_LENGTH = 3;
   const glyphs: FontGlyph[] = [];
 

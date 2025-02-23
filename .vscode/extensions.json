@@ -18,10 +18,8 @@
     "sibiraj-s.vscode-scss-formatter",
     "amodio.tsl-problem-matcher",
     "yoavbls.pretty-ts-errors",
-    "steoates.autoimport",
-    "pushqrdx.inline-html",
     "pkief.material-icon-theme",
-    "antiantisepticeye.vscode-color-picker",
-    "stylelint.vscode-stylelint"
+    "stylelint.vscode-stylelint",
+    "markosth09.color-picker"
   ]
 }

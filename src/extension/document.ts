@@ -1,6 +1,6 @@
 import { dirname, join } from "path";
 import vscode, { ExtensionContext } from "vscode";
-import html from "../webview/index.html";
+import webviewTemplate from "../webview/index.html";
 import { Subject, Subscription } from "rxjs";
 import { FontGlyph } from "../shared/model";
 import { EditorMessage } from "../shared/events/messages";
@@ -61,16 +61,12 @@ export class FontDocument implements vscode.CustomDocument {
     return document;
   }
 
-  public async initWebview(webviewPanel: vscode.WebviewPanel) {
-    await this.createWebview(webviewPanel);
-  }
-
   /**
    * Creates a custom editor for the given webview panel and font document.
    * @param webviewPanel The webview panel to associate with the editor.
    * @param document The font document to display in the editor.
    */
-  private async createWebview(webviewPanel: vscode.WebviewPanel) {
+  public async createWebview(webviewPanel: vscode.WebviewPanel) {
     await this.buildWebview(webviewPanel);
     this.addWebviewEventListeners();
   }
@@ -91,20 +87,30 @@ export class FontDocument implements vscode.CustomDocument {
         vscode.Uri.file(dirname(this.uri.path))
       ]
     };
-    this.webview.html = this.injectWebviewContent();
+    this.webview.html = this.formatWebviewTemplate(webviewTemplate);
     this.disposables.push(this.webviewPanel);
 
     /**
-     * Wait for webview ready state before sending font data.
+     * Wait for webview to be ready before sending font data to render.
      */
     this.subscriptions.push(
       this.previewReady$.subscribe(async () => {
-        const glyphs: FontGlyph[] = loadFont(this.contents);
-        this.webview.postMessage<EditorMessage<"extension">>({
-          source: "extension",
-          name: "font-glyphs-loaded",
-          glyphs
-        });
+        try {
+          const glyphs: FontGlyph[] = loadFont(this.contents);
+
+          this.webview.postMessage<EditorMessage<"extension">>({
+            source: "extension",
+            name: "font-glyphs-loaded",
+            glyphs
+          });
+        } catch (error) {
+          this.outputChannel.appendLine(
+            this.logger.createLogMessage(new FontGlyphPreviewError(error.message), true)
+          );
+          vscode.window.showErrorMessage(
+            ["Failed to open font preview.", error.message].join("\n")
+          );
+        }
       })
     );
   }
@@ -117,26 +123,41 @@ export class FontDocument implements vscode.CustomDocument {
           this.outputChannel.appendLine(logger.createLogMessage(event.data.args, true));
           break;
         }
-        case "webview-state-changed":
+        case "webview-state-changed": {
           if (event.data.state === "ready") {
+            this.outputChannel.appendLine("Webview ready.");
             this.previewReady$.next(true);
           }
+
+          this.outputChannel.appendLine(`Waiting for webview...`);
+          break;
+        }
+        case "notify": {
+          switch (event.data.level) {
+            case "info":
+              vscode.window.showInformationMessage(event.data.message);
+              break;
+            case "warn":
+              vscode.window.showWarningMessage(event.data.message);
+              break;
+            case "error":
+              vscode.window.showErrorMessage(event.data.message);
+              break;
+          }
+        }
       }
     }, this.disposables);
   }
 
-  private injectWebviewContent(): string {
-    return this.interpolateTemplateVariables(html, {
+  private formatWebviewTemplate(content: string): string {
+    let html = content;
+    const templateVariables = {
       webviewScriptUri: this.webviewScriptUri.toString(),
       webviewStylesheetUri: this.webviewStylesheetUri.toString(),
       webviewFontDataUri: this.getFontDataWebviewUri().toString()
-    });
-  }
+    };
 
-  private interpolateTemplateVariables(content: string, data: Record<string, string>): string {
-    let html = content;
-
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(templateVariables).forEach(([key, value]) => {
       html = html.replace(`{{ ${key} }}`, value);
     });
 

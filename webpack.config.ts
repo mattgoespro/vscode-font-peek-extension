@@ -9,7 +9,7 @@ import sass from "sass";
 
 export default {
   target: "web",
-  devtool: "source-map",
+  devtool: "eval-source-map",
   stats: "errors-warnings",
   entry: {
     extension: {

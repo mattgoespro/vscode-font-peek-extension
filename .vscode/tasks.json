@@ -3,14 +3,19 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "watch",
-      "label": "watch",
+      "script": "dev",
+      "label": "dev",
+      "detail": "Start the webpack build in watch mode.",
       "isBackground": true,
       "presentation": {
         "reveal": "always",
         "panel": "shared"
       },
       "problemMatcher": "$ts-checker-webpack-watch",
+      "icon": {
+        "dark": "media/icons/tasks/dev-dark.svg",
+        "light": "media/icons/tasks/dev-light.svg"
+      },
       "group": {
         "kind": "build",
         "isDefault": true

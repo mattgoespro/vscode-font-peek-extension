@@ -12,6 +12,11 @@ type MessagePayloads = {
       level: LogLevel;
       args: unknown[];
     };
+    notify: {
+      moduleContext: string;
+      level: LogLevel;
+      message: string;
+    };
   };
   extension: {
     "font-glyphs-loaded": {

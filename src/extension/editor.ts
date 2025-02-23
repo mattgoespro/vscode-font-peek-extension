@@ -51,7 +51,7 @@ export class FontPreviewDocumentProvider
     webviewPanel: vscode.WebviewPanel
   ): Promise<void> {
     try {
-      await document.initWebview(webviewPanel);
+      await document.createWebview(webviewPanel);
     } catch (error) {
       this.dispose();
       vscode.window.showErrorMessage("Failed to create custom editor.", error);

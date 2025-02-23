@@ -5,13 +5,20 @@
       "name": "Extension: Build",
       "type": "extensionHost",
       "request": "launch",
-      "sourceMaps": true,
-      "resolveSourceMapLocations": ["${workspaceFolder}/dist/**", "!**/node_modules/**"],
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "outFiles": ["${workspaceFolder}/dist/*.js"],
-      "outputCapture": "console",
-      "preLaunchTask": "watch"
+      "preLaunchTask": "dev",
+      "sourceMaps": true,
+      "outputCapture": "std",
+      "resolveSourceMapLocations": ["${workspaceFolder}\\dist"],
+      "outFiles": ["${workspaceFolder}\\dist\\*.js"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "localRoot": "${workspaceFolder}\\dist",
+      "sourceMapPathOverrides": {
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+        "webpack://?:*/*": "${workspaceFolder}/*"
+      },
+      "runtimeSourcemapPausePatterns": ["webpack:///./~/*", "webpack://?:*/*"]
     }
   ]
 }
