@@ -14,7 +14,6 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true
   },
-  "autoimport.showNotifications": false,
   "css.format.enable": false,
   "css.validate": false,
   "debug.toolBarLocation": "commandCenter",
@@ -25,9 +24,19 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.enable": true,
   "eslint.format.enable": false,
-  "eslint.probe": ["javascript", "typescript", "typescriptreact", "html"],
+  "eslint.probe": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "html"
+  ],
   "eslint.run": "onType",
-  "eslint.validate": ["javascript", "typescript", "typescriptreact", "html"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "html"
+  ],
   "explorer.confirmDragAndDrop": false,
   "files.exclude": {
     ".git": true,
@@ -40,10 +49,8 @@
   "javascript.validate.enable": false,
   "less.validate": false,
   "material-icon-theme.activeIconPack": "react",
-  "material-icon-theme.files.color": "#000000",
   "material-icon-theme.folders.color": "#eb7734",
   "material-icon-theme.hidesExplorerArrows": true,
-  "npm.exclude": "release/**",
   "scss.lint.emptyRules": "warning",
   "scss.lint.zeroUnits": "warning",
   "scss.showErrors": true,
@@ -56,11 +63,16 @@
     ".git": true
   },
   "stylelint.enable": true,
-  "stylelint.validate": ["css", "scss"],
+  "stylelint.validate": [
+    "css",
+    "scss"
+  ],
   "terminal.integrated.defaultProfile.windows": "bash-node",
   "terminal.integrated.profiles.windows": {
     "bash-node": {
-      "args": ["-l"],
+      "args": [
+        "-l"
+      ],
       "env": {
         "PATH": "${workspaceFolder}\\node_modules\\.bin;${env:PATH}"
       },
@@ -74,6 +86,5 @@
   "typescript.tsc.autoDetect": "off",
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.updateImportsOnFileMove.enabled": "always",
-  // "vscode-color-picker.languages": ["javascript", "typescript", "css", "scss"],
   "workbench.iconTheme": "material-icon-theme"
 }

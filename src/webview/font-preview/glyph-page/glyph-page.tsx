@@ -10,6 +10,7 @@ import {
   getPageChunk,
   PAGINATION_MAX_NUM_PAGES
 } from "./glyph-pagination/glyph-pagination.model";
+import { GlyphSearchTable } from "./glyph-search-table/glyph-search-table";
 
 type GlyphPageProps = {
   glyphs: FontGlyph[];
@@ -65,6 +66,7 @@ export function GlyphPage({ glyphs }: GlyphPageProps) {
 
   return (
     <div className={styles["glyph-page-wrapper"]}>
+      <GlyphSearchTable glyphs={glyphs} />
       <GlyphSearch onValueChange={onSearchFilterCriteriaChange} />
       <div className={styles["glyph-pagination"]}>
         <GlyphPagination
