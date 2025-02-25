@@ -1,6 +1,6 @@
 {
   "[scss]": {
-    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter",
+    "editor.defaultFormatter": "michelemelluso.code-beautifier",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true
   },
@@ -14,29 +14,57 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true
   },
+  //   {
+  //   indent_size?: number;
+  //   indent_char?: string;
+  //   eol?: string;
+  //   indent_level?: number;
+  //   indent_with_tabs?: boolean;
+  //   preserve_newlines?: boolean;
+  //   max_preserve_newlines?: number;
+  //   jslint_happy?: boolean;
+  //   space_after_anon_function?: boolean;
+  //   brace_style?: 'collapse-preserve-inline' | 'collapse' | 'expand' | 'end-expand' | 'none';
+  //   keep_array_indentation?: boolean;
+  //   keep_function_indentation?: boolean;
+  //   space_before_conditional?: boolean;
+  //   space_in_empty_paren?: boolean;
+  //   break_chained_methods?: boolean;
+  //   eval_code?: boolean;
+  //   unescape_strings?: boolean;
+  //   wrap_line_length?: number;
+  //   wrap_attributes?: 'auto' | 'force';
+  //   wrap_attributes_indent_size?: number;
+  //   end_with_newline?: boolean;
+  "beautify.options": {
+    "brace_style": "collapse-preserve-inline", // "collapse-preserve-inline" | "collapse" | "expand" | "end-expand" | "none"
+    "break_chained_methods": true,
+    "end_with_newline": true,
+    "eval_code": true,
+    "indent_size": 2,
+    "keep_array_indentation": true,
+    "keep_function_indentation": true,
+    "space_before_conditional": true,
+    "space_in_empty_paren": true,
+    "unescape_strings": true,
+    "wrap_attributes": "auto",
+    "wrap_attributes_indent_size": 2,
+    "wrap_line_length": 120
+  },
   "css.format.enable": false,
   "css.validate": false,
   "debug.toolBarLocation": "commandCenter",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
-    "source.fixAll.scss": "always"
+    "source.fixAll.stylelint": "always",
+    "source.sortImports": "always"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.enable": true,
   "eslint.format.enable": false,
-  "eslint.probe": [
-    "javascript",
-    "typescript",
-    "typescriptreact",
-    "html"
-  ],
+  "eslint.probe": ["javascript", "typescript", "typescriptreact", "html"],
   "eslint.run": "onType",
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "typescriptreact",
-    "html"
-  ],
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "html"],
   "explorer.confirmDragAndDrop": false,
   "files.exclude": {
     ".git": true,
@@ -55,7 +83,6 @@
   "scss.lint.zeroUnits": "warning",
   "scss.showErrors": true,
   "scss.validate": false,
-  "scssFormatter.printWidth": 120,
   "search.exclude": {
     "**/bundle-analyzer/**": true,
     "**/dist/**": true,
@@ -63,16 +90,11 @@
     ".git": true
   },
   "stylelint.enable": true,
-  "stylelint.validate": [
-    "css",
-    "scss"
-  ],
+  "stylelint.validate": ["css", "scss"],
   "terminal.integrated.defaultProfile.windows": "bash-node",
   "terminal.integrated.profiles.windows": {
     "bash-node": {
-      "args": [
-        "-l"
-      ],
+      "args": ["-l"],
       "env": {
         "PATH": "${workspaceFolder}\\node_modules\\.bin;${env:PATH}"
       },

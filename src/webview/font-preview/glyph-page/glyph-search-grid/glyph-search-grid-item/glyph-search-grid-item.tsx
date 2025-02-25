@@ -1,11 +1,11 @@
-import { FontGlyph } from "../../../../shared/model";
-import * as styles from "./glyph-page-item.module.scss";
+import { FontGlyph } from "@shared/model";
+import * as styles from "./glyph-search-grid-item.module.scss";
 
-type GlyphPageItemProps = {
+type GlyphSearchGridItemProps = {
   glyph: FontGlyph;
 };
 
-export function GlyphPageItem({ glyph }: GlyphPageItemProps) {
+export function GlyphSearchGridItem({ glyph }: GlyphSearchGridItemProps) {
   return (
     <div className={styles["glyph"]}>
       <div className={styles["name"]}>{glyph.name}</div>

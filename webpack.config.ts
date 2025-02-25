@@ -35,7 +35,7 @@ export default {
       module: false
     },
     alias: {
-      styles: path.resolve(__dirname, "src/webview/styles")
+      styles: path.resolve(__dirname, "src", "webview", "styles")
     }
   },
   module: {
@@ -118,9 +118,6 @@ export default {
         }
       })
     ]
-  },
-  watchOptions: {
-    poll: 1000
   },
   externals: {
     vscode: "commonjs vscode"
