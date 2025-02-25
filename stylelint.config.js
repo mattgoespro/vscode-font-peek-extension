@@ -8,7 +8,7 @@ module.exports = {
       "/^font-size/": ["em"],
       "^[(min|max)-]width|^[(min|max)-]height": ["%", "rem"]
     },
-    "unit-allowed-list": ["px", "rem", "fr", "%", "em", "s", "ms", "deg"]
+    "unit-allowed-list": ["px", "rem", "em", "vw", "vh", "s", "ms", "deg", "fr", "%"]
   },
   overrides: [
     {

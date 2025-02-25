@@ -21,17 +21,13 @@ export function GlyphSearchGrid({ glyphs }: GlyphSearchGridProps) {
   }
 
   return (
-    <>
+    <div className={styles["grid"]}>
       <GlyphSearchGridItemFilter onFilterChange={onFilterCriteriaChange} />
-      {((glyphs ?? []).length > 0 && (
-        <>
-          <div className={styles["search-grid-items"]}>
-            {matchingGridItems.map((gridItem) => (
-              <GlyphSearchGridItem key={genUuid()} glyph={gridItem} />
-            ))}
-          </div>
-        </>
-      )) || <span className={styles["no-glyphs"]}>No glyphs found.</span>}
-    </>
+      <div className={styles["grid-items"]}>
+        {(matchingGridItems ?? []).map((gridItem) => (
+          <GlyphSearchGridItem key={genUuid()} glyph={gridItem} />
+        )) || <span className={styles["grid-no-matching-items"]}>No matching glyphs found.</span>}
+      </div>
+    </div>
   );
 }
