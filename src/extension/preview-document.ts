@@ -1,12 +1,12 @@
 import { dirname, join } from "path";
-import vscode, { ExtensionContext } from "vscode";
-import webviewTemplate from "../webview/index.html";
 import { Subject, Subscription } from "rxjs";
-import { FontGlyph } from "../shared/model";
+import vscode, { ExtensionContext } from "vscode";
 import { EditorMessage } from "../shared/events/messages";
-import { loadFont } from "./font";
-import { createLogger } from "../shared/logging/logger";
 import { FormattedError } from "../shared/logging/formatted-error";
+import { createLogger } from "../shared/logging/logger";
+import { FontGlyph } from "../shared/model";
+import webviewTemplate from "../webview/index.html";
+import { loadFont } from "./model";
 
 class FontGlyphPreviewError extends FormattedError {
   constructor(message: string) {
@@ -18,7 +18,7 @@ class FontGlyphPreviewError extends FormattedError {
   }
 }
 
-export class FontDocument implements vscode.CustomDocument {
+export class PreviewDocument implements vscode.CustomDocument {
   private contents: Buffer;
   private webviewPanel: vscode.WebviewPanel;
   private webviewScriptUri: vscode.Uri;
@@ -56,7 +56,7 @@ export class FontDocument implements vscode.CustomDocument {
     uri: vscode.Uri,
     outputChannel: vscode.OutputChannel
   ) {
-    const document = new FontDocument(context, uri, outputChannel);
+    const document = new PreviewDocument(context, uri, outputChannel);
     await document.readFile(uri);
     return document;
   }

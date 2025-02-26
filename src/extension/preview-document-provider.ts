@@ -1,10 +1,10 @@
 import vscode from "vscode";
-import { FontDocument } from "./document";
+import { PreviewDocument } from "./preview-document";
 
-export class FontPreviewDocumentProvider
-  implements vscode.CustomReadonlyEditorProvider<FontDocument>
+export class PreviewDocumentProvider
+  implements vscode.CustomReadonlyEditorProvider<PreviewDocument>
 {
-  private document: FontDocument;
+  private document: PreviewDocument;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
@@ -21,7 +21,7 @@ export class FontPreviewDocumentProvider
   ): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       "fontGlyphPreview.editor.preview",
-      new FontPreviewDocumentProvider(context, outputChannel),
+      new PreviewDocumentProvider(context, outputChannel),
       {
         supportsMultipleEditorsPerDocument: true,
         webviewOptions: {
@@ -35,8 +35,8 @@ export class FontPreviewDocumentProvider
     uri: vscode.Uri,
     _: vscode.CustomDocumentOpenContext,
     token: vscode.CancellationToken
-  ): Promise<FontDocument> {
-    this.document = await FontDocument.create(this.context, uri, this.outputChannel);
+  ): Promise<PreviewDocument> {
+    this.document = await PreviewDocument.create(this.context, uri, this.outputChannel);
 
     token.onCancellationRequested(() => {
       this.dispose();
@@ -47,7 +47,7 @@ export class FontPreviewDocumentProvider
   }
 
   async resolveCustomEditor(
-    document: FontDocument,
+    document: PreviewDocument,
     webviewPanel: vscode.WebviewPanel
   ): Promise<void> {
     try {

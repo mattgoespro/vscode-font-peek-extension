@@ -1,6 +1,6 @@
 import fontkit from "fontkit";
-import { FontGlyph } from "../shared/model";
 import vscode from "vscode";
+import { FontGlyph } from "../shared/model";
 
 export function loadFont(buffer: Buffer) {
   const font = loadFontData(buffer);

@@ -10,5 +10,4 @@ export type FontGlyph = {
   binary: string;
   unicode: string;
   hex: string;
-  variant?: FontGlyphVariant;
 };
