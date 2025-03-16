@@ -1,22 +1,13 @@
-import typescriptEslint from "typescript-eslint";
-import reactEslint from "eslint-plugin-react";
-import htmlEslint from "@html-eslint/eslint-plugin";
 import eslintPrettier from "eslint-config-prettier";
-import eslintNode from "eslint-plugin-n";
+import eslintReact from "eslint-plugin-react";
+import eslintReactHooks from "eslint-plugin-react-hooks";
+import eslintTs from "typescript-eslint";
 
-export default typescriptEslint.config(
+export default eslintTs.config(
   {
-    ignores: ["node_modules", "dist/**/*", "temp"],
-    files: ["src"],
-    settings: {
-      ecmaFeatures: {
-        jsx: true
-      }
-    }
+    files: ["libs"]
   },
-  ...typescriptEslint.configs.recommended,
   {
-    ...typescriptEslint.configs.eslintRecommended,
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
@@ -29,38 +20,18 @@ export default typescriptEslint.config(
     }
   },
   {
-    ...reactEslint.configs.flat.recommended,
-    settings: {
-      react: { version: "detect" }
-    },
-    rules: {
-      "react/react-in-jsx-scope": "off",
-      "react/jsx-uses-react": "off"
-    }
+    ignores: ["node_modules", "dist", "temp"]
   },
+  eslintTs.configs.recommended,
   eslintPrettier,
+  eslintReact.configs.flat.recommended,
   {
-    ...eslintNode.configs["flat/recommended-module"],
     settings: {
-      node: {
-        tryExtensions: [".ts", ".tsx", ".js", ".jsx"]
+      react: {
+        version: "detect"
       }
-    },
-    rules: {
-      "n/no-unpublished-import": [
-        "warn",
-        {
-          allowModules: [
-            "typescript-eslint",
-            "eslint-plugin-react",
-            "@html-eslint/eslint-plugin",
-            "eslint-config-prettier",
-            "eslint-plugin-n"
-          ]
-        }
-      ]
     }
   },
-  // eslintNode.configs.recommended,
-  { files: ["*.html"], ...htmlEslint.configs["flat/recommended"] }
+  eslintReact.configs.flat["jsx-runtime"],
+  eslintReactHooks.configs["recommended-latest"]
 );

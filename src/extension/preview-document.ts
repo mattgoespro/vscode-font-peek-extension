@@ -1,7 +1,7 @@
 import { dirname, join } from "path";
 import { Subject, Subscription } from "rxjs";
 import vscode, { ExtensionContext } from "vscode";
-import { EditorMessage } from "../shared/events/messages";
+import { EditorMessage, MessageContext } from "../shared/events/messages";
 import { FormattedError } from "../shared/logging/formatted-error";
 import { createLogger } from "../shared/logging/logger";
 import { FontGlyph } from "../shared/model";
@@ -27,7 +27,8 @@ export class PreviewDocument implements vscode.CustomDocument {
 
   private subscriptions: Subscription[] = [];
   private disposables: vscode.Disposable[] = [];
-  private logger = createLogger("FontDocument");
+  private runtimeLogger = createLogger("FontDocument: Runtime");
+  private webviewLogger = createLogger("FontDocument: Document");
 
   constructor(
     private context: vscode.ExtensionContext,
@@ -96,7 +97,7 @@ export class PreviewDocument implements vscode.CustomDocument {
     this.subscriptions.push(
       this.previewReady$.subscribe(async () => {
         try {
-          const glyphs: FontGlyph[] = loadFont(this.contents);
+          const glyphs: FontGlyph[] = loadFont(this.outputChannel, this.contents);
 
           this.webview.postMessage<EditorMessage<"extension">>({
             source: "extension",
@@ -104,9 +105,6 @@ export class PreviewDocument implements vscode.CustomDocument {
             glyphs
           });
         } catch (error) {
-          this.outputChannel.appendLine(
-            this.logger.createLogMessage(new FontGlyphPreviewError(error.message), true)
-          );
           vscode.window.showErrorMessage(
             ["Failed to open font preview.", error.message].join("\n")
           );
@@ -115,33 +113,58 @@ export class PreviewDocument implements vscode.CustomDocument {
     );
   }
 
+  private logOutput(context: MessageContext, ...args: unknown[]) {
+    const output = this.outputChannel.appendLine;
+
+    switch (context) {
+      case "webview": {
+        output(this.webviewLogger.createLogMessage(args));
+        break;
+      }
+      case "extension": {
+        output(this.runtimeLogger.createLogMessage(args));
+        break;
+      }
+    }
+  }
+
   private addWebviewEventListeners() {
     this.webview.onDidReceiveMessage((event: MessageEvent<EditorMessage<"webview">>) => {
-      switch (event.data.name) {
+      const { data: messageData } = event;
+
+      switch (messageData.name) {
         case "log-output": {
-          const logger = createLogger("Webview");
-          this.outputChannel.appendLine(logger.createLogMessage(event.data.args, true));
+          this.logOutput("webview", messageData.args);
           break;
         }
         case "webview-state-changed": {
-          if (event.data.state === "ready") {
-            this.outputChannel.appendLine("Webview ready.");
+          if (messageData.state === "ready") {
+            this.logOutput("webview", "Webview ready.");
             this.previewReady$.next(true);
+            return;
           }
 
-          this.outputChannel.appendLine(`Waiting for webview...`);
+          this.logOutput("webview", "Waiting for webview to be ready...");
           break;
         }
         case "notify": {
-          switch (event.data.level) {
+          switch (messageData.level) {
             case "info":
-              vscode.window.showInformationMessage(event.data.message);
+              vscode.window.showInformationMessage(messageData.message);
               break;
             case "warn":
-              vscode.window.showWarningMessage(event.data.message);
+              vscode.window.showWarningMessage(
+                messageData.message,
+                `${messageData.level}: ${messageData.message}`
+              );
               break;
             case "error":
-              vscode.window.showErrorMessage(event.data.message);
+              vscode.window.showErrorMessage(
+                messageData.message,
+                messageData.level,
+                messageData.name,
+                messageData.source
+              );
               break;
           }
         }
@@ -168,7 +191,7 @@ export class PreviewDocument implements vscode.CustomDocument {
     if (this.webviewPanel == null) {
       vscode.window.showErrorMessage("Webview panel not initialized.");
       this.outputChannel.appendLine(
-        this.logger.createLogMessage(
+        this.runtimeLogger.createLogMessage(
           new FontGlyphPreviewError("Webview panel not initialized"),
           true
         )

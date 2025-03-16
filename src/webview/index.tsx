@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { EditorMessage } from "../shared/events/messages";
 import { FontPreview } from "./font-preview/font-preview";
-import { WebviewContext } from "./shared/webview-context";
 import { useNotifications, useOutputPanel } from "./shared/hooks";
+import { WebviewContext } from "./shared/webview-context";
 
 window.onload = () => {
   const vscodeApi = window.acquireVsCodeApi();
@@ -18,8 +18,6 @@ window.onload = () => {
   window.addEventListener("message", (event: MessageEvent<EditorMessage<"extension">>) => {
     switch (event.data?.name) {
       case "font-glyphs-loaded": {
-        outputPanel.info("Font glyphs loaded", event.data.glyphs);
-
         const root = createRoot(document.getElementById("root"));
 
         root.render(

@@ -11,7 +11,8 @@
     "target": "es6",
     "types": ["node", "react", "./src/types/modules.d.ts", "./src/types/window.d.ts"],
     "paths": {
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["src/shared/*"],
+      "@webview/*": ["src/webview/*"]
     },
     "allowJs": true,
     "strict": false,

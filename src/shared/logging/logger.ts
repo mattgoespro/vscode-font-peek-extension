@@ -16,7 +16,7 @@ type LogMessage = unknown;
  * @param name the log message prefix
  */
 export function createLogger(name: string): Logger {
-  const createLogMessage = (message: LogMessage, addPrefix = false) => {
+  const createLogMessage = (message: LogMessage, addPrefix = true) => {
     return `${addPrefix ? `[${name}]: ` : ""}${prettyStringify(message, { sortObjectKeys: true, quoteStrings: false })}`;
   };
 

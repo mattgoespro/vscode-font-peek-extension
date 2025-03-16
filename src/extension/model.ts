@@ -2,9 +2,9 @@ import fontkit from "fontkit";
 import vscode from "vscode";
 import { FontGlyph } from "../shared/model";
 
-export function loadFont(buffer: Buffer) {
+export function loadFont(outputChannel: vscode.OutputChannel, buffer: Buffer) {
   const font = loadFontData(buffer);
-  return extractFontGlyphs(font);
+  return extractFontGlyphs(outputChannel, font);
 }
 
 function loadFontData(buffer: Buffer) {
@@ -25,31 +25,22 @@ function isFontCollection(
   return (font as fontkit.FontCollection).fonts !== undefined;
 }
 
-export function extractFontGlyphs(font: fontkit.Font) {
-  const MAX_GLYPH_STRING_LENGTH = 3;
+export function extractFontGlyphs(outputChannel: vscode.OutputChannel, font: fontkit.Font) {
   const glyphs: FontGlyph[] = [];
 
   for (let i = 0; i < font.characterSet.length; i++) {
     const glyph = font.glyphForCodePoint(font.characterSet[i]);
-
     const id = glyph.id;
     const name = glyph.name;
-    const binary = glyph.codePoints[0];
-    const hex = `&#x${binary.toString(16)}`;
-    const unicode = String.fromCodePoint(binary);
 
-    const glyphString = font.stringsForGlyph(glyph.id);
-
-    if (glyphString.length > MAX_GLYPH_STRING_LENGTH) {
-      continue;
+    if (glyph.codePoints.length > 1) {
+      outputChannel.appendLine(`Glyph ${name} has more than one code point.`);
     }
 
     glyphs.push({
       id,
       name,
-      binary: `\\u${binary.toString(16)}`,
-      unicode,
-      hex
+      unicode: String.fromCodePoint(...glyph.codePoints)
     });
   }
 

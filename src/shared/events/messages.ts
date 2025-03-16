@@ -2,6 +2,8 @@ import { FontGlyph } from "../model";
 
 export type LogLevel = "info" | "warn" | "error";
 
+export type MessageContext = "webview" | "extension";
+
 type MessagePayloads = {
   webview: {
     "webview-state-changed": {

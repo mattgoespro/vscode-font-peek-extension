@@ -7,7 +7,7 @@ export function activate(context: vscode.ExtensionContext) {
   const logger = createLogger("FontPeek");
 
   context.subscriptions.push(PreviewDocumentProvider.register(context, outputChannel));
-  outputChannel.appendLine(logger.createLogMessage("FontPeek activated.", true));
+  outputChannel.appendLine(logger.createLogMessage("FontPeek activated."));
 }
 
 export function deactivate() {}
