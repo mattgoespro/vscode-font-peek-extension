@@ -37,16 +37,12 @@ export class FontDocument implements vscode.CustomDocument {
     this.webviewScriptUri = vscode.Uri.file(
       join(this.context.extensionPath, "dist", "webview.js")
     ).with({
-      scheme: "vscode-resource",
-      authority: "vscode.preview-font",
-      path: "/dist/webview.js"
+      scheme: "vscode-resource"
     });
     this.webviewStylesheetUri = vscode.Uri.file(
       join(this.context.extensionPath, "dist", "webview.css")
     ).with({
-      scheme: "vscode-resource",
-      authority: "vscode.preview-font",
-      path: "/dist/webview.css"
+      scheme: "vscode-resource"
     });
   }
 

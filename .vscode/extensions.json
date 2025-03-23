@@ -21,6 +21,7 @@
     "yoavbls.pretty-ts-errors",
     "pkief.material-icon-theme",
     "stylelint.vscode-stylelint",
-    "markosth09.color-picker"
+    "markosth09.color-picker",
+    "eamodio.gitlens"
   ]
 }
