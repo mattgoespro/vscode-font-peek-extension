@@ -1,4 +1,4 @@
-import { dirname, join } from "path";
+// import path from "path";
 import vscode, { ExtensionContext } from "vscode";
 import html from "../webview/index.html";
 import { Subject, Subscription } from "rxjs";
@@ -21,8 +21,6 @@ class FontGlyphPreviewError extends FormattedError {
 export class FontDocument implements vscode.CustomDocument {
   private contents: Buffer;
   private webviewPanel: vscode.WebviewPanel;
-  private webviewScriptUri: vscode.Uri;
-  private webviewStylesheetUri: vscode.Uri;
   private previewReady$: Subject<boolean> = new Subject();
 
   private subscriptions: Subscription[] = [];
@@ -33,18 +31,7 @@ export class FontDocument implements vscode.CustomDocument {
     private context: vscode.ExtensionContext,
     readonly uri: vscode.Uri,
     private outputChannel: vscode.OutputChannel
-  ) {
-    this.webviewScriptUri = vscode.Uri.file(
-      join(this.context.extensionPath, "dist", "webview.js")
-    ).with({
-      scheme: "vscode-resource"
-    });
-    this.webviewStylesheetUri = vscode.Uri.file(
-      join(this.context.extensionPath, "dist", "webview.css")
-    ).with({
-      scheme: "vscode-resource"
-    });
-  }
+  ) {}
 
   protected async readFile(uri: vscode.Uri) {
     if (uri.scheme === "untitled") {
@@ -91,8 +78,8 @@ export class FontDocument implements vscode.CustomDocument {
       enableScripts: true,
       enableCommandUris: true,
       localResourceRoots: [
-        vscode.Uri.file(join(this.context.extensionPath, "dist")),
-        vscode.Uri.file(dirname(this.uri.path))
+        vscode.Uri.joinPath(this.context.extensionUri, "dist"),
+        vscode.Uri.file(this.uri.path)
       ]
     };
     this.webview.html = this.injectWebviewContent();
@@ -131,9 +118,13 @@ export class FontDocument implements vscode.CustomDocument {
 
   private injectWebviewContent(): string {
     return this.interpolateTemplateVariables(html, {
-      webviewScriptUri: this.webviewScriptUri.toString(),
-      webviewStylesheetUri: this.webviewStylesheetUri.toString(),
-      webviewFontDataUri: this.getFontDataWebviewUri().toString()
+      webviewScriptUri: this.webview
+        .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview.js"))
+        .toString(),
+      webviewStyleSheetUri: this.webview
+        .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview.css"))
+        .toString(),
+      fontDataUri: this.getFontDataWebviewUri()
     });
   }
 

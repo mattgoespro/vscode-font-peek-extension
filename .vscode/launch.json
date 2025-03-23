@@ -3,22 +3,13 @@
     {
       "name": "Extension: Build",
       "type": "extensionHost",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "localRoot": "${workspaceFolder}\\src",
-      "outFiles": ["${workspaceFolder}\\dist\\*.js"],
-      // "outputCapture": "console",
-      "outputCapture": "std",
-      "pauseForSourceMap": true,
-      "remoteRoot": "\\src",
       "request": "launch",
-      "resolveSourceMapLocations": ["${workspaceFolder}\\dist\\**", "!**\\node_modules\\**"],
       "runtimeExecutable": "${execPath}",
-      "skipFiles": ["<node_internals>\\**"],
-      "sourceMapPathOverrides": {
-        "webpack:\\\\\\src\\*": "${workspaceFolder}\\src\\*"
-      },
-      "sourceMapRenames": true,
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
+      "outFiles": ["${workspaceFolder}\\dist\\*.js"],
+      "outputCapture": "console",
       "sourceMaps": true,
+      "remoteRoot": "${workspaceFolder}",
       "preLaunchTask": "dev"
     }
   ],

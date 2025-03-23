@@ -54,7 +54,10 @@ export class FontPreviewDocumentProvider
       await document.initWebview(webviewPanel);
     } catch (error) {
       this.dispose();
-      vscode.window.showErrorMessage("Failed to create custom editor.", error);
+      this.outputChannel.appendLine(`Failed to resolve custom editor: ${error.message}`);
+      this.outputChannel.appendLine(error.stack);
+      this.outputChannel.show();
+      vscode.window.showErrorMessage("Failed to open font preview editor.");
     }
   }
 
