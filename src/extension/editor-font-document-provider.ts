@@ -1,15 +1,19 @@
 import vscode from "vscode";
-import { FontDocument } from "./document";
+import { EditorFontDocument } from "./editor-font-document";
+import { createLogger, Logger } from "../shared/logging";
 
-export class FontPreviewDocumentProvider
-  implements vscode.CustomReadonlyEditorProvider<FontDocument>
+export class EditorFontDocumentProvider
+  implements vscode.CustomReadonlyEditorProvider<EditorFontDocument>
 {
-  private document: FontDocument;
+  private document: EditorFontDocument;
+  private log: Logger;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly outputChannel: vscode.OutputChannel
-  ) {}
+  ) {
+    this.log = createLogger("EditorFontDocumentProvider", this.outputChannel.appendLine);
+  }
 
   /**
    * Registers the font preview custom editor provider.
@@ -21,7 +25,7 @@ export class FontPreviewDocumentProvider
   ): vscode.Disposable {
     return vscode.window.registerCustomEditorProvider(
       "fontGlyphPreview.editor.preview",
-      new FontPreviewDocumentProvider(context, outputChannel),
+      new EditorFontDocumentProvider(context, outputChannel),
       {
         supportsMultipleEditorsPerDocument: true,
         webviewOptions: {
@@ -35,23 +39,21 @@ export class FontPreviewDocumentProvider
     uri: vscode.Uri,
     _: vscode.CustomDocumentOpenContext,
     token: vscode.CancellationToken
-  ): Promise<FontDocument> {
-    this.document = await FontDocument.create(this.context, uri, this.outputChannel);
-
+  ): Promise<EditorFontDocument> {
     token.onCancellationRequested(() => {
       this.dispose();
       vscode.window.showInformationMessage("Cancelled preview.");
-    });
+    }, this.context.subscriptions);
 
-    return this.document;
+    return new EditorFontDocument(this.context, uri, this.outputChannel);
   }
 
   async resolveCustomEditor(
-    document: FontDocument,
+    document: EditorFontDocument,
     webviewPanel: vscode.WebviewPanel
   ): Promise<void> {
     try {
-      await document.initWebview(webviewPanel);
+      await document.createWebview(webviewPanel);
     } catch (error) {
       this.dispose();
       this.outputChannel.appendLine(`Failed to resolve custom editor: ${error.message}`);
@@ -62,7 +64,7 @@ export class FontPreviewDocumentProvider
   }
 
   /**
-   * Disposes of the font preview document provider.
+   * Disposes of the font preview document.
    */
   dispose() {
     this.document.dispose();
