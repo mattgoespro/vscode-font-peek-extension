@@ -2,26 +2,22 @@ import { createRoot } from "react-dom/client";
 import { EditorMessage } from "../shared/events/messages";
 import { FontPreview } from "./font-preview/font-preview";
 import { WebviewContext } from "./shared/webview-context";
-import { useOutputPanel } from "./shared/hooks/use-output-panel";
 
 window.onload = () => {
   const vscodeApi = window.acquireVsCodeApi();
 
-  console.log(vscodeApi);
-
   vscodeApi.postMessage<EditorMessage<"webview">>({
-    data: { source: "webview", name: "webview-state-changed", state: "ready" }
+    data: { source: "webview", name: "webview-state-changed", payload: { state: "ready" } }
   });
 
   window.onmessage = (event: MessageEvent<EditorMessage<"extension">>) => {
     if (event.data?.name === "font-glyphs-loaded") {
-      useOutputPanel("Webview", vscodeApi).info("Font glyphs loaded", event.data.glyphs);
-
       const root = createRoot(document.getElementById("root"));
+      const { fontData } = event.data.payload;
 
       root.render(
-        <WebviewContext.Provider value={{ vscodeApi }}>
-          <FontPreview glyphs={event.data?.glyphs ?? []} />
+        <WebviewContext.Provider value={{ vscodeApi, fontSpec: fontData }}>
+          <FontPreview />
         </WebviewContext.Provider>
       );
     }

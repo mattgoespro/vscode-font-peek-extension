@@ -1,12 +1,12 @@
 import { createContext } from "react";
-import { FontData } from "../../shared/model";
+import { FontSpec } from "../../shared/model";
 
 export type FontContext = {
-  font: FontData;
+  fontSpec: FontSpec;
   vscodeApi: VsCodeApi;
 };
 
 export const WebviewContext = createContext<FontContext>({
   vscodeApi: null,
-  font: null
+  fontSpec: null
 });

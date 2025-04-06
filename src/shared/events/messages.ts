@@ -1,4 +1,4 @@
-import { FontGlyph } from "../model";
+import { FontSpec } from "../model";
 
 export type LogLevel = "info" | "warn" | "error";
 
@@ -15,7 +15,7 @@ type MessagePayloads = {
   };
   extension: {
     "font-glyphs-loaded": {
-      glyphs: FontGlyph[];
+      fontData: FontSpec;
     };
   };
 };
@@ -24,5 +24,5 @@ export type EditorMessage<T extends keyof MessagePayloads> = {
   [K in keyof MessagePayloads[T]]: {
     source: T;
     name: K;
-  } & MessagePayloads[T][K];
+  } & { payload: MessagePayloads[T][K] };
 }[keyof MessagePayloads[T]];

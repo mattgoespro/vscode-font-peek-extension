@@ -1,24 +1,23 @@
 import vscode from "vscode";
 import html from "../webview/index.html";
-import { Subject, Subscription } from "rxjs";
-import { FontGlyph } from "../shared/model";
+import { FontSpec } from "../shared/model";
 import { EditorMessage } from "../shared/events/messages";
-import { loadFont } from "./font";
-import { createLogger } from "../shared/logging/logger";
+import { loadFont } from "@shared/model";
+import { createLogger, Logger } from "../shared/logging/logger";
 
 export class EditorFontDocument implements vscode.CustomDocument {
-  private contents: Buffer;
+  private contents: ArrayBuffer;
   private webviewPanel: vscode.WebviewPanel;
-  private previewReady$: Subject<boolean> = new Subject();
 
-  private subscriptions: Subscription[] = [];
-  private log = createLogger("EditorFontDocument");
+  private log: Logger;
 
   constructor(
     private context: vscode.ExtensionContext,
     readonly uri: vscode.Uri,
-    private outputChannel: vscode.OutputChannel
-  ) {}
+    outputChannel: vscode.OutputChannel
+  ) {
+    this.log = createLogger("EditorFontDocument", outputChannel.appendLine);
+  }
 
   /**
    * Creates a custom editor for the given webview panel and font document
@@ -28,7 +27,8 @@ export class EditorFontDocument implements vscode.CustomDocument {
    * @param document The font document to display in the editor.
    */
   public async createWebview(webviewPanel: vscode.WebviewPanel) {
-    this.contents = await this.loadContents();
+    this.contents = await this.readWebviewTemplate();
+    this.log.info("Loaded font document contents.", this.contents);
 
     this.webviewPanel = webviewPanel;
     this.webviewPanel.webview.options = {
@@ -39,51 +39,61 @@ export class EditorFontDocument implements vscode.CustomDocument {
         vscode.Uri.file(this.uri.path)
       ]
     };
-    this.webviewPanel.webview.html = this.formatWebviewTemplate(html, {
-      webviewScriptUri: this.webviewPanel.webview
-        .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview.js"))
-        .toString(),
-      webviewStyleSheetUri: this.webviewPanel.webview
-        .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, "dist", "webview.css"))
-        .toString(),
+    this.webviewPanel.webview.html = this.formatWebviewTemplateContents(html, {
+      webviewScriptUri: this.toWebviewUri("dist", "webview.js"),
+      webviewStyleSheetUri: this.toWebviewUri("dist", "webview.css"),
       fontDataUri: this.getFontDataWebviewUri()
     });
 
     this.webviewPanel.webview.onDidReceiveMessage(
       (event: MessageEvent<EditorMessage<"webview">>) => {
-        switch (event.data.name) {
+        const { data } = event;
+        const { payload } = data;
+
+        switch (data.name) {
           case "log-output": {
-            const logger = createLogger("Webview");
-            this.outputChannel.appendLine(logger.createLogMessage(event.data.args, true));
+            this.log.info(payload);
             break;
           }
-          case "webview-state-changed":
-            if (event.data.state === "ready") {
-              this.previewReady$.next(true);
+          case "webview-state-changed": {
+            if (data.payload.state !== "ready") {
+              return;
             }
+
+            /**
+             * The webview is ready to receive and render the font preview.
+             */
+            try {
+              this.log.info("Loading font...", this.contents);
+              const fontData: FontSpec = loadFont(this.contents);
+              this.webviewPanel.webview.postMessage<EditorMessage<"extension">>({
+                source: "extension",
+                name: "font-glyphs-loaded",
+                payload: {
+                  fontData
+                }
+              });
+            } catch (error) {
+              this.log.error("Failed to load font glyphs.", error);
+
+              vscode.window.showErrorMessage(
+                `Failed to load font glyphs: ${error instanceof Error ? error.message : error}`
+              );
+            }
+          }
         }
       },
       this.context.subscriptions
     );
-
-    this.context.subscriptions.push(this.webviewPanel);
-
-    /**
-     * Wait for webview ready state before sending font data.
-     */
-    this.subscriptions.push(
-      this.previewReady$.subscribe(async () => {
-        const glyphs: FontGlyph[] = loadFont(this.contents);
-        this.webviewPanel.webview.postMessage<EditorMessage<"extension">>({
-          source: "extension",
-          name: "font-glyphs-loaded",
-          glyphs
-        });
-      })
-    );
   }
 
-  private formatWebviewTemplate(content: string, data: Record<string, string>): string {
+  private toWebviewUri(...path: string[]) {
+    return this.webviewPanel.webview
+      .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, ...path))
+      .toString();
+  }
+
+  private formatWebviewTemplateContents(content: string, data: Record<string, string>): string {
     let html = content;
 
     Object.entries(data).forEach(([key, value]) => {
@@ -93,20 +103,20 @@ export class EditorFontDocument implements vscode.CustomDocument {
     return html;
   }
 
-  public async loadContents() {
-    const fontData = await vscode.workspace.fs.readFile(this.uri);
-    return Buffer.from(fontData);
+  public async readWebviewTemplate() {
+    const fontFileData = await vscode.workspace.fs.readFile(this.uri);
+    return fontFileData.buffer;
   }
 
   public getFontDataBase64() {
-    return this.contents.toString("base64");
+    return Buffer.from(this.contents).toString("base64");
   }
 
   private getFontDataWebviewUri() {
     return `data:font/ttf;base64,${this.getFontDataBase64()}`;
   }
 
-  public dispose(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  dispose(): void {
+    this.webviewPanel.dispose();
   }
 }

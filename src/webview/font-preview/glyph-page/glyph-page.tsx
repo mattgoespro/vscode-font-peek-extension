@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { FontGlyph } from "../../../shared/model";
+import { useContext, useEffect, useState } from "react";
 import { genUuid } from "../../shared/utils";
 import { GlyphPageItem } from "./glyph-page-item/glyph-page-item";
 import * as styles from "./glyph-page.module.scss";
@@ -10,37 +9,34 @@ import {
   getPageChunk,
   PAGINATION_MAX_NUM_PAGES
 } from "./glyph-pagination/glyph-pagination.model";
-
-type GlyphPageProps = {
-  glyphs: FontGlyph[];
-};
+import { WebviewContext } from "../../shared/webview-context";
 
 type GlyphFilterCriteria = {
   currentSearchName?: string;
   currentPage?: number;
 };
 
-export function GlyphPage({ glyphs }: GlyphPageProps) {
-  const [pageGlyphs, setPageGlyphs] = useState<FontGlyph[]>(glyphs);
+export function GlyphPage() {
+  const { fontSpec } = useContext(WebviewContext);
+  const [pageGlyphs, setPageGlyphs] = useState<opentype.Glyph[]>(fontSpec.glyphs);
   const [filterCriteria, setFilterCriteria] = useState<GlyphFilterCriteria>({
     currentPage: 0,
     currentSearchName: ""
   });
-  console.log(`Total glyphs: ${glyphs.length}`);
+  console.log(`Total glyphs: ${pageGlyphs.length}`);
   console.log(`Max number of pages: ${PAGINATION_MAX_NUM_PAGES}`);
-  console.log(`Page size: ${getChunkSize(glyphs.length)}`);
+  console.log(`Page size: ${getChunkSize(pageGlyphs.length)}`);
 
   function filterGlyphs(criteria: GlyphFilterCriteria) {
     // filter out matchibng glyphs based on the search criteria
-    const filteredGlyphs = glyphs.filter((glyph) =>
+    const filteredGlyphs = pageGlyphs.filter((glyph) =>
       glyph.name.includes(criteria.currentSearchName)
     );
 
-    // page the search results
     return getPageChunk(
       filteredGlyphs,
       filterCriteria.currentPage ?? 0,
-      getChunkSize(glyphs.length)
+      getChunkSize(pageGlyphs.length)
     );
   }
 
@@ -68,11 +64,11 @@ export function GlyphPage({ glyphs }: GlyphPageProps) {
       <GlyphSearch onValueChange={onSearchFilterCriteriaChange} />
       <div className={styles["glyph-pagination"]}>
         <GlyphPagination
-          totalGlyphs={glyphs.length}
+          totalGlyphs={fontSpec.glyphs.length}
           onPageChange={onPageFilterCriteriaChange}
         ></GlyphPagination>
       </div>
-      {((glyphs ?? []).length > 0 && (
+      {((fontSpec.glyphs ?? []).length > 0 && (
         <>
           <div className={styles["glyph-list"]}>
             {pageGlyphs.map((glyph) => (

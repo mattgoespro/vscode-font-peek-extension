@@ -55,11 +55,12 @@ export class EditorFontDocumentProvider
     try {
       await document.createWebview(webviewPanel);
     } catch (error) {
-      this.dispose();
-      this.outputChannel.appendLine(`Failed to resolve custom editor: ${error.message}`);
-      this.outputChannel.appendLine(error.stack);
-      this.outputChannel.show();
+      this.log.error(`Failed to resolve custom editor: ${error.message}`);
+      this.log.error(error.stack);
+
       vscode.window.showErrorMessage("Failed to open font preview editor.");
+
+      this.dispose();
     }
   }
 

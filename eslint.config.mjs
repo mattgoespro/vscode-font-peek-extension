@@ -10,6 +10,17 @@ export default tsEslint.config(
   eslint.configs.recommended,
   tsEslint.configs.recommended,
   {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_"
+        }
+      ]
+    }
+  },
+  {
     ...reactEslint.configs.flat.recommended,
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {

@@ -4,7 +4,7 @@ export const useOutputPanel = (moduleContext: string, vscodeApi: VsCodeApi) => {
   const logMessage = (level: LogLevel) => {
     return (...args: unknown[]) => {
       vscodeApi.postMessage<EditorMessage<"webview">>({
-        data: { source: "webview", name: "log-output", level, moduleContext, args }
+        data: { source: "webview", name: "log-output", payload: { level, moduleContext, args } }
       });
     };
   };
