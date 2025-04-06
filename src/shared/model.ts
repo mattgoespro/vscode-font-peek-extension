@@ -1,8 +1,4 @@
-export type FontGlyphVariant = {
-  binary: string;
-  unicode: string;
-  hex: string;
-};
+import opentype from "opentype.js";
 
 export type FontGlyph = {
   id: number;
@@ -10,5 +6,13 @@ export type FontGlyph = {
   binary: string;
   unicode: string;
   hex: string;
-  variant?: FontGlyphVariant;
+};
+
+export type FontData = {
+  name: string;
+  features: {
+    unitsPerEm: opentype.Font["unitsPerEm"];
+    headTable: opentype.Table["head"];
+  };
+  glyphs: opentype.Glyph[];
 };
