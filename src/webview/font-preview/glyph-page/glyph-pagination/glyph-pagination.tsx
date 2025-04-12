@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { getChunkSize, PAGINATION_MAX_NUM_PAGES } from "./glyph-pagination.model";
-import { Button, Container, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
 type GlyphPaginationProps = {
   totalGlyphs: number;
@@ -23,12 +25,14 @@ export function GlyphPagination({ totalGlyphs, onPageChange }: GlyphPaginationPr
   }
 
   return (
-    <Container>
+    <Grid container spacing={2}>
       {Array.from({ length: PAGINATION_MAX_NUM_PAGES }, (_, i) => (
-        <Button variant="outlined" key={i} onClick={handlePageChange}>
-          <Typography variant="button">{glyphRangeText()}</Typography>
-        </Button>
+        <Grid size={1}>
+          <Button variant="outlined" key={i} onClick={handlePageChange}>
+            <Typography variant="button">{glyphRangeText()}</Typography>
+          </Button>
+        </Grid>
       ))}
-    </Container>
+    </Grid>
   );
 }

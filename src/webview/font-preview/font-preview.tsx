@@ -8,11 +8,9 @@ export function FontPreview() {
 
   return (
     <Container>
-      <Container>
-        <Typography variant="h1">{fontData.name}</Typography>
-        <Typography variant="h2">Font Glyph Preview</Typography>
-        <Typography variant="h3">Click a glyph to copy its unicode value.</Typography>
-      </Container>
+      <Typography variant="h1" textAlign="center">
+        {fontData.name}
+      </Typography>
       <GlyphPage />
     </Container>
   );

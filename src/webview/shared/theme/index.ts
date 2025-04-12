@@ -1,7 +1,6 @@
-// import { createTheme } from "@mui/material";
 import { createTheme } from "@mui/material";
 import { components } from "./components";
-import { shape } from "./shape";
+import MuiCreateStyled from "@mui/system/createStyled";
 
 export const theme = createTheme({
   palette: {
@@ -60,17 +59,20 @@ export const theme = createTheme({
     fontFamily: "Roboto, sans-serif",
     fontSize: 14,
     h1: {
+      fontFamily: "Open Sans, sans-serif",
       fontSize: "2em",
       fontWeight: 500,
-      color: palette.text.primary
+      color: palette.getContrastText(palette.background.paper),
+      margin: "0.5rem"
     },
     h2: {
       fontSize: "1.5em",
       fontWeight: 500,
-      color: palette.text.primary
+      color: palette.text.primary,
+      margin: "0.5rem"
     },
     h3: {
-      fontSize: "1.17em",
+      fontSize: "1.25em",
       fontWeight: 500,
       color: palette.text.primary
     },
@@ -80,6 +82,12 @@ export const theme = createTheme({
       fontWeight: 400,
       textTransform: "uppercase"
     },
+    overline: {
+      fontSize: "0.75em",
+      fontWeight: 400,
+      textTransform: "uppercase",
+      color: palette.text.secondary
+    },
     body1: {
       fontSize: "1em",
       fontWeight: 400,
@@ -87,6 +95,7 @@ export const theme = createTheme({
     },
     body2: {
       fontSize: "0.875em",
+      fontFamily: "Nunito Sans, sans-serif",
       fontWeight: 400,
       color: palette.text.primary
     },
@@ -98,5 +107,11 @@ export const theme = createTheme({
   }),
   components,
   spacing: 4,
-  shape
+  shape: {
+    borderRadius: 4
+  }
+});
+
+export const createStyled = MuiCreateStyled({
+  defaultTheme: theme
 });
