@@ -1,7 +1,6 @@
 import { useState } from "react";
-import * as styles from "./glyph-pagination.module.scss";
-import { styleClasses } from "../../../shared/utils";
 import { getChunkSize, PAGINATION_MAX_NUM_PAGES } from "./glyph-pagination.model";
+import { Button, Container, Typography } from "@mui/material";
 
 type GlyphPaginationProps = {
   totalGlyphs: number;
@@ -11,33 +10,25 @@ type GlyphPaginationProps = {
 export function GlyphPagination({ totalGlyphs, onPageChange }: GlyphPaginationProps) {
   const [currentPage, setCurrentPage] = useState(0);
 
-  function glyphRangeText(pageIndex: number) {
+  function glyphRangeText() {
     const chunkSize = getChunkSize(totalGlyphs);
-    const start = pageIndex * chunkSize + 1;
+    const start = currentPage * chunkSize + 1;
     const end = Math.min(start + chunkSize - 1, totalGlyphs);
     return `${start} - ${end}`;
   }
 
-  function handlePageChange(page: number) {
-    setCurrentPage(page);
-    onPageChange(page);
+  function handlePageChange(event: React.MouseEvent<HTMLButtonElement>) {
+    setCurrentPage(+event.currentTarget.value);
+    onPageChange(+event.currentTarget.value);
   }
 
   return (
-    <div className={styles["pagination"]}>
+    <Container>
       {Array.from({ length: PAGINATION_MAX_NUM_PAGES }, (_, i) => (
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={styleClasses(
-            styles,
-            "pagination-button",
-            ...[currentPage === i ? "active" : undefined]
-          )}
-        >
-          {glyphRangeText(i)}
-        </button>
+        <Button variant="outlined" key={i} onClick={handlePageChange}>
+          <Typography variant="button">{glyphRangeText()}</Typography>
+        </Button>
       ))}
-    </div>
+    </Container>
   );
 }

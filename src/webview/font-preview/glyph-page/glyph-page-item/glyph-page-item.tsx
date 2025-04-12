@@ -1,4 +1,4 @@
-import * as styles from "./glyph-page-item.module.scss";
+import { Container, Typography } from "@mui/material";
 
 type GlyphPageItemProps = {
   glyph: opentype.Glyph;
@@ -6,9 +6,9 @@ type GlyphPageItemProps = {
 
 export function GlyphPageItem({ glyph }: GlyphPageItemProps) {
   return (
-    <div className={styles["glyph"]}>
-      <div className={styles["name"]}>{glyph.name}</div>
-      <div className={styles["unicode"]}>{glyph.unicode}</div>
-    </div>
+    <Container>
+      <Typography variant="button">{glyph.name}</Typography>
+      <Typography variant="caption">{glyph.unicode}</Typography>
+    </Container>
   );
 }

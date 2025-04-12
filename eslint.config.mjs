@@ -1,6 +1,7 @@
 import tsEslint from "typescript-eslint";
 import eslint from "@eslint/js";
 import reactEslint from "eslint-plugin-react";
+import jsxEslint from "eslint-plugin-jsx-a11y";
 import htmlEslint from "@html-eslint/eslint-plugin";
 
 export default tsEslint.config(
@@ -40,6 +41,7 @@ export default tsEslint.config(
       "no-unused-vars": "off"
     }
   },
+  { ...jsxEslint.flatConfigs.recommended },
   {
     files: ["*.html"],
     ...htmlEslint.configs["flat/recommended"]

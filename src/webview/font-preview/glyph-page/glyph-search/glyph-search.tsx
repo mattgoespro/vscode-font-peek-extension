@@ -1,4 +1,4 @@
-import * as styles from "./glyph-search.module.scss";
+import { Input } from "@mui/material";
 
 type GlyphSearchProps = {
   onValueChange: (search: string) => void;
@@ -6,11 +6,10 @@ type GlyphSearchProps = {
 
 export function GlyphSearch(props: GlyphSearchProps) {
   return (
-    <input
+    <Input
       type="search"
       placeholder="Search for a glyph..."
       defaultValue=""
-      className={styles["search-input"]}
       onChange={(event) => {
         props.onValueChange((event.target as HTMLInputElement).value);
       }}

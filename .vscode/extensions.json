@@ -14,14 +14,11 @@
     "formulahendry.auto-rename-tag",
     "dsznajder.es7-react-js-snippets",
     "meganrogge.template-string-converter",
-    "cipchk.cssrem",
-    "mrmlnc.vscode-scss",
-    "sibiraj-s.vscode-scss-formatter",
     "amodio.tsl-problem-matcher",
     "yoavbls.pretty-ts-errors",
-    "pkief.material-icon-theme",
-    "stylelint.vscode-stylelint",
     "markosth09.color-picker",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "onlyutkarsh.vsix-viewer",
+    "helgardrichard.helium-icon-theme"
   ]
 }

@@ -1,18 +1,19 @@
 import { useContext } from "react";
 import { WebviewContext } from "../shared/webview-context";
-import * as styles from "./font-preview.module.scss";
 import { GlyphPage } from "./glyph-page/glyph-page";
+import { Container, Typography } from "@mui/material";
 
 export function FontPreview() {
   const { fontSpec: fontData } = useContext(WebviewContext);
+
   return (
-    <div className={styles["preview"]}>
-      <div className={styles["header"]}>
-        <h1 className={styles["title"]}>{fontData.name}</h1>
-        <h2 className={styles["title"]}>Font Glyph Preview</h2>
-        <h2 className={styles["subtitle"]}>Click a glyph to copy its unicode value.</h2>
-      </div>
+    <Container>
+      <Container>
+        <Typography variant="h1">{fontData.name}</Typography>
+        <Typography variant="h2">Font Glyph Preview</Typography>
+        <Typography variant="h3">Click a glyph to copy its unicode value.</Typography>
+      </Container>
       <GlyphPage />
-    </div>
+    </Container>
   );
 }

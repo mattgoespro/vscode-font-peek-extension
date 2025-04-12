@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { genUuid } from "../../shared/utils";
 import { GlyphPageItem } from "./glyph-page-item/glyph-page-item";
-import * as styles from "./glyph-page.module.scss";
 import { GlyphPagination } from "./glyph-pagination/glyph-pagination";
 import { GlyphSearch } from "./glyph-search/glyph-search";
 import {
@@ -10,6 +9,8 @@ import {
   PAGINATION_MAX_NUM_PAGES
 } from "./glyph-pagination/glyph-pagination.model";
 import { WebviewContext } from "../../shared/webview-context";
+import { Container } from "@mui/system";
+import { Typography } from "@mui/material";
 
 type GlyphFilterCriteria = {
   currentSearchName?: string;
@@ -60,23 +61,23 @@ export function GlyphPage() {
   }, [filterCriteria.currentPage, filterCriteria.currentSearchName]);
 
   return (
-    <div className={styles["glyph-page-wrapper"]}>
+    <Container>
       <GlyphSearch onValueChange={onSearchFilterCriteriaChange} />
-      <div className={styles["glyph-pagination"]}>
+      <Container>
         <GlyphPagination
           totalGlyphs={fontSpec.glyphs.length}
           onPageChange={onPageFilterCriteriaChange}
         ></GlyphPagination>
-      </div>
+      </Container>
       {((fontSpec.glyphs ?? []).length > 0 && (
         <>
-          <div className={styles["glyph-list"]}>
+          <Container>
             {pageGlyphs.map((glyph) => (
               <GlyphPageItem key={genUuid()} glyph={glyph} />
             ))}
-          </div>
+          </Container>
         </>
-      )) || <span className={styles["no-glyphs"]}>No glyphs found.</span>}
-    </div>
+      )) || <Typography variant="caption">No glyphs found.</Typography>}
+    </Container>
   );
 }

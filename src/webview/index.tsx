@@ -2,6 +2,8 @@ import { createRoot } from "react-dom/client";
 import { EditorMessage } from "../shared/events/messages";
 import { FontPreview } from "./font-preview/font-preview";
 import { WebviewContext } from "./shared/webview-context";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./shared/theme";
 
 window.onload = () => {
   const vscodeApi = window.acquireVsCodeApi();
@@ -16,9 +18,11 @@ window.onload = () => {
       const { fontData } = event.data.payload;
 
       root.render(
-        <WebviewContext.Provider value={{ vscodeApi, fontSpec: fontData }}>
-          <FontPreview />
-        </WebviewContext.Provider>
+        <ThemeProvider theme={theme}>
+          <WebviewContext.Provider value={{ vscodeApi, fontSpec: fontData }}>
+            <FontPreview />
+          </WebviewContext.Provider>
+        </ThemeProvider>
       );
     }
   };
