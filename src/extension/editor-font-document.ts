@@ -1,12 +1,14 @@
 import vscode from "vscode";
 import html from "../webview/index.html";
-import { FontSpec } from "../shared/model";
-import { EditorMessage } from "../shared/events/messages";
-import { loadFont } from "@shared/model";
-import { createLogger, Logger } from "../shared/logging/logger";
+import { Logger, createLogger } from "@shared/logging";
+import {
+  LoadFontEvent,
+  WebviewLogOutputEvent,
+  WebviewStateChangedEvent
+} from "@shared/message/messages";
+import path from "path";
 
 export class EditorFontDocument implements vscode.CustomDocument {
-  private contents: ArrayBuffer;
   private webviewPanel: vscode.WebviewPanel;
 
   private log: Logger;
@@ -27,36 +29,32 @@ export class EditorFontDocument implements vscode.CustomDocument {
    * @param document The font document to display in the editor.
    */
   public async createWebview(webviewPanel: vscode.WebviewPanel) {
-    this.contents = await this.readWebviewTemplate();
-    this.log.info("Loaded font document contents.", this.contents);
-
     this.webviewPanel = webviewPanel;
     this.webviewPanel.webview.options = {
       enableScripts: true,
       enableCommandUris: true,
       localResourceRoots: [
-        vscode.Uri.joinPath(this.context.extensionUri, "dist"),
-        vscode.Uri.file(this.uri.path)
+        vscode.Uri.joinPath(this.context.extensionUri, "dist"), // the folder where the extension webview scripts and styles are located
+        vscode.Uri.joinPath(this.context.extensionUri, "..") // the folder where this document (i.e., the font file) is located
       ]
     };
     this.webviewPanel.webview.html = this.formatWebviewTemplateContents(html, {
       webviewScriptUri: this.toWebviewUri("dist", "webview.js"),
-      webviewStyleSheetUri: this.toWebviewUri("dist", "webview.css"),
-      fontDataUri: this.getFontDataWebviewUri()
+      webviewStyleSheetUri: this.toWebviewUri("dist", "webview.css")
     });
 
     this.webviewPanel.webview.onDidReceiveMessage(
-      (event: MessageEvent<EditorMessage<"webview">>) => {
-        const { data } = event;
-        const { payload } = data;
+      (event: WebviewStateChangedEvent | WebviewLogOutputEvent) => {
+        console.log("Received message from webview:", event);
+        const { name, payload } = event;
 
-        switch (data.name) {
+        switch (name) {
           case "log-output": {
             this.log.info(payload);
             break;
           }
           case "webview-state-changed": {
-            if (data.payload.state !== "ready") {
+            if (payload.state !== "ready") {
               return;
             }
 
@@ -64,13 +62,17 @@ export class EditorFontDocument implements vscode.CustomDocument {
              * The webview is ready to receive and render the font preview.
              */
             try {
-              this.log.info("Loading font...", this.contents);
-              const fontData: FontSpec = loadFont(this.contents);
-              this.webviewPanel.webview.postMessage<EditorMessage<"extension">>({
-                source: "extension",
-                name: "font-glyphs-loaded",
+              console.log("Local resource roots:");
+              for (const root of [
+                vscode.Uri.joinPath(this.context.extensionUri, "dist"),
+                vscode.Uri.file(path.dirname(this.uri.fsPath))
+              ]) {
+                console.log(root.toString(), root.fsPath);
+              }
+              this.webviewPanel.webview.postMessage<LoadFontEvent>({
+                name: "load-font",
                 payload: {
-                  fontData
+                  fileUri: this.webviewPanel.webview.asWebviewUri(this.uri).toString()
                 }
               });
             } catch (error) {
@@ -105,15 +107,10 @@ export class EditorFontDocument implements vscode.CustomDocument {
 
   public async readWebviewTemplate() {
     const fontFileData = await vscode.workspace.fs.readFile(this.uri);
+    console.log(fontFileData instanceof Uint8Array);
+    console.log(fontFileData instanceof ArrayBuffer);
+    console.log(fontFileData instanceof Buffer);
     return fontFileData.buffer;
-  }
-
-  public getFontDataBase64() {
-    return Buffer.from(this.contents).toString("base64");
-  }
-
-  private getFontDataWebviewUri() {
-    return `data:font/ttf;base64,${this.getFontDataBase64()}`;
   }
 
   dispose(): void {

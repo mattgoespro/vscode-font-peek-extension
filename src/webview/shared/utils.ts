@@ -1,6 +1,4 @@
-import { v4 } from "uuid";
-
-export const genUuid = v4;
+export { v4 as uuid } from "uuid";
 
 export function styleClasses(
   styles: typeof import("*.scss"),

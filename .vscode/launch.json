@@ -1,17 +1,16 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
-      "name": "Extension: Build",
+      "name": "debug",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "outFiles": ["${workspaceFolder}\\dist\\*.js"],
-      "outputCapture": "console",
-      "sourceMaps": true,
       "remoteRoot": "${workspaceFolder}",
-      "preLaunchTask": "dev"
+      "debugWebviews": true,
+      "preLaunchTask": "dev",
+      "cwd": "${workspaceFolder}"
     }
-  ],
-  "version": "0.2.0"
+  ]
 }

@@ -1,29 +1,33 @@
 import { createRoot } from "react-dom/client";
-import { EditorMessage } from "../shared/events/messages";
-import { FontPreview } from "./font-preview/font-preview";
-import { WebviewContext } from "./shared/webview-context";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "./shared/theme";
+import { App } from "./app/app";
+import { LoadFontEvent, WebviewStateChangedEvent } from "@shared/message/messages";
+console.log("Creating webview root...");
 
-window.onload = () => {
-  const vscodeApi = window.acquireVsCodeApi();
-
-  vscodeApi.postMessage<EditorMessage<"webview">>({
-    data: { source: "webview", name: "webview-state-changed", payload: { state: "ready" } }
-  });
-
-  window.onmessage = (event: MessageEvent<EditorMessage<"extension">>) => {
-    if (event.data?.name === "font-glyphs-loaded") {
-      const root = createRoot(document.getElementById("root"));
-      const { fontData } = event.data.payload;
-
-      root.render(
-        <ThemeProvider theme={theme}>
-          <WebviewContext.Provider value={{ vscodeApi, fontSpec: fontData }}>
-            <FontPreview />
-          </WebviewContext.Provider>
-        </ThemeProvider>
-      );
+const vscodeApi = window.acquireVsCodeApi();
+window.addEventListener("load", () => {
+  console.log("Webview loaded, sending ready event to extension...");
+  vscodeApi.postMessage<WebviewStateChangedEvent>({
+    name: "webview-state-changed",
+    payload: {
+      state: "ready"
     }
-  };
-};
+  });
+});
+
+window.addEventListener("message", (event: MessageEvent<LoadFontEvent>) => {
+  const {
+    data: { name, payload }
+  } = event;
+
+  switch (name) {
+    case "load-font": {
+      createRoot(document.getElementById("root")).render(
+        <App vscodeApi={vscodeApi} fontUri={payload.fileUri} />
+      );
+      console.log("Received font URI to load:", payload.fileUri);
+      break;
+    }
+    default:
+      break;
+  }
+});

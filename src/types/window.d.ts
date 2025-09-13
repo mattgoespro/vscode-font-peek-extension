@@ -1,5 +1,5 @@
 import * as events from "../shared/events/messages";
-console.log(events);
+
 declare global {
   type ExtensionEvent = events[keyof events];
 
@@ -7,7 +7,7 @@ declare global {
    * The `vscode` namespace provided by the webview host.
    */
   export interface VsCodeApi {
-    postMessage<T extends ExtensionEvent>(message: Partial<MessageEvent<T>>): void;
+    postMessage<T extends ExtensionEvent>(message: T): void;
   }
 
   /**

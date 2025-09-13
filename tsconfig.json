@@ -13,6 +13,7 @@
     "paths": {
       "@shared/*": ["src/shared/*"]
     },
+    "sourceMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true

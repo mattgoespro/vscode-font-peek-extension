@@ -1,5 +1,4 @@
 import path from "path";
-import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import TsconfigPathsWebpackPlugin from "tsconfig-paths-webpack-plugin";
 import { Configuration } from "webpack";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
@@ -7,8 +6,9 @@ import TerserWebpackPlugin from "terser-webpack-plugin";
 
 export default {
   target: "web",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   stats: "errors-warnings",
+  cache: true,
   entry: {
     extension: {
       import: "./src/extension.ts",
@@ -22,7 +22,8 @@ export default {
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "dist"),
-    libraryTarget: "commonjs"
+    libraryTarget: "commonjs",
+    clean: true
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
@@ -31,20 +32,27 @@ export default {
       path: require.resolve("path-browserify"),
       fs: false,
       module: false
-    },
-    alias: {
-      styles: path.resolve(__dirname, "src/webview/styles")
     }
   },
   module: {
     rules: [
       {
-        test: /[ts]x?$/,
-        loader: "ts-loader",
+        test: /\.tsx$/,
+        loader: "esbuild-loader",
+        exclude: /node_modules/,
         options: {
-          transpileOnly: true
-        },
-        exclude: /node_modules/
+          loader: "tsx",
+          target: "es2015"
+        }
+      },
+      {
+        test: /\.ts$/,
+        loader: "esbuild-loader",
+        exclude: /node_modules/,
+        options: {
+          loader: "ts",
+          target: "es2015"
+        }
       },
       {
         test: /\.html$/,
@@ -53,12 +61,7 @@ export default {
       }
     ]
   },
-  plugins: [
-    new CleanWebpackPlugin({ verbose: true }),
-    new ForkTsCheckerWebpackPlugin({
-      typescript: { configFile: path.resolve(__dirname, "tsconfig.json") }
-    })
-  ],
+  plugins: [new ForkTsCheckerWebpackPlugin()],
   optimization: {
     minimize: true,
     minimizer: [
