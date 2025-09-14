@@ -35,12 +35,12 @@ export class EditorFontDocument implements vscode.CustomDocument {
       enableCommandUris: true,
       localResourceRoots: [
         vscode.Uri.joinPath(this.context.extensionUri, "dist"), // the folder where the extension webview scripts and styles are located
-        vscode.Uri.joinPath(this.context.extensionUri, "..") // the folder where this document (i.e., the font file) is located
+        vscode.Uri.joinPath(this.context.extensionUri, "..") // the folder where this document (i.e. the font file) is located
       ]
     };
     this.webviewPanel.webview.html = this.formatWebviewTemplateContents(html, {
-      webviewScriptUri: this.toWebviewUri("dist", "webview.js"),
-      webviewStyleSheetUri: this.toWebviewUri("dist", "webview.css")
+      webviewScriptUri: this.toRelativeWebviewUri("dist", "webview.js"),
+      webviewStyleSheetUri: this.toRelativeWebviewUri("dist", "webview.css")
     });
 
     this.webviewPanel.webview.onDidReceiveMessage(
@@ -89,7 +89,7 @@ export class EditorFontDocument implements vscode.CustomDocument {
     );
   }
 
-  private toWebviewUri(...path: string[]) {
+  private toRelativeWebviewUri(...path: string[]) {
     return this.webviewPanel.webview
       .asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, ...path))
       .toString();

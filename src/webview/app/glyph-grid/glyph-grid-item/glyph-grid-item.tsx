@@ -3,7 +3,6 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { Glyph } from "opentype.js";
 import { CELL_HEIGHT, CELL_WIDTH, enableHighDPICanvas, renderGlyph } from "./glyph-grid-item.model";
-import { useRef } from "react";
 import { FontSpec } from "@shared/model";
 
 type GlyphGridItemProps = {
@@ -12,7 +11,6 @@ type GlyphGridItemProps = {
 };
 
 export function GlyphGridItem({ glyph, fontSpec }: GlyphGridItemProps) {
-  const setCanvasRef = useRef<HTMLCanvasElement>(null);
   const handleCanvasRef = (canvas: HTMLCanvasElement) => {
     if (canvas) {
       enableHighDPICanvas(canvas, CELL_WIDTH, CELL_HEIGHT);
