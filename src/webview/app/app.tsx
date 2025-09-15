@@ -1,144 +1,72 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { ThemeProvider } from "@mui/material";
 import { FontContext } from "../shared/contexts/font-context";
 import { theme } from "../shared/theme";
 import { GlyphGrid } from "./glyph-grid/glyph-grid";
 import { FontSpec } from "@shared/model";
 import opentype, { Glyph } from "opentype.js";
-import { VsCodeContext } from "../shared/contexts/vscode-api-context";
+import { VsCodeApiContext } from "../shared/contexts/vscode-api-context";
+import { useOutputPanel } from "../shared/hooks/use-output-panel";
+import { LoadFontEvent, WebviewStateChangedEvent } from "@shared/message/messages";
 
-interface AppProps {
-  vscodeApi: VsCodeApi;
-  fontUri: string;
-}
-
-export function App({ vscodeApi, fontUri }: AppProps) {
+export function App() {
   const [fontSpec, setFontSpec] = useState<FontSpec>(null);
-  // const webviewApi = useContext(VsCodeContext);
-  // const outputPanel = useOutputPanel();
+  const vscodeApi = useContext(VsCodeApiContext);
+  const outputPanel = useOutputPanel();
 
-  // const loadFont = useCallback(
-  //   async (payload: FontLoadEvent["payload"]) => {
-  //     try {
-  //       const fontLoader = new FontLoaderService(payload);
+  const loadFont = useCallback(async (fontUri: string) => {
+    outputPanel.info(`Loading font from URI: ${fontUri}`);
+    const fontData = await fetch(fontUri);
+    const fontDataBuffer = await fontData.arrayBuffer();
+    const font = opentype.parse(fontDataBuffer);
 
-  //       const { font } = await fontLoader.loadFont();
-  //       // Create the glyph list after loading the font, otherwise the payload is too large.
-  //       const glyphs = fontLoader.getGlyphList(font);
+    const glyphs: Glyph[] = [];
 
-  //       log.info(`Loaded ${glyphs.length} glyphs from font '${payload.fileName}'`);
+    for (let i = 0; i < font.glyphs.length; i++) {
+      const glyph = font.glyphs.get(i);
+      glyphs.push(glyph);
+    }
 
-  //       setFont(font);
-  //       setFontFileName(payload.fileName);
-  //       setGlyphs(glyphs);
-  //     } catch (err) {
-  //       log.error("Failed to load font.", err);
-  //     }
-  //   },
-  //   [log, webviewApi]
-  // );
+    setFontSpec({
+      name: font.names.fullName.en,
+      glyphs,
+      features: {
+        unitsPerEm: font.unitsPerEm,
+        headTable: font.tables.head
+      }
+    });
+  }, []);
 
-  // const onMessage = useCallback(
-  //   async (message: MessageEvent<LoadFontEvent>) => {
-  //     // outputPanel.info(`Webview received message from extension:`, message);
+  const onMessage = useCallback(async (message: MessageEvent<LoadFontEvent>) => {
+    outputPanel.info(`Webview received message from extension:`, message.data);
 
-  //     switch (message.data.name) {
-  //       case "load-font": {
-  //         console.log("Received font URI to load:", message.data.payload.fileUri);
-  //         const fontData = await fetch(message.data.payload.fileUri);
-  //         const arrayBuffer = await fontData.arrayBuffer();
-  //         const font = opentype.parse(arrayBuffer);
-  //         console.log(font.glyphs);
-  //         const glyphs: Glyph[] = [];
-
-  //         for (let i = 0; i < font.glyphs.length; i++) {
-  //           const glyph = font.glyphs.get(i);
-  //           glyphs.push(glyph);
-  //         }
-  //         setFontSpec({
-  //           name: font.names.fullName.en,
-  //           glyphs,
-  //           features: {
-  //             unitsPerEm: font.unitsPerEm,
-  //             headTable: font.tables.head
-  //           }
-  //         });
-  //         break;
-  //       }
-  //       default:
-  //         break;
-  //     }
-  //   },
-  //   []
-  //   // [webviewApi]
-  // );
-
-  // const loadFont = useCallback(
-  //   async (fileUri: string) => {
-  //     try {
-  //       const fontData = await fetch(fileUri);
-  //       const arrayBuffer = await fontData.arrayBuffer();
-  //       const font = opentype.parse(arrayBuffer);
-  //       console.log(font.glyphs);
-  //       const glyphs: Glyph[] = [];
-
-  //       for (let i = 0; i < font.glyphs.length; i++) {
-  //         const glyph = font.glyphs.get(i);
-  //         glyphs.push(glyph);
-  //       }
-  //       setFontSpec({
-  //         name: font.names.fullName.en,
-  //         glyphs,
-  //         features: {
-  //           unitsPerEm: font.unitsPerEm,
-  //           headTable: font.tables.head
-  //         }
-  //       });
-  //     } catch (error) {
-  //       // outputPanel.error("Failed to load font.", error);
-  //     }
-  //   },
-  //   []
-  //   // [webviewApi]
-  // );
+    switch (message.data.name) {
+      case "load-font": {
+        await loadFont(message.data.payload.fileUri);
+        break;
+      }
+      default:
+        break;
+    }
+  }, []);
 
   useEffect(() => {
-    if (fontUri == null) {
-      return;
-    }
-
-    async function loadFont() {
-      console.log("Received font URI to load:", fontUri);
-      const fontData = await fetch(fontUri);
-      const arrayBuffer = await fontData.arrayBuffer();
-      const font = opentype.parse(arrayBuffer);
-      console.log(font.glyphs);
-      const glyphs: Glyph[] = [];
-
-      for (let i = 0; i < font.glyphs.length; i++) {
-        const glyph = font.glyphs.get(i);
-        glyphs.push(glyph);
+    vscodeApi.postMessage<WebviewStateChangedEvent>({
+      name: "webview-state-changed",
+      payload: {
+        state: "ready"
       }
-      setFontSpec({
-        name: font.names.fullName.en,
-        glyphs,
-        features: {
-          unitsPerEm: font.unitsPerEm,
-          headTable: font.tables.head
-        }
-      });
-    }
+    });
 
-    loadFont();
-  }, [fontUri]);
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      <VsCodeContext.Provider value={vscodeApi}>
-        <FontContext.Provider value={{ fontSpec }}>
-          {(fontSpec != null && <GlyphGrid fontSpec={fontSpec} />) || <div>Loading font...</div>}
-        </FontContext.Provider>
-      </VsCodeContext.Provider>
+      <FontContext.Provider value={{ fontSpec }}>
+        {(fontSpec != null && <GlyphGrid fontSpec={fontSpec} />) || <div>Loading font...</div>}
+      </FontContext.Provider>
     </ThemeProvider>
   );
 }

@@ -33,12 +33,13 @@ export function GlyphGrid({ fontSpec }: GlyphGridProps) {
 
   return (
     <FlexBox direction="column" align="center" m={2} p={2}>
+      <Typography variant="h2" textAlign="center">
+        Preview of
+      </Typography>
       <Typography variant="h1" textAlign="center">
         {fontSpec.name}
       </Typography>
-      <Typography variant="h2" textAlign="center">
-        Preview
-      </Typography>
+
       <Box mt={3}>
         <GlyphGridFilter state={glyphsState} dispatch={dispatchGlyphs} />
         <TabView

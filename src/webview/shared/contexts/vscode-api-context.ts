@@ -1,4 +1,4 @@
 import { Context, createContext } from "react";
-import { WebviewApi } from "vscode";
+import { VsCodeApi } from "vscode";
 
-export const VsCodeContext: Context<WebviewApi> = createContext(window.acquireVsCodeApi());
+export const VsCodeApiContext: Context<VsCodeApi> = createContext(window.acquireVsCodeApi());

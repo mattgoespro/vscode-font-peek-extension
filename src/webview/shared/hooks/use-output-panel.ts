@@ -1,22 +1,19 @@
 import { LogLevel } from "@shared/logging";
-import { VsCodeContext } from "../contexts/vscode-api-context";
+import { VsCodeApiContext } from "../contexts/vscode-api-context";
 import { useContext } from "react";
 import { WebviewLogOutputEvent } from "@shared/message/messages";
 
-export const useOutputPanel = () => {
-  const vscodeApi = useContext(VsCodeContext);
+export function useOutputPanel() {
+  const vscodeApi = useContext(VsCodeApiContext);
   const logMessage = (level: LogLevel) => {
     return (...args: unknown[]) => {
-      vscodeApi.postMessage(
-        JSON.stringify(<WebviewLogOutputEvent>{
-          sender: "webview",
-          name: "log-output",
-          payload: {
-            level,
-            args
-          }
-        })
-      );
+      vscodeApi.postMessage<WebviewLogOutputEvent>({
+        name: "log-output",
+        payload: {
+          level,
+          args
+        }
+      });
     };
   };
 
@@ -25,4 +22,4 @@ export const useOutputPanel = () => {
     warn: logMessage("warn"),
     error: logMessage("error")
   };
-};
+}

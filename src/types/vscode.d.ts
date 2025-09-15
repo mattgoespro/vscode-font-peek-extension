@@ -10,7 +10,7 @@ declare module "vscode" {
     webview: Webview;
   }
 
-  export interface WebviewApi {
+  export interface VsCodeApi {
     postMessage<T extends EditorMessage>(message: T): void;
   }
 }
