@@ -1,4 +1,4 @@
-import * as events from "../shared/events/messages";
+import * as events from "../shared/message/messages";
 
 declare global {
   type ExtensionEvent = events[keyof events];

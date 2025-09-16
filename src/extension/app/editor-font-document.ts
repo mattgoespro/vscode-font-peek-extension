@@ -1,12 +1,12 @@
 import vscode from "vscode";
-import html from "../webview/index.html";
-import { Logger, createLogger } from "@shared/logging";
+import html from "@webview/index.html";
 import {
   LoadFontEvent,
   WebviewLogOutputEvent,
   WebviewStateChangedEvent
 } from "@shared/message/messages";
 import path from "path";
+import { createLogger, Logger } from "logsculpt";
 
 export class EditorFontDocument implements vscode.CustomDocument {
   private webviewPanel: vscode.WebviewPanel;
@@ -18,7 +18,7 @@ export class EditorFontDocument implements vscode.CustomDocument {
     readonly uri: vscode.Uri,
     outputChannel: vscode.OutputChannel
   ) {
-    this.log = createLogger("EditorFontDocument", outputChannel.appendLine);
+    this.log = createLogger("EditorFontDocument", { printer: outputChannel.appendLine });
   }
 
   /**

@@ -1,21 +1,27 @@
 {
-  "include": ["src"],
+  "include": ["src", "libs"],
   "exclude": ["**/node_modules/**", "eslint.config.mjs"],
   "compilerOptions": {
     "module": "commonjs",
     "jsx": "react-jsx",
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "isolatedModules": true,
     "baseUrl": ".",
-    "lib": ["dom", "es2022"],
+    "rootDir": "./",
     "outDir": "dist",
     "target": "es6",
-    "types": ["node", "react"],
+    "types": ["node"],
     "paths": {
-      "@shared/*": ["src/shared/*"]
+      "@shared/*": ["libs/shared/*"],
+      "@webview/*": ["src/webview/*"]
     },
     "sourceMap": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
-  }
+    "declaration": true
+  },
+  "references": [
+    { "path": "./src/webview/tsconfig.webview.json" },
+    { "path": "./libs/tsconfig.libs.json" }
+  ]
 }

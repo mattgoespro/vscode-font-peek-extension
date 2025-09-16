@@ -1,4 +1,4 @@
-import { LogLevel } from "@shared/logging";
+import { LogLevel } from "logsculpt";
 import { VsCodeApiContext } from "../contexts/vscode-api-context";
 import { useContext } from "react";
 import { WebviewLogOutputEvent } from "@shared/message/messages";

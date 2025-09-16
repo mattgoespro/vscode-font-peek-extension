@@ -11,7 +11,7 @@ export default {
   cache: true,
   entry: {
     extension: {
-      import: "./src/extension.ts",
+      import: "./src/extension/index.ts",
       filename: "extension.js"
     },
     preview: {

@@ -8,7 +8,7 @@ import TabView from "../../shared/components/tab-view/tab-view";
 import { TabViewContent } from "../../shared/components/tab-view/tab-view-content";
 import { useGlyphs } from "../../shared/hooks/use-glyphs";
 import { uuid } from "../../shared/utils";
-import { FontSpec } from "../../../shared/model";
+import { FontSpec } from "@shared/model";
 
 type GlyphGridProps = {
   fontSpec: FontSpec;

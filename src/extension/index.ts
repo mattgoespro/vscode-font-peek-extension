@@ -1,15 +1,15 @@
 import vscode from "vscode";
-import { EditorFontDocumentProvider } from "./extension/editor-font-document-provider";
-import { createLogger } from "./shared/logging/logger";
+import { EditorFontDocumentProvider } from "./app/editor-font-document-provider";
+import { createLogger } from "logsculpt";
 
 export function activate(context: vscode.ExtensionContext) {
   const outputChannel = vscode.window.createOutputChannel("Font Glyph Preview");
   outputChannel.show();
 
-  const logger = createLogger("FontPeek");
+  const logger = createLogger("FontPeek", { printer: outputChannel.appendLine });
 
   context.subscriptions.push(EditorFontDocumentProvider.register(context, outputChannel));
-  outputChannel.appendLine(logger.createLogMessage("Font Glyph Preview activated.", true));
+  logger.info("Font Glyph Preview activated.");
 }
 
 export function deactivate() {}

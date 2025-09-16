@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { EditorFontDocument } from "./editor-font-document";
-import { createLogger, Logger } from "../shared/logging";
+import { createLogger, Logger } from "logsculpt";
 
 export class EditorFontDocumentProvider
   implements vscode.CustomReadonlyEditorProvider<EditorFontDocument>
@@ -12,7 +12,9 @@ export class EditorFontDocumentProvider
     private readonly context: vscode.ExtensionContext,
     private readonly outputChannel: vscode.OutputChannel
   ) {
-    this.log = createLogger("EditorFontDocumentProvider", this.outputChannel.appendLine);
+    this.log = createLogger("EditorFontDocumentProvider", {
+      printer: this.outputChannel.appendLine
+    });
   }
 
   /**

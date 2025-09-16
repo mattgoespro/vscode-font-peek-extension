@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../dist",
+    "jsx": "react-jsx",
+    "lib": ["dom", "es2022"],
+    "types": ["node", "vscode", "react", "react-dom"],
+    "typeRoots": ["../../node_modules/@types", "../libs/types"],
+    "declaration": true
+  }
+}

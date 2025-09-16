@@ -1,4 +1,4 @@
-import { LogLevel } from "@shared/logging";
+import { LogLevel } from "logsculpt";
 
 type MessagePayloads = {
   webview: {

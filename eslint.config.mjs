@@ -3,6 +3,7 @@ import eslint from "@eslint/js";
 import reactEslint from "eslint-plugin-react";
 import jsxEslint from "eslint-plugin-jsx-a11y";
 import htmlEslint from "@html-eslint/eslint-plugin";
+import prettierConfigEslint from "eslint-config-prettier";
 
 export default tsEslint.config(
   {
@@ -12,6 +13,7 @@ export default tsEslint.config(
   tsEslint.configs.recommended,
   {
     rules: {
+      ...prettierConfigEslint.rules,
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
