@@ -6,13 +6,15 @@ export class EditorFontDocumentProvider
   implements vscode.CustomReadonlyEditorProvider<EditorFontDocument>
 {
   private document: EditorFontDocument;
-  private log: Logger;
+  private output: Logger;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
-    private readonly outputChannel: vscode.OutputChannel
+    readonly outputChannel: vscode.OutputChannel
   ) {
-    this.log = createLogger("EditorFontDocumentProvider", this.outputChannel.appendLine);
+    this.output = createLogger("EditorFontDocumentProvider", {
+      printer: this.outputChannel.appendLine
+    });
   }
 
   /**
@@ -55,8 +57,8 @@ export class EditorFontDocumentProvider
     try {
       await document.createWebview(webviewPanel);
     } catch (error) {
-      this.log.error(`Failed to resolve custom editor: ${error.message}`);
-      this.log.error(error.stack);
+      this.output.error(`Failed to resolve custom editor: ${error.message}`);
+      this.output.error(error.stack);
 
       vscode.window.showErrorMessage("Failed to open font preview editor.");
 

@@ -11,14 +11,16 @@ import path from "path";
 export class EditorFontDocument implements vscode.CustomDocument {
   private webviewPanel: vscode.WebviewPanel;
 
-  private log: Logger;
+  private output: Logger;
 
   constructor(
     private context: vscode.ExtensionContext,
     readonly uri: vscode.Uri,
-    outputChannel: vscode.OutputChannel
+    readonly outputChannel: vscode.OutputChannel
   ) {
-    this.log = createLogger("EditorFontDocument", outputChannel.appendLine);
+    this.output = createLogger("EditorFontDocumentProvider", {
+      printer: outputChannel.appendLine
+    });
   }
 
   /**
@@ -50,7 +52,7 @@ export class EditorFontDocument implements vscode.CustomDocument {
 
         switch (name) {
           case "log-output": {
-            this.log.info(payload);
+            this.output.info(payload);
             break;
           }
           case "webview-state-changed": {
@@ -76,7 +78,7 @@ export class EditorFontDocument implements vscode.CustomDocument {
                 }
               });
             } catch (error) {
-              this.log.error("Failed to load font glyphs.", error);
+              // this.log.error("Failed to load font glyphs.", error);
 
               vscode.window.showErrorMessage(
                 `Failed to load font glyphs: ${error instanceof Error ? error.message : error}`

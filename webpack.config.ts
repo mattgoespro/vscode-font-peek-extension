@@ -59,6 +59,10 @@ export default {
         loader: "html-loader",
         exclude: /node_modules/
       }
+      // {
+      //   test: /\.node$/,
+      //   use: "node-loader"
+      // }
     ]
   },
   plugins: [new ForkTsCheckerWebpackPlugin()],
@@ -74,9 +78,6 @@ export default {
         }
       })
     ]
-  },
-  watchOptions: {
-    poll: 1000
   },
   externals: {
     vscode: "commonjs vscode"
