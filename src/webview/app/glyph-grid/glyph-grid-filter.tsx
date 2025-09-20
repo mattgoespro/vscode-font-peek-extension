@@ -18,22 +18,14 @@ type GlyphGridFilter = {
 };
 
 export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
-  const [sortOrderConstraint, setSortOrderConstraint] = useState<keyof UseGlyphsStateSortOrder>();
+  const [sortOrder, setSortOrder] = useState<keyof UseGlyphsStateSortOrder>();
 
-  const handleChange = useCallback((event: SelectChangeEvent) => {
-    if (!isValidSortOrder(event.target.value)) {
-      return;
-    }
-
-    setSortOrderConstraint(event.target.value);
-  }, []);
-
-  const isValidSortOrder = useCallback((value: string): value is keyof UseGlyphsStateSortOrder => {
-    return value === "name" || value === "unicode";
+  const handleSortOrderChange = useCallback((event: SelectChangeEvent) => {
+    setSortOrder(event.target.value as keyof UseGlyphsStateSortOrder);
   }, []);
 
   return (
-    <FlexBox direction="column" gap={1}>
+    <FlexBox direction="row" gap={1}>
       <TextField
         variant="outlined"
         size="medium"
@@ -63,8 +55,8 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
       <Select
         variant="outlined"
         size="small"
-        value={sortOrderConstraint || ""}
-        onChange={handleChange}
+        value={sortOrder || ""}
+        onChange={handleSortOrderChange}
         label="Sort By"
         // set the maximum menu option height
         MenuProps={{

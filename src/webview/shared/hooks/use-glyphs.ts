@@ -1,8 +1,6 @@
 import { Glyph } from "opentype.js";
 import { useReducer } from "react";
 
-export const DEFAULT_GRID_PAGE_SIZE = 100;
-
 export type UseGlyphsStateSortOrder = Partial<{
   [key in keyof Pick<Glyph, "name" | "unicode">]: "asc" | "desc";
 }>;
@@ -69,7 +67,8 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
   state: UseGlyphsState,
   action: UseGlyphsAction<Action>
 ): UseGlyphsState {
-  console.log(action);
+  const UseGlyphsDefaultGridPageSize = 100;
+
   switch (action.type) {
     case "load": {
       const { glyphs } = (action as UseGlyphsAction<"load">).payload;
@@ -77,10 +76,10 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
       return {
         ...state,
         allGlyphs: glyphs,
-        pageSize: DEFAULT_GRID_PAGE_SIZE,
-        numPages: getNumPages(glyphs, DEFAULT_GRID_PAGE_SIZE),
+        pageSize: UseGlyphsDefaultGridPageSize,
+        numPages: getNumPages(glyphs, UseGlyphsDefaultGridPageSize),
         currentPage: 0,
-        pageGlyphs: getPageGlyphs(glyphs, 0, DEFAULT_GRID_PAGE_SIZE),
+        pageGlyphs: getPageGlyphs(glyphs, 0, UseGlyphsDefaultGridPageSize),
         currentSearch: {
           fields: {
             name: "",

@@ -7,7 +7,7 @@ import {
   LogMessage,
   LogPrefixFn
 } from "./logger.model";
-import { prettyStringify } from "./formatting/pretty-stringify";
+import { prettyStringify } from "./pretty-stringify";
 
 /**
  * Returns a function that logs messages of different levels prefixed with the logger name.

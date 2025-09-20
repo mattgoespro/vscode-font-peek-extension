@@ -1,11 +1,10 @@
 import vscode from "vscode";
-import { EditorFontDocument } from "./editor-font-document";
 import { createLogger, Logger } from "../shared/logging";
+import { EditorFontDocument } from "./editor-font-document";
 
 export class EditorFontDocumentProvider
   implements vscode.CustomReadonlyEditorProvider<EditorFontDocument>
 {
-  private document: EditorFontDocument;
   private output: Logger;
 
   constructor(
@@ -19,7 +18,11 @@ export class EditorFontDocumentProvider
 
   /**
    * Registers the font preview custom editor provider.
+   *
    * @param context The extension context.
+   * @param outputChannel The output channel for logging.
+   *
+   * @returns A disposable to unregister the provider.
    */
   static register(
     context: vscode.ExtensionContext,
@@ -43,7 +46,6 @@ export class EditorFontDocumentProvider
     token: vscode.CancellationToken
   ): Promise<EditorFontDocument> {
     token.onCancellationRequested(() => {
-      this.dispose();
       vscode.window.showInformationMessage("Cancelled preview.");
     }, this.context.subscriptions);
 
@@ -52,24 +54,21 @@ export class EditorFontDocumentProvider
 
   async resolveCustomEditor(
     document: EditorFontDocument,
-    webviewPanel: vscode.WebviewPanel
+    webviewPanel: vscode.WebviewPanel,
+    token: vscode.CancellationToken
   ): Promise<void> {
+    token.onCancellationRequested(() => {
+      webviewPanel.dispose();
+      vscode.window.showInformationMessage("Cancelled preview.");
+    }, this.context.subscriptions);
+
     try {
-      await document.createWebview(webviewPanel);
+      await document.loadPanelWebview(webviewPanel);
     } catch (error) {
       this.output.error(`Failed to resolve custom editor: ${error.message}`);
       this.output.error(error.stack);
 
       vscode.window.showErrorMessage("Failed to open font preview editor.");
-
-      this.dispose();
     }
-  }
-
-  /**
-   * Disposes of the font preview document.
-   */
-  dispose() {
-    this.document.dispose();
   }
 }

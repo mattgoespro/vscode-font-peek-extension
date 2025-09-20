@@ -68,10 +68,22 @@ export default {
   plugins: [new ForkTsCheckerWebpackPlugin()],
   optimization: {
     minimize: true,
+    concatenateModules: true,
+    removeEmptyChunks: true,
+    innerGraph: true,
     minimizer: [
       new TerserWebpackPlugin({
         extractComments: false,
+        parallel: true,
+        minify: TerserWebpackPlugin.terserMinify,
+        exclude: /\/node_modules/,
         terserOptions: {
+          compress: true,
+          sourceMap: {
+            filename: "source-map.map",
+            includeSources: true,
+            url: "source-map.map"
+          },
           format: {
             comments: false
           }

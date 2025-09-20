@@ -1,4 +1,4 @@
-import { PrettyStringifyOptions } from "./formatting/pretty-stringify";
+import { PrettyStringifyOptions } from "./pretty-stringify";
 
 export type Logger = {
   info: (...args: LogMessage[]) => void;

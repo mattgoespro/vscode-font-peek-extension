@@ -7,10 +7,9 @@
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--disable-extensions"],
-      "remoteRoot": "${workspaceFolder}",
-      "debugWebviews": true,
-      "preLaunchTask": "dev",
-      "cwd": "${workspaceFolder}"
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "timeout": 20000,
+      "preLaunchTask": "dev"
     }
   ]
 }

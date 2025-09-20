@@ -11,30 +11,36 @@ import { LoadFontEvent, WebviewStateChangedEvent } from "@shared/message/message
 
 export function App() {
   const [fontSpec, setFontSpec] = useState<FontSpec>(null);
+  const [error, setError] = useState<string>(null);
   const vscodeApi = useContext(VsCodeApiContext);
   const outputPanel = useOutputPanel();
 
-  const loadFont = useCallback(async (fontUri: string) => {
-    outputPanel.info(`Loading font from URI: ${fontUri}`);
-    const fontData = await fetch(fontUri);
+  const loadFont = useCallback(async (fileUri: string) => {
+    const fontData = await fetch(fileUri);
     const fontDataBuffer = await fontData.arrayBuffer();
-    const font = opentype.parse(fontDataBuffer);
 
-    const glyphs: Glyph[] = [];
+    try {
+      const font = opentype.parse(fontDataBuffer);
 
-    for (let i = 0; i < font.glyphs.length; i++) {
-      const glyph = font.glyphs.get(i);
-      glyphs.push(glyph);
-    }
+      const glyphs: Glyph[] = [];
 
-    setFontSpec({
-      name: font.names.fullName.en,
-      glyphs,
-      features: {
-        unitsPerEm: font.unitsPerEm,
-        headTable: font.tables.head
+      for (let i = 0; i < font.glyphs.length; i++) {
+        const glyph = font.glyphs.get(i);
+        glyphs.push(glyph);
       }
-    });
+
+      setFontSpec({
+        name: font.names.fullName.en,
+        glyphs,
+        features: {
+          unitsPerEm: font.unitsPerEm,
+          headTable: font.tables.head
+        }
+      });
+    } catch (error) {
+      outputPanel.error("Failed to load font:", error);
+      setError("Failed to load font. See output panel for details.");
+    }
   }, []);
 
   const onMessage = useCallback(async (message: MessageEvent<LoadFontEvent>) => {
@@ -65,7 +71,10 @@ export function App() {
   return (
     <ThemeProvider theme={theme}>
       <FontContext.Provider value={{ fontSpec }}>
-        {(fontSpec != null && <GlyphGrid fontSpec={fontSpec} />) || <div>Loading font...</div>}
+        {error && <>Error: {error}</>}
+        {!error && (
+          <>{(fontSpec && <GlyphGrid fontSpec={fontSpec} />) || <>Loading preview...</>}</>
+        )}
       </FontContext.Provider>
     </ThemeProvider>
   );
