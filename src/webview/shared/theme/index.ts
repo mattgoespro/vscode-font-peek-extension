@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
-import { components } from "./components";
 import MuiCreateStyled from "@mui/system/createStyled";
+import { components } from "./components";
 
 export const theme = createTheme({
   palette: {
@@ -66,6 +66,7 @@ export const theme = createTheme({
       margin: "0.5rem"
     },
     h2: {
+      fontFamily: "Noto Sans Mono, sans-serif",
       fontSize: "1.5em",
       fontWeight: 500,
       color: palette.text.primary,
@@ -100,13 +101,13 @@ export const theme = createTheme({
       color: palette.text.primary
     },
     caption: {
-      fontSize: "0.5em",
-      fontWeight: 400,
+      fontSize: "0.875em",
+      fontWeight: 500,
       color: palette.text.primary
     }
   }),
   components,
-  spacing: 4,
+  spacing: 16,
   shape: {
     borderRadius: 4
   }

@@ -14,7 +14,14 @@ export type LoggerOptions = PrettyStringifyOptions & {
   prefix?: boolean | LogPrefixFn;
 };
 
-export type LogMessage = unknown;
+export type LogMessage =
+  | string
+  | number
+  | boolean
+  | ArrayLike<LogMessage>
+  | Record<string, unknown>
+  | null
+  | undefined;
 
 export type LogLevel = "info" | "warn" | "error" | "debug";
 

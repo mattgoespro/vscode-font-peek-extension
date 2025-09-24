@@ -1,9 +1,11 @@
 import { Glyph } from "opentype.js";
 import { useReducer } from "react";
 
-export type UseGlyphsStateSortOrder = Partial<{
+export type UseGlyphsStateSortConstraints = Partial<{
   [key in keyof Pick<Glyph, "name" | "unicode">]: "asc" | "desc";
 }>;
+
+export type UseGlyphsStateSortOrder = keyof UseGlyphsStateSortConstraints;
 
 export type UseGlyphsState = {
   allGlyphs: Glyph[];
@@ -12,7 +14,8 @@ export type UseGlyphsState = {
   currentPage: number;
   currentSearch: {
     fields?: UseGlyphsStateSearchField;
-    sortOrder?: UseGlyphsStateSortOrder;
+    sortBy?: UseGlyphsStateSortOrder;
+    sortOrder?: UseGlyphsStateSortConstraints;
   };
   currentMatchingGlyphs: Glyph[];
   pageGlyphs: Glyph[];
@@ -32,7 +35,8 @@ export type UseGlyphsActions = {
   };
   "change-search": {
     fields?: UseGlyphsStateSearchField;
-    sortOrder?: UseGlyphsStateSortOrder;
+    sortBy?: UseGlyphsStateSortOrder;
+    sortOrder?: UseGlyphsStateSortConstraints;
   };
 };
 
@@ -52,9 +56,8 @@ export function useGlyphs() {
         name: "",
         unicode: ""
       },
-      sortOrder: {
-        name: "asc"
-      }
+      sortBy: "name",
+      sortOrder: undefined
     },
     currentMatchingGlyphs: null,
     pageGlyphs: null
@@ -85,9 +88,8 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
             name: "",
             unicode: ""
           },
-          sortOrder: {
-            name: "asc"
-          }
+          sortBy: "name",
+          sortOrder: undefined
         }
       };
     }
@@ -101,7 +103,7 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
           : currentMatchingGlyphs;
 
       if (matchingGlyphs == null) {
-        matchingGlyphs = findMatchingGlyphs(allGlyphs, currentSearch.fields);
+        matchingGlyphs = filterMatchingGlyphs(allGlyphs, currentSearch.fields);
       }
 
       const pageGlyphs = getPageGlyphs(matchingGlyphs, page, pageSize);
@@ -115,13 +117,15 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
       };
     }
     case "change-search": {
-      const { fields, sortOrder } = (action as UseGlyphsAction<"change-search">).payload;
+      const { fields, sortBy, sortOrder } = (action as UseGlyphsAction<"change-search">).payload;
       const { currentPage, pageSize, allGlyphs } = state;
-      const currentMatchingGlyphs = findMatchingGlyphs(allGlyphs, fields);
+      const currentMatchingGlyphs = filterMatchingGlyphs(allGlyphs, fields);
       console.log(
-        `Found ${currentMatchingGlyphs.length} glyphs matching ${Object.entries(fields)
+        `Found ${currentMatchingGlyphs.length} glyphs matching filter fields: ${Object.entries(
+          fields
+        )
           .map(([key, value]) => `${key} = ${value}`)
-          .join(", ")}.`
+          .join(", ")}`
       );
 
       return {
@@ -131,6 +135,7 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
             name: "",
             unicode: ""
           },
+          sortBy: sortBy ?? state.currentSearch.sortBy,
           sortOrder: sortOrder ?? state.currentSearch.sortOrder
         },
         currentMatchingGlyphs,
@@ -140,7 +145,7 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
   }
 }
 
-function findMatchingGlyphs(glyphs: Glyph[], fields: UseGlyphsStateSearchField) {
+function filterMatchingGlyphs(glyphs: Glyph[], fields: UseGlyphsStateSearchField) {
   if (fields.unicode.length === 0 && fields.unicode.length === 0) {
     return glyphs;
   }

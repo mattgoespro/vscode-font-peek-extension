@@ -20,7 +20,7 @@ export type PrettyStringifyOptions = {
 type PrettyStringifyPrefixFn = (name: string) => string;
 
 /**
- * Converts a given value to a pretty-printed string representation.
+ * Converts a provided value to a pretty-printed string representation.
  *
  * @param value - The value to be pretty-printed. Can be of any type.
  * @param options - Optional formatting options for JSON strings.
@@ -65,14 +65,14 @@ export function prettyStringify(value: unknown, options?: PrettyStringifyOptions
 }
 
 /**
- * Formats an array of objects into a pretty-printed JSON string with the specified indentation.
+ * Formats an array of values into a pretty-printed JSON string with the specified indentation.
  *
- * @param array - The array of objects to format.
+ * @param array - The array of values to format.
  * @param options - Optional formatting options.
  * @param indent - Indentation level.
  * @returns The formatted array as a JSON string.
  */
-function stringifyArray(array: object[], options: PrettyStringifyOptions, indent: number): string {
+function stringifyArray(array: unknown[], options: PrettyStringifyOptions, indent: number): string {
   const formattedArray = array
     .map(
       (value) =>
@@ -104,12 +104,7 @@ function stringifyObject(
       : Object.entries(object)
   )
     .map(([key, value]) => {
-      if (
-        value == null ||
-        typeof value === "string" ||
-        typeof value === "number" ||
-        typeof value === "boolean"
-      ) {
+      if (value == null || typeof value !== "object") {
         const quotedValue = options?.quoteStrings ? `"${value}"` : value;
         return `${" ".repeat(indent + 2)}${keyModifier(key)}: ${valueModifier(quotedValue)}`;
       }

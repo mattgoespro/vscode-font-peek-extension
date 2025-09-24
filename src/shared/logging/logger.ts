@@ -33,7 +33,7 @@ export function createLogger(name: string, options?: LoggerOptions): Logger {
      * A message has multiple lines if at least one of the message arguments is a string that contains an escaped line break.
      * In this case, split the message into lines and log each line separately.
      */
-    const messageLines = messageArgs.flatMap((message) =>
+    const messageLines = messageArgs.flatMap<LogMessage>((message) =>
       typeof message === "string" ? message.split("\n") : message
     );
 

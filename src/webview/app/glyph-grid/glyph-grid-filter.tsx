@@ -1,16 +1,11 @@
-import TextField from "@mui/material/TextField";
-import { SelectChangeEvent } from "@mui/material/Select/SelectInput";
-import { useCallback, useState } from "react";
-import {
-  UseGlyphsState,
-  UseGlyphsAction,
-  UseGlyphsActions,
-  UseGlyphsStateSortOrder
-} from "../../shared/hooks/use-glyphs";
-import { FlexBox } from "../../shared/components/flex-box";
-import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import { SelectChangeEvent } from "@mui/material/Select/SelectInput";
+import TextField from "@mui/material/TextField";
+import { useCallback } from "react";
+import { FlexBox } from "../../shared/components/flex-box";
+import { UseGlyphsAction, UseGlyphsActions, UseGlyphsState } from "../../shared/hooks/use-glyphs";
 
 type GlyphGridFilter = {
   state: UseGlyphsState;
@@ -18,10 +13,11 @@ type GlyphGridFilter = {
 };
 
 export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
-  const [sortOrder, setSortOrder] = useState<keyof UseGlyphsStateSortOrder>();
-
   const handleSortOrderChange = useCallback((event: SelectChangeEvent) => {
-    setSortOrder(event.target.value as keyof UseGlyphsStateSortOrder);
+    dispatch({
+      type: "change-search",
+      payload: { sortOrder: { [event.target.value]: "asc" } }
+    });
   }, []);
 
   return (
@@ -54,21 +50,19 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
       />
       <Select
         variant="outlined"
-        size="small"
-        value={sortOrder || ""}
+        autoWidth={true}
+        value={state?.currentSearch?.sortBy || ""}
         onChange={handleSortOrderChange}
         label="Sort By"
-        // set the maximum menu option height
+        slotProps={{ root: { sx: { height: "100%" } } }}
         MenuProps={{
           PaperProps: {
             style: {
-              fontSize: 11,
-              fontWeight: "normal",
-              maxHeight: "3rem"
+              color: "var(--vscode-foreground)"
             }
           }
         }}
-        input={<OutlinedInput placeholder="Sort By" size="small"></OutlinedInput>}
+        input={<OutlinedInput placeholder="Sort By" size="medium"></OutlinedInput>}
       >
         <MenuItem value="name">Name</MenuItem>
         <MenuItem value="unicode">Unicode</MenuItem>
