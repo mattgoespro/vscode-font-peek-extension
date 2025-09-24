@@ -73,6 +73,14 @@ export function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      {
+        /*
+         * TODO: See if the CssBaseline component is useful and could be enabled.
+         *
+         * @see https://mui.com/material-ui/react-css-baseline
+         */
+        // <CssBaseline enableColorScheme />
+      }
       {error && (
         <Typography variant="caption" color="error">
           {error}

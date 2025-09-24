@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useMemo } from "react";
 import { FontSpec } from "../../../shared/model";
 import { FlexBox } from "../../shared/components/flex-box";
+import { GridView } from "../../shared/components/grid-view";
 import TabView from "../../shared/components/tab-view/tab-view";
 import { TabViewContent } from "../../shared/components/tab-view/tab-view-content";
 import { useGlyphs } from "../../shared/hooks/use-glyphs";
@@ -32,7 +33,7 @@ export function GlyphGrid({ fontSpec }: GlyphGridProps) {
 
   const glyphItems = useMemo(() => {
     return glyphsState.pageGlyphs?.map((glyph) => (
-      <GlyphGridItem key={glyph.index} glyph={glyph} fontSpec={fontSpec} />
+      <GlyphGridItem glyph={glyph} fontSpec={fontSpec} />
     ));
   }, [glyphsState.pageGlyphs, fontSpec]);
 
@@ -58,8 +59,13 @@ export function GlyphGrid({ fontSpec }: GlyphGridProps) {
         onTabChange={(index) => dispatchGlyphs({ type: "change-page", payload: { page: index } })}
       >
         {Array.from({ length: glyphsState.numPages }, (_, pageIndex) => (
-          <TabViewContent label={getTabLabel(pageIndex)} key={uuid()}>
-            {(glyphsState.pageGlyphs?.length > 0 && glyphItems) || glyphPageEmpty}
+          <TabViewContent key={uuid()} label={getTabLabel(pageIndex)}>
+            {(glyphsState.pageGlyphs?.length > 0 && (
+              <GridView columns={10} key={uuid()}>
+                {glyphItems}
+              </GridView>
+            )) ||
+              glyphPageEmpty}
           </TabViewContent>
         ))}
       </TabView>

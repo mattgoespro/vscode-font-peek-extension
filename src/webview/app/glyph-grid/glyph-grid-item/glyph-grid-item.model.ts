@@ -1,4 +1,5 @@
 import { FontSpec } from "@shared/model";
+import { Glyph } from "opentype.js";
 
 export const CELL_WIDTH = 54;
 export const CELL_HEIGHT = 54;
@@ -6,7 +7,7 @@ const CELL_MARGIN_TOP = 8;
 const CELL_MARGIN_BOTTOM = 8;
 const CELL_MARGIN_LEFT_RIGHT = 8;
 
-export function renderGlyph(canvas: HTMLCanvasElement, font: FontSpec, glyphIndex: number) {
+export function renderGlyph(canvas: HTMLCanvasElement, glyph: Glyph, fontSpec: FontSpec) {
   const context = canvas.getContext("2d");
 
   if (!context) {
@@ -17,12 +18,11 @@ export function renderGlyph(canvas: HTMLCanvasElement, font: FontSpec, glyphInde
 
   const width = CELL_WIDTH - CELL_MARGIN_LEFT_RIGHT * 2;
   const height = CELL_HEIGHT - CELL_MARGIN_TOP - CELL_MARGIN_BOTTOM;
-  const head = font.features.headTable;
+  const head = fontSpec.features.headTable;
   const maxHeight = head.yMax - head.yMin;
   const fontScale = Math.min(width / (head.xMax - head.xMin), height / maxHeight);
-  const fontSize = fontScale * font.features.unitsPerEm;
+  const fontSize = fontScale * fontSpec.features.unitsPerEm;
   const fontBaseline = CELL_MARGIN_TOP + (height * head.yMax) / maxHeight;
-  const glyph = font.glyphs[glyphIndex];
   const glyphWidth = (glyph.advanceWidth ?? 1) * fontScale;
   const xMin = (CELL_WIDTH - glyphWidth) / 2;
 

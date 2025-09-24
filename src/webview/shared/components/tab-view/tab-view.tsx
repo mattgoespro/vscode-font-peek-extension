@@ -1,10 +1,10 @@
+import { SxProps, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
-import { ReactElement, useState } from "react";
-import { TabViewContent, TabViewContentProps } from "./tab-view-content";
-import { SxProps, Typography } from "@mui/material";
+import { ReactElement, useMemo, useState } from "react";
 import { uuid } from "../../utils";
+import { TabViewContentProps } from "./tab-view-content";
 
 type TabViewProps = {
   numTabs: number;
@@ -14,16 +14,20 @@ type TabViewProps = {
 };
 
 export default function TabView({ numTabs, children, onTabChange, sx }: TabViewProps) {
-  const [value, setValue] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setCurrentIndex(newValue);
     onTabChange(newValue);
   };
 
+  const tabContent = useMemo(() => {
+    return children[currentIndex]?.props.children;
+  }, [children, currentIndex]);
+
   return (
     <Box sx={{ width: "100%", ...sx }}>
-      <Tabs value={value} onChange={handleChange}>
+      <Tabs value={currentIndex} onChange={handleChange} sx={{ marginBottom: 1 }}>
         {Array.from({ length: numTabs }).map((_, index) => (
           <Tab
             key={uuid()}
@@ -36,14 +40,7 @@ export default function TabView({ numTabs, children, onTabChange, sx }: TabViewP
           />
         ))}
       </Tabs>
-      {children.map(
-        (child, index) =>
-          value === index && (
-            <TabViewContent key={uuid()} label={child.props.label}>
-              {child.props.children}
-            </TabViewContent>
-          )
-      )}
+      {tabContent}
     </Box>
   );
 }
