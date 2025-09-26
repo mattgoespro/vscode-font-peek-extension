@@ -14,7 +14,7 @@ export const FlexBox = createStyled(Box, {
   name: "FlexBox",
   shouldForwardProp: (prop: string) => !["direction", "justify", "align", "gap"].includes(prop)
 })<FlexBoxProps>(
-  ({ theme, direction = "column", justify = "flex-start", align = "flex-start", gap = 1 }) => {
+  ({ theme, direction = "column", justify = "flex-start", align = "flex-start", gap = 0 }) => {
     return {
       display: "flex",
       flexDirection: direction,

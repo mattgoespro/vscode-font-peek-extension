@@ -35,14 +35,14 @@
   "javascript.validate.enable": false,
   "less.validate": false,
   "search.exclude": {
+    "**/*.md": true,
     "**/.git/**": true,
     "**/.vscode/**": true,
-    "**/node_modules/**": true,
     "**/demo/**": true,
     "**/dist/**": true,
-    "**/resources/**": true,
-    "**/*.md": true,
-    "**/package*.json": true
+    "**/node_modules/**": true,
+    "**/package*.json": true,
+    "**/resources/**": true
   },
   "terminal.integrated.defaultProfile.windows": "bash-node",
   "terminal.integrated.env.windows": {
@@ -59,5 +59,6 @@
     }
   },
   "typescript.format.enable": false,
+  "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.updateImportsOnFileMove.enabled": "always"
 }

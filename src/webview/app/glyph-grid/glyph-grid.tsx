@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
-import { useCallback, useEffect, useMemo } from "react";
-import { FontSpec } from "../../../shared/model";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import { FlexBox } from "../../shared/components/flex-box";
 import { GridView } from "../../shared/components/grid-view";
 import TabView from "../../shared/components/tab-view/tab-view";
@@ -9,17 +8,15 @@ import { useGlyphs } from "../../shared/hooks/use-glyphs";
 import { uuid } from "../../shared/utils";
 import { GlyphGridFilter } from "./glyph-grid-filter";
 import { GlyphGridItem } from "./glyph-grid-item/glyph-grid-item";
+import { FontContext } from "../../shared/contexts/font-context";
 
-type GlyphGridProps = {
-  fontSpec: FontSpec;
-};
-
-export function GlyphGrid({ fontSpec }: GlyphGridProps) {
+export function GlyphGrid() {
   const [glyphsState, dispatchGlyphs] = useGlyphs();
+  const fontContext = useContext(FontContext);
 
   useEffect(() => {
-    dispatchGlyphs({ type: "load", payload: { glyphs: fontSpec.glyphs } });
-  }, [fontSpec]);
+    dispatchGlyphs({ type: "load", payload: { glyphs: fontContext.fontSpec.glyphs } });
+  }, [fontContext.fontSpec]);
 
   const getTabLabel = useCallback(
     (pageIndex: number) => {
@@ -32,10 +29,10 @@ export function GlyphGrid({ fontSpec }: GlyphGridProps) {
   );
 
   const glyphItems = useMemo(() => {
-    return glyphsState.pageGlyphs?.map((glyph) => (
-      <GlyphGridItem glyph={glyph} fontSpec={fontSpec} />
+    return glyphsState.currentPageGlyphs?.map((glyph) => (
+      <GlyphGridItem glyph={glyph} fontSpec={fontContext.fontSpec} />
     ));
-  }, [glyphsState.pageGlyphs, fontSpec]);
+  }, [glyphsState.currentPageGlyphs, fontContext]);
 
   const glyphPageEmpty = useMemo(() => {
     return (
@@ -60,7 +57,7 @@ export function GlyphGrid({ fontSpec }: GlyphGridProps) {
       >
         {Array.from({ length: glyphsState.numPages }, (_, pageIndex) => (
           <TabViewContent key={uuid()} label={getTabLabel(pageIndex)}>
-            {(glyphsState.pageGlyphs?.length > 0 && (
+            {(glyphsState.currentPageGlyphs?.length > 0 && (
               <GridView columns={10} key={uuid()}>
                 {glyphItems}
               </GridView>

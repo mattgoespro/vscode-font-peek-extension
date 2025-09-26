@@ -2,10 +2,14 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import { SelectChangeEvent } from "@mui/material/Select/SelectInput";
-import TextField from "@mui/material/TextField";
 import { useCallback } from "react";
 import { FlexBox } from "../../shared/components/flex-box";
-import { UseGlyphsAction, UseGlyphsActions, UseGlyphsState } from "../../shared/hooks/use-glyphs";
+import {
+  UseGlyphsAction,
+  UseGlyphsActions,
+  UseGlyphsState,
+  UseGlyphsStateSortBy
+} from "../../shared/hooks/use-glyphs";
 
 type GlyphGridFilter = {
   state: UseGlyphsState;
@@ -13,56 +17,50 @@ type GlyphGridFilter = {
 };
 
 export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
-  const handleSortOrderChange = useCallback((event: SelectChangeEvent) => {
+  const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: "change-search",
-      payload: { sortOrder: { [event.target.value]: "asc" } }
+      payload: { filter: { name: event.target.value || "" } }
+    });
+  }, []);
+
+  const onUnicodeChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: "change-search",
+      payload: { filter: { unicode: event.target.value || "" } }
+    });
+  }, []);
+
+  const onSortByChange = useCallback((event: SelectChangeEvent) => {
+    console.log(event.target.value);
+    dispatch({
+      type: "change-search",
+      payload: { sortBy: event.target.value as UseGlyphsStateSortBy } // TODO: Allow changing sort order
     });
   }, []);
 
   return (
     <FlexBox direction="row" gap={1}>
-      <TextField
-        variant="outlined"
-        size="medium"
-        value={state?.currentSearch?.fields?.name?.toLowerCase() || ""}
-        onChange={(event) =>
-          dispatch({
-            type: "change-search",
-            payload: { fields: { ...state.currentSearch.fields, name: event.target.value || "" } }
-          })
-        }
+      <OutlinedInput
+        size="small"
+        value={state?.currentSearch.filter?.name?.toLowerCase() || ""}
+        onChange={onNameChange}
         placeholder="Search by name..."
       />
-      <TextField
-        variant="outlined"
-        size="medium"
-        value={state?.currentSearch?.fields?.name?.toLowerCase() || ""}
-        onChange={(event) =>
-          dispatch({
-            type: "change-search",
-            payload: {
-              fields: { ...state.currentSearch.fields, name: event.target.value || "" }
-            }
-          })
-        }
+      <OutlinedInput
+        size="small"
+        value={state?.currentSearch.filter?.unicode?.toLowerCase() || ""}
+        onChange={onUnicodeChange}
         placeholder="Search by unicode value..."
       />
       <Select
+        size="small"
         variant="outlined"
         autoWidth={true}
-        value={state?.currentSearch?.sortBy || ""}
-        onChange={handleSortOrderChange}
+        value={state.currentSearch.sortBy || ""}
+        onChange={onSortByChange}
         label="Sort By"
-        slotProps={{ root: { sx: { height: "100%" } } }}
-        MenuProps={{
-          PaperProps: {
-            style: {
-              color: "var(--vscode-foreground)"
-            }
-          }
-        }}
-        input={<OutlinedInput placeholder="Sort By" size="medium"></OutlinedInput>}
+        // input={<OutlinedInput color="primary" placeholder="Sort By"></OutlinedInput>}
       >
         <MenuItem value="name">Name</MenuItem>
         <MenuItem value="unicode">Unicode</MenuItem>

@@ -91,7 +91,7 @@ export function App() {
         <FlexBox direction="column" align="center" m={2} gap={2}>
           <AppHeader fontName={fontSpec?.name} />
           <FontContext.Provider value={{ fontSpec }}>
-            <GlyphGrid fontSpec={fontSpec} />
+            <GlyphGrid />
           </FontContext.Provider>
         </FlexBox>
       )}

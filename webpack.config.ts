@@ -8,7 +8,9 @@ export default {
   target: "web",
   devtool: "inline-source-map",
   stats: "errors-warnings",
-  cache: true,
+  cache: {
+    type: "filesystem"
+  },
   entry: {
     extension: {
       import: "./src/extension.ts",

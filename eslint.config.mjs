@@ -6,7 +6,7 @@ import htmlEslint from "@html-eslint/eslint-plugin";
 
 export default tsEslint.config(
   {
-    ignores: ["node_modules", "dist", "temp", "*.js"]
+    ignores: ["node_modules/**", "dist/**", "temp/**", "*.js", "**/*.d.ts"]
   },
   eslint.configs.recommended,
   tsEslint.configs.recommended,
@@ -14,34 +14,27 @@ export default tsEslint.config(
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_"
-        }
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }
       ]
     }
   },
   {
-    ...reactEslint.configs.flat.recommended,
     files: ["src/**/*.{ts,tsx}"],
-    languageOptions: {
-      ...reactEslint.configs.flat.recommended.languageOptions
-    },
-    settings: {
-      react: {
-        version: "detect"
-      },
-      ecmaFeatures: {
-        jsx: true
-      }
-    },
+    ...reactEslint.configs.flat.recommended,
+    settings: { react: { version: "detect" } },
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
       "no-unused-vars": "off"
     }
   },
-  { ...jsxEslint.flatConfigs.recommended },
+  {
+    files: ["src/**/*.tsx"],
+    ...jsxEslint.flatConfigs.recommended,
+    rules: {
+      "jsx-a11y/anchor-is-valid": "warn"
+    }
+  },
   {
     files: ["*.html"],
     ...htmlEslint.configs["flat/recommended"]

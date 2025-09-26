@@ -8,10 +8,10 @@ type AppHeaderProps = {
 export function AppHeader({ fontName }: AppHeaderProps) {
   return (
     <FlexBox direction="column" align="center" mb={2}>
-      <Typography variant="h2" textAlign="center">
+      <Typography variant="h2" fontFamily="Fira Code, Cascadia Code, monospace" textAlign="center">
         Preview of
       </Typography>
-      <Typography variant="h1" textAlign="center">
+      <Typography variant="h1" fontFamily="Fira Code, Cascadia Code, monospace" textAlign="center">
         {fontName}
       </Typography>
     </FlexBox>

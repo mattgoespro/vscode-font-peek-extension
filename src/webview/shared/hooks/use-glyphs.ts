@@ -1,11 +1,11 @@
 import { Glyph } from "opentype.js";
 import { useReducer } from "react";
 
-export type UseGlyphsStateSortConstraints = Partial<{
+type UseGlyphsStateSortConstraints = Partial<{
   [key in keyof Pick<Glyph, "name" | "unicode">]: "asc" | "desc";
 }>;
 
-export type UseGlyphsStateSortOrder = keyof UseGlyphsStateSortConstraints;
+export type UseGlyphsStateSortBy = keyof UseGlyphsStateSortConstraints;
 
 export type UseGlyphsState = {
   allGlyphs: Glyph[];
@@ -13,17 +13,17 @@ export type UseGlyphsState = {
   numPages: number;
   currentPage: number;
   currentSearch: {
-    fields?: UseGlyphsStateSearchField;
-    sortBy?: UseGlyphsStateSortOrder;
+    filter?: UseGlyphsStateSearchFilter;
+    sortBy?: UseGlyphsStateSortBy;
     sortOrder?: UseGlyphsStateSortConstraints;
   };
   currentMatchingGlyphs: Glyph[];
-  pageGlyphs: Glyph[];
+  currentPageGlyphs: Glyph[];
 };
 
-type UseGlyphsStateSearchField = {
-  name: string;
-  unicode: string;
+type UseGlyphsStateSearchFilter = {
+  name?: string;
+  unicode?: string;
 };
 
 export type UseGlyphsActions = {
@@ -34,8 +34,8 @@ export type UseGlyphsActions = {
     page: number;
   };
   "change-search": {
-    fields?: UseGlyphsStateSearchField;
-    sortBy?: UseGlyphsStateSortOrder;
+    filter?: UseGlyphsStateSearchFilter;
+    sortBy?: UseGlyphsStateSortBy;
     sortOrder?: UseGlyphsStateSortConstraints;
   };
 };
@@ -45,24 +45,24 @@ export type UseGlyphsAction<Action extends keyof UseGlyphsActions> = {
   payload: UseGlyphsActions[Action];
 };
 
-export function useGlyphs() {
-  const useGlyphsInitialState: UseGlyphsState = {
-    allGlyphs: null,
-    pageSize: null,
-    numPages: null,
-    currentPage: null,
-    currentSearch: {
-      fields: {
-        name: "",
-        unicode: ""
-      },
-      sortBy: "name",
-      sortOrder: undefined
+const useGlyphsInitialState: UseGlyphsState = {
+  allGlyphs: null,
+  pageSize: null,
+  numPages: null,
+  currentPage: null,
+  currentSearch: {
+    filter: {
+      name: "",
+      unicode: ""
     },
-    currentMatchingGlyphs: null,
-    pageGlyphs: null
-  };
+    sortBy: "name",
+    sortOrder: undefined
+  },
+  currentMatchingGlyphs: null,
+  currentPageGlyphs: null
+};
 
+export function useGlyphs() {
   return useReducer(glyphsReducer, useGlyphsInitialState);
 }
 
@@ -82,28 +82,19 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
         pageSize: UseGlyphsDefaultGridPageSize,
         numPages: getNumPages(glyphs, UseGlyphsDefaultGridPageSize),
         currentPage: 0,
-        pageGlyphs: getPageGlyphs(glyphs, 0, UseGlyphsDefaultGridPageSize),
-        currentSearch: {
-          fields: {
-            name: "",
-            unicode: ""
-          },
-          sortBy: "name",
-          sortOrder: undefined
-        }
+        currentPageGlyphs: getPageGlyphs(glyphs, 0, UseGlyphsDefaultGridPageSize)
       };
     }
     case "change-page": {
       const { page } = (action as UseGlyphsAction<"change-page">).payload;
       const { allGlyphs, pageSize, currentSearch, currentMatchingGlyphs } = state;
 
-      let matchingGlyphs =
-        currentSearch.fields.name.length + currentSearch.fields.unicode.length === 0
-          ? allGlyphs
-          : currentMatchingGlyphs;
+      let matchingGlyphs = hasFilterCriteria(currentSearch.filter)
+        ? currentMatchingGlyphs
+        : allGlyphs;
 
       if (matchingGlyphs == null) {
-        matchingGlyphs = filterMatchingGlyphs(allGlyphs, currentSearch.fields);
+        matchingGlyphs = filterMatchingGlyphs(allGlyphs, currentSearch.filter);
       }
 
       const pageGlyphs = getPageGlyphs(matchingGlyphs, page, pageSize);
@@ -112,49 +103,51 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
       return {
         ...state,
         currentPage: page,
-        pageGlyphs,
+        currentPageGlyphs: pageGlyphs,
         currentMatchingGlyphs: matchingGlyphs
       };
     }
     case "change-search": {
-      const { fields, sortBy, sortOrder } = (action as UseGlyphsAction<"change-search">).payload;
+      const { filter, sortBy, sortOrder } = (action as UseGlyphsAction<"change-search">).payload;
       const { currentPage, pageSize, allGlyphs } = state;
-      const currentMatchingGlyphs = filterMatchingGlyphs(allGlyphs, fields);
-      console.log(
-        `Found ${currentMatchingGlyphs.length} glyphs matching filter fields: ${Object.entries(
-          fields
-        )
-          .map(([key, value]) => `${key} = ${value}`)
-          .join(", ")}`
-      );
+      const mergedFilterCriteria = {
+        ...state.currentSearch.filter,
+        ...filter
+      };
+      const currentMatchingGlyphs = filterMatchingGlyphs(allGlyphs, mergedFilterCriteria);
 
       return {
         ...state,
         currentSearch: {
-          fields: fields ?? {
-            name: "",
-            unicode: ""
-          },
+          filter: mergedFilterCriteria,
           sortBy: sortBy ?? state.currentSearch.sortBy,
           sortOrder: sortOrder ?? state.currentSearch.sortOrder
         },
         currentMatchingGlyphs,
-        pageGlyphs: getPageGlyphs(currentMatchingGlyphs, currentPage, pageSize)
+        currentPageGlyphs: getPageGlyphs(currentMatchingGlyphs, currentPage, pageSize)
       };
     }
   }
 }
 
-function filterMatchingGlyphs(glyphs: Glyph[], fields: UseGlyphsStateSearchField) {
-  if (fields.unicode.length === 0 && fields.unicode.length === 0) {
+function hasFilterCriteria(fields: UseGlyphsStateSearchFilter) {
+  return (fields.name ?? "").length > 0 || (fields.unicode ?? "").length > 0;
+}
+
+function filterMatchingGlyphs(glyphs: Glyph[], fields: UseGlyphsStateSearchFilter) {
+  if (!hasFilterCriteria(fields)) {
     return glyphs;
   }
 
   return glyphs.filter((glyph) => {
+    if (glyph.unicode == null) {
+      console.warn(`Glyph ${glyph.name} has no unicode value.`);
+    }
+
     const matchesName =
       fields.name.length === 0 || glyph.name.toLowerCase().includes(fields.name.toLowerCase());
     const matchesUnicode =
-      fields.unicode.length === 0 || glyph.unicode?.toString().includes(fields.unicode);
+      fields.unicode.length === 0 || (glyph.unicode ?? -1).toString().includes(fields.unicode);
 
     return matchesName && matchesUnicode;
   });

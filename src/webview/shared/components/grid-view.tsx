@@ -8,17 +8,11 @@ type GridViewProps = {
   children: JSX.Element | JSX.Element[];
 };
 
+console.log();
+
 export function GridView({ columns, children }: GridViewProps) {
   return (
-    <Grid
-      container
-      columns={columns}
-      spacing={0.5}
-      sx={{
-        justifyContent: "center",
-        alignItems: "center"
-      }}
-    >
+    <Grid container columns={columns} size="grow" spacing={0.5} sx={{ alignItems: "stretch" }}>
       {(Array.isArray(children) &&
         children.map((child) => (
           <Grid key={uuid()} size={1}>
