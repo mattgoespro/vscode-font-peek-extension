@@ -34,6 +34,7 @@
   "html.format.enable": false,
   "javascript.validate.enable": false,
   "less.validate": false,
+  "prettier.requireConfig": true,
   "search.exclude": {
     "**/*.md": true,
     "**/.git/**": true,
@@ -53,7 +54,8 @@
       "env": {
         "PATH": "${workspaceFolder}\\node_modules\\.bin;${env:PATH}"
       },
-      "icon": "terminal-bash",
+      "icon": "terminal-linux",
+      "color": "terminal.ansiGreen",
       "overrideName": true,
       "path": "C:\\Program Files\\Git\\bin\\bash.exe"
     }

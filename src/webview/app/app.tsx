@@ -2,15 +2,15 @@ import { ThemeProvider, Typography } from "@mui/material";
 import { LoadFontEvent, WebviewStateChangedEvent } from "@shared/message/messages";
 import { FontSpec } from "@shared/model";
 import opentype, { Glyph } from "opentype.js";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { FlexBox } from "../shared/components/flex-box";
-import { BorderLinearProgress } from "../shared/components/spinner";
 import { FontContext } from "../shared/contexts/font-context";
 import { VsCodeApiContext } from "../shared/contexts/vscode-api-context";
 import { useOutputPanel } from "../shared/hooks/use-output-panel";
 import { theme } from "../shared/theme";
 import { AppHeader } from "./app-header";
 import { GlyphGrid } from "./glyph-grid/glyph-grid";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export function App() {
   const [fontSpec, setFontSpec] = useState<FontSpec>(null);
@@ -28,6 +28,11 @@ export function App() {
 
     for (let i = 0; i < font.glyphs.length; i++) {
       const glyph = font.glyphs.get(i);
+
+      if (glyph.unicode == null) {
+        continue;
+      }
+
       glyphs.push(glyph);
     }
 
@@ -71,12 +76,28 @@ export function App() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
+  const LoadingIndicator = useMemo(() => {
+    return (
+      <Typography
+        variant="caption"
+        color="textSecondary"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        gap={1}
+      >
+        Loading font
+        <CircularProgress color="inherit" />
+      </Typography>
+    );
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       {
         /*
-         * TODO: See if the CssBaseline component is useful and could be enabled.
-         *
+         * TODO: See if the `CssBaseline` component is useful and is worth enabling.
          * @see https://mui.com/material-ui/react-css-baseline
          */
         // <CssBaseline enableColorScheme />
@@ -86,9 +107,9 @@ export function App() {
           {error}
         </Typography>
       )}
-      {!error && !fontSpec && <BorderLinearProgress />}
+      {!error && !fontSpec && LoadingIndicator}
       {!error && fontSpec && (
-        <FlexBox direction="column" align="center" m={2} gap={2}>
+        <FlexBox id="app-root" direction="column" align="center" width="100%" m={2} gap={2}>
           <AppHeader fontName={fontSpec?.name} />
           <FontContext.Provider value={{ fontSpec }}>
             <GlyphGrid />

@@ -26,7 +26,8 @@ export function GlyphGridItem({ glyph, fontSpec }: GlyphGridItemProps) {
         borderColor: theme.palette.divider,
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: "4px",
-        padding: "0.5rem"
+        padding: "0.5rem",
+        height: "5rem"
       })}
     >
       <canvas width={CELL_WIDTH} height={CELL_HEIGHT} ref={handleCanvasRef} />
@@ -36,7 +37,7 @@ export function GlyphGridItem({ glyph, fontSpec }: GlyphGridItemProps) {
         </Typography>
       )) || (
         <Typography variant="caption" textAlign="center" fontStyle="italic" fontWeight="300">
-          Unknown
+          &lt;Unknown&gt;
         </Typography>
       )}
     </FlexBox>

@@ -147,7 +147,7 @@ function filterMatchingGlyphs(glyphs: Glyph[], fields: UseGlyphsStateSearchFilte
     const matchesName =
       fields.name.length === 0 || glyph.name.toLowerCase().includes(fields.name.toLowerCase());
     const matchesUnicode =
-      fields.unicode.length === 0 || (glyph.unicode ?? -1).toString().includes(fields.unicode);
+      fields.unicode.length === 0 || glyph.unicode?.toString().includes(fields.unicode);
 
     return matchesName && matchesUnicode;
   });

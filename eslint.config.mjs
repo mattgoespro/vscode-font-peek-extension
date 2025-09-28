@@ -6,7 +6,7 @@ import htmlEslint from "@html-eslint/eslint-plugin";
 
 export default tsEslint.config(
   {
-    ignores: ["node_modules/**", "dist/**", "temp/**", "*.js", "**/*.d.ts"]
+    ignores: ["node_modules/**", "dist/**", "*.[c]js"]
   },
   eslint.configs.recommended,
   tsEslint.configs.recommended,

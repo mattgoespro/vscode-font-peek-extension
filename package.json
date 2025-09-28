@@ -23,7 +23,8 @@
     "package": "vsce package -t win32-x64 -o dist/",
     "prepackage": "npm run build",
     "publish": "vsce publish",
-    "lint": "eslint src"
+    "lint": "eslint",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -60,6 +61,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "html-loader": "^5.1.0",
     "node-loader": "^2.1.0",
+    "prettier": "^3.6.2",
     "stylelint": "^16.14.1",
     "terser-webpack-plugin": "^5.3.11",
     "ts-loader": "^9.5.2",

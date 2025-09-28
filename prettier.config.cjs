@@ -1,4 +1,4 @@
-/** @type {import ("prettier").Config} */
+/** @type { import("prettier").Config } */
 module.exports = {
   semi: true,
   tabWidth: 2,
@@ -6,5 +6,5 @@ module.exports = {
   singleQuote: false,
   trailingComma: "none",
   endOfLine: "lf",
-  jsxSingleQuote: false,
+  htmlWhitespaceSensitivity: "ignore"
 };

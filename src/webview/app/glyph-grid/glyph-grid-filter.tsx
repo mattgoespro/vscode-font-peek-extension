@@ -57,6 +57,7 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
         size="small"
         variant="outlined"
         autoWidth={true}
+        notched={false}
         value={state.currentSearch.sortBy || ""}
         onChange={onSortByChange}
         label="Sort By"
