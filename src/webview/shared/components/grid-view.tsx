@@ -1,28 +1,20 @@
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { JSX } from "react";
+import { ReactNode } from "react";
 import { uuid } from "../utils";
 
 type GridViewProps = {
-  columns: number;
-  children: JSX.Element | JSX.Element[];
+  numColumns: number;
+  children: ReactNode[];
 };
 
-console.log();
-
-export function GridView({ columns, children }: GridViewProps) {
+export function GridView({ numColumns, children }: GridViewProps) {
   return (
-    <Grid container columns={columns} size="grow" spacing={0.5} sx={{ alignItems: "stretch" }}>
-      {(Array.isArray(children) &&
-        children.map((child) => (
-          <Grid key={uuid()} size={1}>
-            {child}
-          </Grid>
-        ))) || <Grid size={1}>{children}</Grid>}
+    <Grid container columns={numColumns} size="grow" spacing={0.5} sx={{ alignItems: "stretch" }}>
+      {children.map((child) => (
+        <Grid key={uuid()} size={1}>
+          {child}
+        </Grid>
+      ))}
     </Grid>
   );
-}
-
-export function GridItem({ children }: React.PropsWithChildren) {
-  return <Box>{children}</Box>;
 }

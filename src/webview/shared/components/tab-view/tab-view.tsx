@@ -27,7 +27,14 @@ export default function TabView({ numTabs, children, onTabChange, sx }: TabViewP
 
   return (
     <Box sx={{ width: "100%", ...sx }}>
-      <Tabs value={currentIndex} onChange={handleChange} sx={{ marginBottom: 1 }}>
+      <Tabs
+        value={currentIndex}
+        onChange={handleChange}
+        sx={{
+          marginBottom: 1,
+          "& .Mui-selected": { backgroundColor: "action.selected" }
+        }}
+      >
         {Array.from({ length: numTabs }).map((_, index) => (
           <Tab
             key={uuid()}

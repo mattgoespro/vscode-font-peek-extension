@@ -58,7 +58,7 @@ export function GlyphGrid() {
         {Array.from({ length: glyphsState.numPages }, (_, pageIndex) => (
           <TabViewContent key={uuid()} label={getTabLabel(pageIndex)}>
             {(glyphsState.currentPageGlyphs?.length > 0 && (
-              <GridView columns={10} key={uuid()}>
+              <GridView numColumns={10} key={uuid()}>
                 {glyphItems}
               </GridView>
             )) ||

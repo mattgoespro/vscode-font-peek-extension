@@ -32,7 +32,6 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
   }, []);
 
   const onSortByChange = useCallback((event: SelectChangeEvent) => {
-    console.log(event.target.value);
     dispatch({
       type: "change-search",
       payload: { sortBy: event.target.value as UseGlyphsStateSortBy } // TODO: Allow changing sort order
@@ -56,13 +55,15 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
       <Select
         size="small"
         variant="outlined"
-        autoWidth={true}
-        notched={false}
-        value={state.currentSearch.sortBy || ""}
-        onChange={onSortByChange}
         label="Sort By"
-        // input={<OutlinedInput color="primary" placeholder="Sort By"></OutlinedInput>}
+        displayEmpty
+        notched={false}
+        value={state.currentSearch.sortBy}
+        onChange={onSortByChange}
       >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
         <MenuItem value="name">Name</MenuItem>
         <MenuItem value="unicode">Unicode</MenuItem>
       </Select>

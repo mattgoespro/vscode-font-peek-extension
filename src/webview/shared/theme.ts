@@ -45,12 +45,12 @@ export const theme = createTheme({
       contrastText: "#f0f0f0"
     },
     text: {
-      primary: "#696969",
-      disabled: "#a9a9a9",
-      secondary: "#808080"
+      primary: "#c5c5c5",
+      secondary: "#969696",
+      disabled: "#5f5f5f"
     },
     background: {
-      default: "#101010",
+      default: "#111111",
       paper: "#1e1e1e"
     }
   },
@@ -58,36 +58,38 @@ export const theme = createTheme({
     fontFamily: "Roboto, sans-serif",
     fontSize: 14,
     h1: {
-      fontFamily: "Fira Code, monospace",
+      fontFamily: "Fira Code, Cascadia Code, monospace",
       fontSize: "3em",
       fontWeight: 500,
-      color: palette.getContrastText(palette.background.paper),
+      lineHeight: 1.5,
+      color: palette.getContrastText(palette.background.default),
       margin: "0.5rem",
       wordBreak: "break-word"
     },
     h2: {
-      fontFamily: "Fira Code, monospace",
+      fontFamily: "Fira Code, Cascadia Code, monospace",
       fontSize: "1.5em",
-      fontWeight: 500,
-      color: palette.text.primary,
+      fontWeight: 300,
+      lineHeight: 1.5,
+      color: palette.text.secondary,
       margin: "0.5rem",
       wordBreak: "break-word"
     },
     h3: {
       fontSize: "1.25em",
       fontWeight: 500,
-      color: palette.text.primary,
+      color: "text.secondary",
       wordBreak: "break-word"
     },
     button: {
       fontFamily: "Nunito Sans, sans-serif",
       fontSize: "0.875em",
-      fontWeight: 400,
-      textTransform: "uppercase"
+      color: "ButtonText",
+      textTransform: "uppercase",
+      textAlign: "center"
     },
     overline: {
       fontSize: "0.75em",
-      fontWeight: 400,
       textTransform: "uppercase",
       color: palette.text.secondary
     },
@@ -103,37 +105,19 @@ export const theme = createTheme({
       color: palette.text.primary
     },
     caption: {
-      fontSize: "0.875em",
-      fontWeight: 500,
-      color: palette.text.primary
+      fontFamily: "Nunito Sans, Roboto, sans-serif",
+      fontSize: "1em",
+      fontWeight: 400,
+      // fontFamily: "Inter, Roboto, sans-serif",
+      // fontSize: "0.875em",
+      // fontWeight: 300,
+      letterSpacing: "0.25px",
+      lineHeight: 1.25,
+      color: palette.text.primary,
+      textAlign: "center",
+      wordBreak: "break-all"
     }
   }),
-  components: {
-    // MuiInput: {
-    //   defaultProps: {
-    //     color: "primary",
-    //     size: "small"
-    //   },
-    //   variants: [
-    //     {
-    //       props: {
-    //         sx: (theme) => {
-    //           return {
-    //             backgroundColor: theme.palette.background.paper,
-    //             borderRadius: theme.shape.borderRadius,
-    //             "&:hover": {
-    //               backgroundColor: theme.palette.background.paper
-    //             }
-    //           };
-    //         }
-    //       },
-    //       style: ({ theme }) => ({
-    //         backgroundColor: theme.palette.background.paper
-    //       })
-    //     }
-    //   ]
-    // }
-  },
   spacing: 16,
   shape: {
     borderRadius: 4
