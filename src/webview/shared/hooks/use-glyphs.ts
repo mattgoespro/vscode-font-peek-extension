@@ -99,13 +99,10 @@ function glyphsReducer<Action extends keyof UseGlyphsActions>(
         matchingGlyphs = filterMatchingGlyphs(allGlyphs, currentSearch.filter);
       }
 
-      const pageGlyphs = getPageGlyphs(matchingGlyphs, page, pageSize);
-      console.log(`Loading ${pageGlyphs.length} glyphs on page ${page + 1}.`);
-
       return {
         ...state,
         currentPage: page,
-        currentPageGlyphs: pageGlyphs,
+        currentPageGlyphs: getPageGlyphs(matchingGlyphs, page, pageSize),
         currentMatchingGlyphs: matchingGlyphs
       };
     }

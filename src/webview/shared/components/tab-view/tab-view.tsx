@@ -32,11 +32,12 @@ export default function TabView({ numTabs, children, onTabChange, sx }: TabViewP
         onChange={handleChange}
         sx={{
           marginBottom: 1,
-          "& .Mui-selected": { backgroundColor: "action.selected" }
+          "& .Mui-selected": { backgroundColor: "rgba(255, 255, 255, 0.04)" }
         }}
       >
         {Array.from({ length: numTabs }).map((_, index) => (
           <Tab
+            disableTouchRipple
             key={uuid()}
             wrapped
             label={

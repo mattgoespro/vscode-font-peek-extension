@@ -18,7 +18,7 @@ export function GlyphGrid() {
     dispatchGlyphs({ type: "load", payload: { glyphs: fontContext.fontSpec.glyphs } });
   }, [fontContext.fontSpec]);
 
-  const getTabLabel = useCallback(
+  const getPageLabel = useCallback(
     (pageIndex: number) => {
       const start = pageIndex * glyphsState.pageSize;
       const end = Math.min(start + glyphsState.pageSize - 1, glyphsState.allGlyphs.length);
@@ -26,6 +26,11 @@ export function GlyphGrid() {
       return `${start}-${end}`;
     },
     [glyphsState.pageSize, glyphsState.allGlyphs?.length]
+  );
+
+  const onPageChange = useCallback(
+    (index: number) => dispatchGlyphs({ type: "change-page", payload: { page: index } }),
+    []
   );
 
   const glyphItems = useMemo(() => {
@@ -51,12 +56,9 @@ export function GlyphGrid() {
   return (
     <FlexBox direction="column" flexGrow={1} width="100%" gap={2}>
       <GlyphGridFilter state={glyphsState} dispatch={dispatchGlyphs} />
-      <TabView
-        numTabs={glyphsState.numPages}
-        onTabChange={(index) => dispatchGlyphs({ type: "change-page", payload: { page: index } })}
-      >
+      <TabView numTabs={glyphsState.numPages} onTabChange={onPageChange}>
         {Array.from({ length: glyphsState.numPages }, (_, pageIndex) => (
-          <TabViewContent key={uuid()} label={getTabLabel(pageIndex)}>
+          <TabViewContent key={uuid()} label={getPageLabel(pageIndex)}>
             {(glyphsState.currentPageGlyphs?.length > 0 && (
               <GridView numColumns={10} key={uuid()}>
                 {glyphItems}
