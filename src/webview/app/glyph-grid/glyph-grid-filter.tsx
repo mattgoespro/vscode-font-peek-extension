@@ -2,53 +2,67 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import { SelectChangeEvent } from "@mui/material/Select/SelectInput";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FlexBox } from "../../shared/components/flex-box";
-import {
-  UseGlyphsAction,
-  UseGlyphsActions,
-  UseGlyphsState,
-  UseGlyphsStateSortBy
-} from "../../shared/hooks/use-glyphs";
+import { UseGlyphsStateSortBy } from "../../shared/hooks/use-glyphs";
 
-type GlyphGridFilter = {
-  state: UseGlyphsState;
-  dispatch: React.ActionDispatch<[action: UseGlyphsAction<keyof UseGlyphsActions>]>;
+export type GlyphGridFilterCriteria = {
+  name: string;
+  unicode: string;
+  sortBy: UseGlyphsStateSortBy;
 };
 
-export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
-  const onNameChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: "change-search",
-      payload: { filter: { name: event.target.value || "" } }
-    });
-  }, []);
+type GlyphGridFilter = {
+  criteriaChange: (criteria: GlyphGridFilterCriteria) => void;
+};
 
-  const onUnicodeChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: "change-search",
-      payload: { filter: { unicode: event.target.value || "" } }
-    });
-  }, []);
+export function GlyphGridFilter({ criteriaChange }: GlyphGridFilter) {
+  const [filterCriteria, setFilterCriteria] = useState<GlyphGridFilterCriteria>({
+    name: "",
+    unicode: "",
+    sortBy: ""
+  });
 
-  const onSortByChange = useCallback((event: SelectChangeEvent) => {
-    dispatch({
-      type: "change-search",
-      payload: { sortBy: event.target.value as UseGlyphsStateSortBy } // TODO: Allow changing sort order
-    });
-  }, []);
+  const onNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      criteriaChange({ ...filterCriteria, name: event.target.value });
+    },
+    [criteriaChange]
+  );
+
+  const onUnicodeChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFilterCriteria((prev) => {
+        const newCriteria = { ...prev, unicode: event.target.value };
+        criteriaChange(newCriteria);
+        return newCriteria;
+      });
+    },
+    [criteriaChange]
+  );
+
+  const onSortByChange = useCallback(
+    (event: SelectChangeEvent) => {
+      setFilterCriteria((prev) => {
+        const newCriteria = { ...prev, sortBy: event.target.value as UseGlyphsStateSortBy };
+        criteriaChange(newCriteria);
+        return newCriteria;
+      });
+    },
+    [criteriaChange]
+  );
 
   return (
     <FlexBox direction="row" gap={1}>
       <OutlinedInput
         size="small"
-        value={state?.currentSearch.filter?.name?.toLowerCase() || ""}
+        defaultValue=""
         onChange={onNameChange}
         placeholder="Search by name..."
       />
       <OutlinedInput
         size="small"
-        value={state?.currentSearch.filter?.unicode?.toLowerCase() || ""}
+        defaultValue=""
         onChange={onUnicodeChange}
         placeholder="Search by unicode value..."
       />
@@ -58,7 +72,7 @@ export function GlyphGridFilter({ state, dispatch }: GlyphGridFilter) {
         label="Sort By"
         displayEmpty
         notched={false}
-        value={state.currentSearch.sortBy}
+        defaultValue=""
         onChange={onSortByChange}
       >
         <MenuItem value="">
