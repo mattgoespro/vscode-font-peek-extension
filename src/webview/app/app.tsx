@@ -1,4 +1,6 @@
-import { ThemeProvider, Typography } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import { LoadFontEvent, WebviewStateChangedEvent } from "@shared/message/messages";
 import { FontSpec } from "@shared/model";
 import opentype, { Glyph } from "opentype.js";
@@ -10,7 +12,6 @@ import { useOutputPanel } from "../shared/hooks/use-output-panel";
 import { theme } from "../shared/theme";
 import { AppHeader } from "./app-header";
 import { GlyphGrid } from "./glyph-grid/glyph-grid";
-import CircularProgress from "@mui/material/CircularProgress";
 
 export function App() {
   const [fontSpec, setFontSpec] = useState<FontSpec>(null);
@@ -46,23 +47,26 @@ export function App() {
     });
   }, []);
 
-  const onMessage = useCallback(async (message: MessageEvent<LoadFontEvent>) => {
-    outputPanel.info(`Webview received message from extension:`, message.data);
+  const onMessage = useCallback(
+    async (message: MessageEvent<LoadFontEvent>) => {
+      outputPanel.info(`Webview received message from extension:`, message.data);
 
-    switch (message.data.name) {
-      case "load-font": {
-        try {
-          await loadFont(message.data.payload.fileUri);
-        } catch (error) {
-          outputPanel.error("Failed to load font:", error);
-          setError("Failed to load font. See output panel for details.");
+      switch (message.data.name) {
+        case "load-font": {
+          try {
+            await loadFont(message.data.payload.fileUri);
+          } catch (error) {
+            outputPanel.error("Failed to load font:", error);
+            setError("Failed to load font. See output panel for details.");
+          }
+          break;
         }
-        break;
+        default:
+          break;
       }
-      default:
-        break;
-    }
-  }, []);
+    },
+    [vscodeApi]
+  );
 
   useEffect(() => {
     vscodeApi.postMessage<WebviewStateChangedEvent>({

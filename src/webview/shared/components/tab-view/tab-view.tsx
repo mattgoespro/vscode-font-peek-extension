@@ -28,6 +28,7 @@ export default function TabView({ numTabs, children, onTabChange, sx }: TabViewP
   return (
     <Box sx={{ width: "100%", ...sx }}>
       <Tabs
+        variant="fullWidth"
         value={currentIndex}
         onChange={handleChange}
         sx={{

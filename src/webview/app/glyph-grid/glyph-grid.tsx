@@ -4,11 +4,11 @@ import { FlexBox } from "../../shared/components/flex-box";
 import { GridView } from "../../shared/components/grid-view";
 import TabView from "../../shared/components/tab-view/tab-view";
 import { TabViewContent } from "../../shared/components/tab-view/tab-view-content";
+import { FontContext } from "../../shared/contexts/font-context";
 import { useGlyphs } from "../../shared/hooks/use-glyphs";
 import { uuid } from "../../shared/utils";
 import { GlyphGridFilter } from "./glyph-grid-filter";
 import { GlyphGridItem } from "./glyph-grid-item/glyph-grid-item";
-import { FontContext } from "../../shared/contexts/font-context";
 
 export function GlyphGrid() {
   const [glyphsState, dispatchGlyphs] = useGlyphs();
